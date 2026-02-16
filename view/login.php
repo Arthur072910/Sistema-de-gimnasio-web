@@ -31,27 +31,22 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - Delux Gym</title>
     
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- CSS Personalizado -->
     <link rel="stylesheet" href="../assets/css/login.css">
 </head>
 <body>
     <div class="login-container">
         <div class="login-card">
             
-            <!-- LOGO -->
+
             <div class="logo">
                 <img src="../assets/img/ChatGPT Image 30 ene 2026, 10_35_11 p.m..png" alt="Delux Gym">
                 <h1>Delux Gym</h1>
                 <p>BIENVENIDO DE VUELTA</p>
             </div>
             
-            <!-- MENSAJE DE ERROR (PHP) -->
+
             <?php if($error): ?>
             <div class="error-message">
                 <i class="fas fa-exclamation-circle"></i>
@@ -59,9 +54,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
             <?php endif; ?>
             
-            <!-- FORMULARIO -->
+
             <form method="POST" id="loginForm">
-                <!-- EMAIL -->
                 <div class="form-group">
                     <label>
                         <i class="fas fa-envelope"></i>
@@ -79,7 +73,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                 </div>
                 
-                <!-- CONTRASEÑA -->
                 <div class="form-group">
                     <label>
                         <i class="fas fa-lock"></i>
@@ -96,7 +89,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                 </div>
                 
-                <!-- OPCIONES -->
                 <div class="form-options">
                     <label class="remember">
                         <input type="checkbox" id="remember" name="remember">
@@ -105,21 +97,18 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <a href="#" class="forgot">¿Olvidaste tu contraseña?</a>
                 </div>
                 
-                <!-- BOTÓN -->
                 <button type="submit" class="btn-login">
                     <i class="fas fa-sign-in-alt"></i>
                     <span>INICIAR SESIÓN</span>
                 </button>
             </form>
             
-            <!-- SEPARADOR -->
             <div class="divider">
                 <span class="divider-line"></span>
                 <span class="divider-text">¿Nuevo aquí?</span>
                 <span class="divider-line"></span>
             </div>
             
-            <!-- REGISTRO -->
             <div class="register-section">
                 <p class="register-text">Únete a la comunidad Delux Gym</p>
                 <a href="registro.php" class="register-link">
@@ -128,7 +117,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </a>
             </div>
             
-            <!-- TÉRMINOS -->
             <div class="terms">
                 Al iniciar sesión aceptas nuestros 
                 <a href="#">Términos</a> y 

@@ -34,27 +34,23 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro - Delux Gym</title>
     
-    <!-- Font Awesome -->
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- CSS Personalizado -->
     <link rel="stylesheet" href="../assets/css/registro.css">
 </head>
 <body>
     <div class="registro-container">
         <div class="registro-card">
             
-            <!-- LOGO -->
+
             <div class="logo">
                 <img src="../assets/img/ChatGPT Image 30 ene 2026, 10_35_11 p.m..png" alt="Delux Gym">
                 <h1>Delux Gym</h1>
                 <p>CREA TU CUENTA</p>
             </div>
             
-            <!-- MENSAJES -->
+
             <?php if($error): ?>
             <div class="alert alert-error">
                 <i class="fas fa-exclamation-circle"></i>
@@ -69,10 +65,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
             <?php endif; ?>
             
-            <!-- FORMULARIO -->
+
             <form method="POST" id="registroForm">
                 
-                <!-- NOMBRE Y APELLIDO -->
+
                 <div class="form-row">
                     <div class="form-group">
                         <label>
@@ -109,7 +105,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                 </div>
                 
-                <!-- EMAIL -->
+
                 <div class="form-group">
                     <label>
                         <i class="fas fa-envelope"></i>
@@ -127,7 +123,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                 </div>
                 
-                <!-- CONTRASEÑA -->
+
                 <div class="form-row">
                     <div class="form-group">
                         <label>
@@ -163,7 +159,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                 </div>
                 
-                <!-- TELÉFONO -->
+
                 <div class="form-group">
                     <label>
                         <i class="fas fa-phone"></i>
@@ -180,7 +176,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                 </div>
                 
-                <!-- BOTONES -->
+
                 <div class="button-row">
                     <a href="login.php" class="btn-cancelar">
                         <i class="fas fa-times"></i>
@@ -195,7 +191,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                 
             </form>
             
-            <!-- SEPARADOR -->
+
             <div class="divider">
                 <span class="divider-line"></span>
                 <span class="divider-text">¿Ya tienes cuenta?</span>
@@ -210,7 +206,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </a>
             </div>
             
-            <!-- TÉRMINOS -->
             <div class="terms">
                 Al registrarte aceptas nuestros 
                 <a href="#">Términos y Condiciones</a> y 
@@ -220,7 +215,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     </div>
     
-    <!-- JS Personalizado -->
     <script src="../assets/js/registro.js"></script>
 </body>
 </html>

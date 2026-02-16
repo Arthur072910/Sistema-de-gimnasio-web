@@ -1,8 +1,9 @@
+<?php session_start(); ?>
 <!doctype html>
 <html lang="en">
 
 <head>
-  <title>Title</title>
+  <title>Delux Gym - Inicio</title>
 
   <!-- Required meta tags -->
   <meta charset="utf-8">
@@ -14,6 +15,7 @@
 
   <link rel="stylesheet" href="assets/css/index.css">
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
@@ -21,6 +23,10 @@
   <!-- NAVBAR -->
   <nav class="navbar navbar-expand-sm navbar-light bg-light" id="nav-1">
     <img src="assets/img/ChatGPT Image 30 ene 2026, 10_35_11 p.m..png" style="height: 100px;">
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavId">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
     <div class="collapse navbar-collapse" id="collapsibleNavId">
       <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
@@ -50,12 +56,36 @@
             <a class="dropdown-item" href="view/admin.php">Admin</a>
             <a class="dropdown-item" href="">No se2</a>
           </div>
-        </li> 
+        </li>
+
+        <!-- Mostrar opciones según login -->
+        <?php if(isset($_SESSION['cliente_id'])): ?>
+          <li class="nav-item">
+            <span class="nav-link text-primary font-weight-bold">
+              👤 <?php echo $_SESSION['cliente_nombre'] ?? 'Usuario'; ?>
+            </span>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link btn btn-danger btn-sm text-white" href="view/logout.php">
+              Cerrar Sesión
+            </a>
+          </li>
+        <?php else: ?>
+          <li class="nav-item">
+            <a class="nav-link btn btn-outline-primary btn-sm mx-1" href="view/login.php">
+              🔐 Iniciar Sesión
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link btn btn-primary btn-sm text-white mx-1" href="view/registro.php">
+              📝 Registrarse
+            </a>
+          </li>
+        <?php endif; ?>
 
       </ul>
     </div>
   </nav>
-
 
   <!-- CAROUSEL -->
   <div id="carouselId" class="carousel slide" data-ride="carousel">
@@ -172,7 +202,6 @@
     <a href="#contact" class="btn unete">Unete a nosotros</a>
   </div>
 
-
   <!-- CARDS -->
   <section>
     <h1 style="text-align: center;">Nuestras instalaciones</h1>
@@ -183,7 +212,7 @@
         <a class="card" href="#">
           <div class="card__background" style="background-image: url(assets/img/mature-adult-man-working-out-at-personal-training-royalty-free-image-1573720585.avif)"></div>
           <div class="card__content">
-            <p class="card__category">EMTRENAMIENTO PERSONAL</p>
+            <p class="card__category">ENTRENAMIENTO PERSONAL</p>
             <h3 class="card__heading">
               Rutinas personalizadas según tu nivel y objetivos, con seguimiento profesional para maximizar tus resultados.
             </h3>
@@ -225,48 +254,48 @@
   </section>
 
   <!-- CONTACTOS -->
-      <div class="contactos-container" style="text-align: center;">
-        <h2>CONTACTANOS</h2>
+  <div class="contactos-container" style="text-align: center;">
+    <h2>CONTACTANOS</h2>
 
-        <div class="formulario-container">
-          <h4>CORREO ELECTRONICO</h4>
-          <h6>deluxgym2026@gmail.com</h6>
+    <div class="formulario-container">
+      <h4>CORREO ELECTRONICO</h4>
+      <h6>deluxgym2026@gmail.com</h6>
 
-          <h4>NUMERO DE TLEFONO</h4>
-          <h6>+503 1111-1111</h6>
+      <h4>NUMERO DE TELEFONO</h4>
+      <h6>+503 1111-1111</h6>
+    </div>
+
+    <div class="container-img-contactos">
+      <img src="assets/img/caminadora.jpg" alt="" srcset="">
+    </div>
+
+    <div class="container-mensaje">
+      <h3 style="text-align: center;">Preguntas o inquietud</h3>
+
+      <form action="">
+        <input type="text" placeholder="NOMBRE" class="input-inquietud">
+        <input type="text" placeholder="CORREO" class="input-inquietud">
+
+        <div class="usuario-group">
+          <label>
+            <input type="radio" name="usuario" checked>
+            SOY USUARIO
+          </label>
+
+          <label>
+            <input type="radio" name="usuario">
+            NO SOY USUARIO
+          </label>
+
+          <textarea placeholder="ESCRIBE TU MENSAJE" class="input-inquietud textarea-inquietud"></textarea>
+
+          <button type="submit" class="btn-submit">
+            Enviar mensaje
+          </button>
         </div>
-
-        <div class="container-img-contactos">
-          <img src="assets/img/caminadora.jpg" alt="" srcset="">
-        </div>
-
-        <div class="container-mensaje">
-          <h3 style="text-align: center;">Preguntas o inquietud</h3>
-
-          <form action="">
-            <input type="text" placeholder="NOMBRE" class="input-inquietud">
-            <input type="text" placeholder="CORREO" class="input-inquietud">
-
-            <div class="usuario-group">
-              <label>
-                <input type="radio" name="usuario" checked>
-                SOY USUARIO
-              </label>
-
-              <label>
-                <input type="radio" name="usuario">
-                NO SOY USUARIO
-              </label>
-
-              <textarea placeholder="ESCRIBE TU MENSAJE" class="input-inquietud textarea-inquietud"></textarea>
-
-              <button type="submit" class="btn-submit">
-                Enviar mensaje
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
+      </form>
+    </div>
+  </div>
 
   <!-- FOOTER -->
   <div class="footer-area">
@@ -295,11 +324,9 @@
     </footer>
   </div>
 
-
   <!-- JS -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
 </body>
 </html>

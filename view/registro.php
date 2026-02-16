@@ -6,24 +6,40 @@ if(isset($_SESSION['cliente_id'])) {
     exit();
 }
 
-$error = '';
-$success = '';
+require_once __DIR__ . '/../controller/ClienteController.php';
+
+$mensaje = '';
+$tipo = '';
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Aquí tu lógica de registro
-    $nombre = $_POST['nombre'] ?? '';
-    $apellido = $_POST['apellido'] ?? '';
-    $email = $_POST['email'] ?? '';
-    $password = $_POST['password'] ?? '';
-    $telefono = $_POST['telefono'] ?? '';
-    
-    // Validación básica
-    if($nombre && $apellido && $email && $password) {
-        // Simulación de registro exitoso
-        $success = '¡Registro exitoso! Serás redirigido al login.';
-        header("refresh:3;url=login.php");
+    // Validar que las contraseñas coincidan
+    if($_POST['password'] !== $_POST['confirmar']) {
+        $mensaje = 'Las contraseñas no coinciden';
+        $tipo = 'danger';
     } else {
-        $error = 'Todos los campos obligatorios deben estar completos';
+        $controller = new ClienteController();
+        
+        $datos = [
+            'nombre' => $_POST['nombre'],
+            'apellido' => $_POST['apellido'],
+            'email' => $_POST['email'],
+            'contraseña' => $_POST['password'],
+            'telefono' => $_POST['telefono'] ?? '',
+            'fecha_nacimiento' => $_POST['fecha_nacimiento'] ?? null,
+            'genero' => $_POST['genero'] ?? null
+        ];
+
+        $resultado = $controller->agregar($datos);
+        $mensaje = $resultado['message'];
+        $tipo = $resultado['success'] ? 'success' : 'danger';
+
+        if($resultado['success']) {
+            echo "<script>
+                setTimeout(function() {
+                    window.location.href='login.php';
+                }, 2000);
+            </script>";
+        }
     }
 }
 ?>
@@ -34,7 +50,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro - Delux Gym</title>
     
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/registro.css">
@@ -43,32 +58,21 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="registro-container">
         <div class="registro-card">
             
-
             <div class="logo">
                 <img src="../assets/img/ChatGPT Image 30 ene 2026, 10_35_11 p.m..png" alt="Delux Gym">
                 <h1>Delux Gym</h1>
                 <p>CREA TU CUENTA</p>
             </div>
             
-
-            <?php if($error): ?>
-            <div class="alert alert-error">
-                <i class="fas fa-exclamation-circle"></i>
-                <span><?php echo $error; ?></span>
+            <?php if($mensaje): ?>
+            <div class="alert alert-<?php echo $tipo; ?>">
+                <i class="fas fa-<?php echo $tipo == 'success' ? 'check-circle' : 'exclamation-circle'; ?>"></i>
+                <span><?php echo htmlspecialchars($mensaje); ?></span>
             </div>
             <?php endif; ?>
             
-            <?php if($success): ?>
-            <div class="alert alert-success">
-                <i class="fas fa-check-circle"></i>
-                <span><?php echo $success; ?></span>
-            </div>
-            <?php endif; ?>
-            
-
             <form method="POST" id="registroForm">
                 
-
                 <div class="form-row">
                     <div class="form-group">
                         <label>
@@ -82,7 +86,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                                    name="nombre" 
                                    class="form-control" 
                                    placeholder="Juan"
-                                   value="<?php echo $_POST['nombre'] ?? ''; ?>"
+                                   value="<?php echo htmlspecialchars($_POST['nombre'] ?? ''); ?>"
                                    required>
                         </div>
                     </div>
@@ -99,13 +103,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                                    name="apellido" 
                                    class="form-control" 
                                    placeholder="Pérez"
-                                   value="<?php echo $_POST['apellido'] ?? ''; ?>"
+                                   value="<?php echo htmlspecialchars($_POST['apellido'] ?? ''); ?>"
                                    required>
                         </div>
                     </div>
                 </div>
                 
-
                 <div class="form-group">
                     <label>
                         <i class="fas fa-envelope"></i>
@@ -118,12 +121,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                                name="email" 
                                class="form-control" 
                                placeholder="ejemplo@correo.com"
-                               value="<?php echo $_POST['email'] ?? ''; ?>"
+                               value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>"
                                required>
                     </div>
                 </div>
                 
-
                 <div class="form-row">
                     <div class="form-group">
                         <label>
@@ -159,7 +161,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                 </div>
                 
-
                 <div class="form-group">
                     <label>
                         <i class="fas fa-phone"></i>
@@ -167,16 +168,48 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </label>
                     <div class="input-wrapper">
                         <i class="fas fa-phone"></i>
-                        <input type="tel" 
+                        <input type="text" 
                                id="telefono"
                                name="telefono" 
                                class="form-control" 
                                placeholder="0000-0000"
-                               value="<?php echo $_POST['telefono'] ?? ''; ?>">
+                               value="<?php echo htmlspecialchars($_POST['telefono'] ?? ''); ?>">
                     </div>
                 </div>
                 
-
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-calendar"></i>
+                            Fecha de Nacimiento
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-calendar"></i>
+                            <input type="date" 
+                                   id="fecha_nacimiento"
+                                   name="fecha_nacimiento" 
+                                   class="form-control"
+                                   value="<?php echo htmlspecialchars($_POST['fecha_nacimiento'] ?? ''); ?>">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-venus-mars"></i>
+                            Género
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-venus-mars"></i>
+                            <select name="genero" id="genero" class="form-control">
+                                <option value="">Seleccione...</option>
+                                <option value="M" <?php echo (isset($_POST['genero']) && $_POST['genero'] == 'M') ? 'selected' : ''; ?>>Masculino</option>
+                                <option value="F" <?php echo (isset($_POST['genero']) && $_POST['genero'] == 'F') ? 'selected' : ''; ?>>Femenino</option>
+                                <option value="Otro" <?php echo (isset($_POST['genero']) && $_POST['genero'] == 'Otro') ? 'selected' : ''; ?>>Otro</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="button-row">
                     <a href="login.php" class="btn-cancelar">
                         <i class="fas fa-times"></i>
@@ -191,14 +224,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                 
             </form>
             
-
             <div class="divider">
                 <span class="divider-line"></span>
                 <span class="divider-text">¿Ya tienes cuenta?</span>
                 <span class="divider-line"></span>
             </div>
             
-            <!-- ENLACE A LOGIN -->
             <div class="login-link">
                 <a href="login.php">
                     <i class="fas fa-sign-in-alt"></i>

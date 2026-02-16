@@ -1,52 +1,48 @@
-// ========================================
-// REGISTRO - DELUX GYM
-// ========================================
-
 document.addEventListener('DOMContentLoaded', function() {
     
-    // 1. Enfocar el primer campo
-    const nombreInput = document.getElementById('nombre');
-    if (nombreInput) {
-        nombreInput.focus();
-    }
-    
-    // 2. Referencias a elementos
+    // Referencias a elementos
     const registroForm = document.getElementById('registroForm');
     const password = document.getElementById('password');
     const confirmar = document.getElementById('confirmar');
     const email = document.getElementById('email');
     const telefono = document.getElementById('telefono');
+    const nombre = document.getElementById('nombre');
+    const apellido = document.getElementById('apellido');
     
-    // 3. Mostrar/ocultar contraseñas
-    function setupPasswordToggle(inputId, iconId) {
-        const input = document.getElementById(inputId);
+    // Enfocar primer campo
+    if (nombre) {
+        nombre.focus();
+    }
+    
+    // Mostrar/ocultar contraseñas
+    function setupPasswordToggle(input) {
         if (!input) return;
         
         const toggle = document.createElement('i');
         toggle.className = 'fas fa-eye toggle-password';
-        toggle.setAttribute('data-target', inputId);
+        toggle.style.cssText = 'position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #666;';
         
         const wrapper = input.closest('.input-wrapper');
         if (wrapper) {
+            wrapper.style.position = 'relative';
             wrapper.appendChild(toggle);
             
             toggle.addEventListener('click', function() {
-                const target = document.getElementById(this.dataset.target);
-                if (target.type === 'password') {
-                    target.type = 'text';
+                if (input.type === 'password') {
+                    input.type = 'text';
                     this.className = 'fas fa-eye-slash toggle-password';
                 } else {
-                    target.type = 'password';
+                    input.type = 'password';
                     this.className = 'fas fa-eye toggle-password';
                 }
             });
         }
     }
     
-    setupPasswordToggle('password');
-    setupPasswordToggle('confirmar');
+    setupPasswordToggle(password);
+    setupPasswordToggle(confirmar);
     
-    // 4. Validación en tiempo real
+    // Validación en tiempo real
     if (email) {
         email.addEventListener('blur', function() {
             validateEmail(this);
@@ -70,11 +66,21 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (telefono) {
         telefono.addEventListener('input', function() {
+            // Formato automático: 0000-0000
+            let value = this.value.replace(/\D/g, '');
+            if (value.length > 4) {
+                value = value.slice(0,4) + '-' + value.slice(4,8);
+            }
+            if (value.length > 9) {
+                value = value.slice(0,9);
+            }
+            this.value = value;
+            
             validatePhone(this);
         });
     }
     
-    // 5. Funciones de validación
+    // Funciones de validación
     function validateEmail(input) {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const errorDiv = getOrCreateError(input, 'email-error');
@@ -123,10 +129,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function validatePhone(input) {
         const errorDiv = getOrCreateError(input, 'phone-error');
-        const re = /^[0-9]{8,15}$/;
+        const re = /^[0-9]{4}-?[0-9]{4}$/;
         
-        if (input.value && !re.test(input.value.replace(/[-\s]/g, ''))) {
-            showError(errorDiv, 'Teléfono inválido (solo números)');
+        if (input.value && !re.test(input.value)) {
+            showError(errorDiv, 'Formato: 0000-0000');
             return false;
         } else {
             hideError(errorDiv);
@@ -134,15 +140,16 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // 6. Funciones auxiliares
+    // Funciones auxiliares
     function getOrCreateError(input, id) {
         let errorDiv = document.getElementById(id);
         if (!errorDiv) {
             errorDiv = document.createElement('div');
             errorDiv.id = id;
             errorDiv.className = 'validation-error';
+            errorDiv.style.cssText = 'color: #e74c3c; font-size: 12px; margin-top: 5px; display: none;';
             errorDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> <span></span>';
-            input.parentNode.insertAdjacentElement('afterend', errorDiv);
+            input.closest('.input-wrapper').insertAdjacentElement('afterend', errorDiv);
         }
         return errorDiv;
     }
@@ -150,38 +157,41 @@ document.addEventListener('DOMContentLoaded', function() {
     function showError(errorDiv, message) {
         errorDiv.querySelector('span').textContent = message;
         errorDiv.style.display = 'block';
-        errorDiv.previousElementSibling.classList.add('error');
+        const inputWrapper = errorDiv.previousElementSibling;
+        if (inputWrapper) {
+            inputWrapper.style.borderColor = '#e74c3c';
+        }
     }
     
     function hideError(errorDiv) {
         errorDiv.style.display = 'none';
-        errorDiv.previousElementSibling.classList.remove('error');
+        const inputWrapper = errorDiv.previousElementSibling;
+        if (inputWrapper) {
+            inputWrapper.style.borderColor = '';
+        }
     }
     
-    // 7. Validación al enviar
+    // Validación al enviar formulario
     if (registroForm) {
         registroForm.addEventListener('submit', function(e) {
             let isValid = true;
             
-            // Validar todos los campos
-            if (!validateEmail(email)) isValid = false;
-            if (!validatePassword(password)) isValid = false;
-            if (!validateConfirmPassword(password, confirmar)) isValid = false;
-            if (telefono.value && !validatePhone(telefono)) isValid = false;
-            
             // Validar campos obligatorios
-            const nombre = document.getElementById('nombre');
-            const apellido = document.getElementById('apellido');
-            
-            if (!nombre.value) {
+            if (!nombre || !nombre.value.trim()) {
                 showError(getOrCreateError(nombre, 'nombre-error'), 'El nombre es obligatorio');
                 isValid = false;
             }
             
-            if (!apellido.value) {
+            if (!apellido || !apellido.value.trim()) {
                 showError(getOrCreateError(apellido, 'apellido-error'), 'El apellido es obligatorio');
                 isValid = false;
             }
+            
+            if (!validateEmail(email)) isValid = false;
+            if (!validatePassword(password)) isValid = false;
+            if (!validateConfirmPassword(password, confirmar)) isValid = false;
+            
+            if (telefono && telefono.value && !validatePhone(telefono)) isValid = false;
             
             if (!isValid) {
                 e.preventDefault();
@@ -195,29 +205,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // 8. Animaciones
+    // Animaciones del botón
     const btnRegistro = document.querySelector('.btn-registro');
     if (btnRegistro) {
         btnRegistro.addEventListener('mouseenter', function() {
             this.style.transform = 'translateY(-2px)';
+            this.style.transition = 'all 0.3s ease';
         });
         
         btnRegistro.addEventListener('mouseleave', function() {
             this.style.transform = 'translateY(0)';
-        });
-    }
-    
-    // 9. Formato de teléfono
-    if (telefono) {
-        telefono.addEventListener('input', function() {
-            let value = this.value.replace(/\D/g, '');
-            if (value.length > 4) {
-                value = value.slice(0,4) + '-' + value.slice(4,8);
-            }
-            if (value.length > 9) {
-                value = value.slice(0,9);
-            }
-            this.value = value;
         });
     }
 });

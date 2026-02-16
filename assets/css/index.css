@@ -222,7 +222,7 @@ body{
   }
 
   .pricing-header h1 {
-    color: #50bfe6;
+    color: #ffd700;
     font-size: 2.5rem;
     margin-bottom: 20px;
   }
@@ -271,7 +271,7 @@ body{
   }
 
   input:checked+.slider {
-    background-color: #50bfe6;
+    background-color: #ffd700;
   }
 
   input:checked+.slider:before {
@@ -316,9 +316,9 @@ body{
   }
 
   .pricing-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(80, 191, 230, 0.2);
-  }
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(80, 191, 230, 0.2);
+}
 
   
 
@@ -326,7 +326,7 @@ body{
     position: absolute;
     top: -12px;
     right: 20px;
-    background: #50bfe6;
+    background: #ffd700;
     color: white;
     padding: 4px 15px;
     border-radius: 20px;
@@ -335,7 +335,7 @@ body{
   }
 
   .pricing-card h3 {
-    color: #50bfe6;
+    color: #ffd700;
     font-size: 1.8rem;
     margin-top: 10px;
     margin-bottom: 20px;
@@ -369,7 +369,7 @@ body{
 
   .pricing-card ul li:before {
     content: "✓";
-    color: #50bfe6;
+    color: #ffd700;
     position: absolute;
     left: 0;
   }
@@ -397,7 +397,7 @@ body{
     padding: 12px 16px;
     border-radius: 10px;
     border: none;
-    background: linear-gradient(90deg,#2d7cff,#4ec1ff);
+    background: linear-gradient(90deg,#ffd700,#ffd700);
     color: #08202b;
     font-weight: 700;
     cursor: pointer;
@@ -487,13 +487,13 @@ body{
 }
 
 .footer a{
-  color:#9fefff; 
+  color:#ffd700; 
   text-decoration:none; 
   transition:color .18s, 
   transform .18s
 }
 .footer a:hover{
-  color:#50bfe6; 
+  color:#ffd700; 
   transform:translateY(-2px)
 }
 
@@ -656,10 +656,10 @@ body{
 
 .input-inquietud:focus,
 .textarea-inquietud:focus{
-  border-color: #5db8ff;
+  border-color: #ffd700;
   box-shadow: 0 8px 24px rgba(13,110,253,0.10);
-  transform: translateY(-1px);
 }
+
 
 .textarea-inquietud{
   min-height: 140px;
@@ -672,15 +672,15 @@ body{
   padding: 12px 16px;
   border-radius: 10px;
   border: none;
-  background: linear-gradient(90deg,#2d7cff,#4ec1ff);
+  background: linear-gradient(90deg,#ffd700,#ffd700);
   color: #08202b;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 8px 20px rgba(45,124,255,0.18);
+ box-shadow: 0 10px 20px rgba(255, 215, 0, 0.25);
   transition: transform .12s ease, box-shadow .12s ease;
 }
 
-.btn-submit:hover{ transform: translateY(-2px); box-shadow: 0 12px 30px rgba(45,124,255,0.22); }
+.btn-submit:hover{ transform: translateY(-2px);   box-shadow: 0 10px 20px rgba(255, 215, 0, 0.25); }
 
 .usuario-group{
   margin-bottom: 18px;
@@ -695,7 +695,7 @@ body{
   color: #ffffff;
 }
 .usuario-group input[type="radio"]{
-  accent-color: #2d7cff;
+  accent-color:#ffd700;
   width: 18px;
   height: 18px;
 }
@@ -754,7 +754,7 @@ body{
 .nosotros-texto h2 {
   font-size: 2.4rem;
   margin-bottom: 15px;
-  color: #50bfe6;
+  color: #ffd700;
   font-weight: bold;
 }
 

@@ -18,7 +18,7 @@
     <div class="col-sm-3">
         <div class="sidebar">
             <div class="logo-area">
-                <img src="../assets/img/ChatGPT Image 30 ene 2026, 10_35_11 p.m..png" alt="" srcset="" style="height: 100px;">
+                <img src="../assets/img/logo_deluxGym.png" alt="" srcset="" style="height: 100px;">
             </div>
             
             <ul class="nav-menu">

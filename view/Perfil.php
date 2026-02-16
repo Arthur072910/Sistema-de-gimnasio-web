@@ -94,18 +94,25 @@
             </div>
 
 
-
 <div class="suscripcion-box">
-    <button class="btn btn-gold btn-suscripcion">
-        <i class="fa-solid fa-id-card"></i>
-        Ver Suscripción
-    </button>
+
+    
+
+    <form action="tarjeta.php" method="get">
+        <button type="submit" class="  btn btn-gold"  >
+            <i class="fa-solid fa-id-card"></i>
+            Tarjeta de inscripción
+        </button>
+    </form>
+    <form action="recomendaciones.php" method="get">
+        <button type="submit" class="  btn btn-gold"  >
+            <i class="fa-solid fa-credit-card"></i>
+            Recomendaciones
+        </button>
+    </form>
+
 </div>
 
-
-        </div>
-
-    </div>
 
 </div>
 

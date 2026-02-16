@@ -22,7 +22,7 @@
     <aside class="col-md-3 col-lg-2 bg-dark min-vh-100 sidebar">
 
       <div class="logo-area text-center py-4">
-        <img src="../assets/img/ChatGPT Image 30 ene 2026, 10_35_11 p.m..png"
+        <img src="../assets/img/logo_deluxGym.png"
              alt="Logo"
              style="height:100px;">
       </div>

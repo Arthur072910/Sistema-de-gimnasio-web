@@ -2,8 +2,8 @@
 :root {
     --black: #111111;
     --white: #fff8f8;
-    --gold: #b37f32;
-    --gold-dark: #CFB53B;
+    --gold: #ffd700;
+    --gold-dark: #ffd700;
     --gray-light: rgba(255,255,255,0.05);
     --shadow: 0 4px 12px rgba(0,0,0,0.4);
 }
@@ -206,6 +206,40 @@ body{
 
 .btn-notify:hover{
     transform: scale(1.1);
+}
+
+
+
+.suscripcion-box{
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn-suscripcion,
+.btn-tarjeta{
+    padding: 10px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.btn-gold{
+    background: #d4af37;
+    color: white;
+}
+
+.btn-dark{
+    background: #222;
+    color: white;
+}
+
+.btn-gold:hover{
+    background: #b8952e;
+}
+
+.btn-dark:hover{
+    background: #000;
 }
 
 

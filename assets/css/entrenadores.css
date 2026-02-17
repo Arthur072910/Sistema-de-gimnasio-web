@@ -19,8 +19,7 @@
 
 /* ===== RESET GLOBAL ===== */
 * {
-    margin: 0;
-    padding: 0;
+    
     box-sizing: border-box;
     font-family: 'Open Sans', Arial, Helvetica, sans-serif;
 }
@@ -283,4 +282,24 @@ a:hover {
         flex-direction: column;
         gap: 15px;
     }
+}
+
+
+.modal-body input,
+.modal-body input[type="text"],
+.modal-body input[type="email"],
+.modal-body input[type="date"] {
+    color: #212529 !important;           /* texto oscuro */
+    background-color: #fff !important;    /* fondo blanco */
+    border: 1px solid #ced4da !important; /* borde visible */
+}
+
+.modal-body label {
+    color: #212529 !important;
+}
+
+.modal-content,
+.modal-body {
+    background-color: #fff !important;
+    color: #212529 !important;
 }

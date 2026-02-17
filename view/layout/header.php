@@ -18,10 +18,6 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" href="/Sistema-de-gimnasio-web/view/Perfil.php">Perfil</a>
-      </li>
-
-      <li class="nav-item">
         <a class="nav-link" href="/Sistema-de-gimnasio-web/view/carrito.php">Carrito</a>
       </li>
 
@@ -38,6 +34,7 @@
 
       <?php if(isset($_SESSION['cliente_id'])): ?>
         <li class="nav-item">
+          <a class="nav-link text-primary font-weight-bold" href="/Sistema-de-gimnasio-web/view/Perfil.php">
           <span class="nav-link text-primary font-weight-bold">
             👤 <?php echo $_SESSION['cliente_nombre'] ?? 'Usuario'; ?>
           </span>

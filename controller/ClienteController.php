@@ -61,5 +61,17 @@ class ClienteController {
         }
         return ['success' => false, 'message' => 'Email o contraseña incorrectos'];
     }
+
+    public function verPerfil($id_cliente) {
+        if(empty($id_cliente)) return null;
+        return $this->cliente->obtenerPerfilCompleto($id_cliente);
+    }
+
+    public function obtenerDatosCompletos($id_cliente) {
+        if (empty($id_cliente)) {
+            return null;
+        }
+        return $this->cliente->obtenerPerfilCompleto($id_cliente);
+    }
 }
 ?>

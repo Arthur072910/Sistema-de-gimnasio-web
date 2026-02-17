@@ -143,5 +143,28 @@ class Cliente {
         }
         return false;
     }
+
+    public function obtenerPerfilCompleto($id_cliente) {
+    try {
+        $query = "SELECT u.email, u.rol, c.*, 
+                         m.fecha_vencimiento, m.estado as estado_membresia, 
+                         tm.nombre as plan 
+                  FROM " . $this->table_clientes . " c
+                  INNER JOIN " . $this->table_usuarios . " u ON c.id_usuario = u.id_usuario
+                  LEFT JOIN membresias m ON c.id_cliente = m.id_cliente
+                  LEFT JOIN tipo_membresia tm ON m.id_tipo_membresia = tm.id_tipo_membresia
+                  WHERE c.id_cliente = :id
+                  ORDER BY m.fecha_creacion DESC LIMIT 1";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $id_cliente, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log("Error en obtenerPerfilCompleto: " . $e->getMessage());
+            return false;
+        }
+    }
 }
 ?>

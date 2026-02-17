@@ -1,203 +1,498 @@
 /* ==========================================================================
-   CONFIGURACIÓN GENERAL Y VARIABLES
+   VARIABLES GLOBALES
    ========================================================================== */
 :root {
     --black: #111111;
-    --white: #fff8f8;
+    --white: #f8f8f8;
     --gold: #ffd700;
-    --background-dark: #1b1f22;
-    --spacing-l: 24px;
-    --spacing-xxl: 64px;
-    --width-container: 1200px;
+    --dark-gray: #1e1e1e;
+    --light-gray: #333;
+    --spacing: 24px;
+    --container-width: 1200px;
 }
 
+/* ==========================================================================
+   RESET Y BASE
+   ========================================================================== */
 body {
-    background: var(--black); /* Fondo sólido negro profesional */
+    background: var(--black);
     color: var(--white);
     font-family: 'Montserrat', sans-serif;
     margin: 0;
     padding: 0;
+    line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--gold);
+    font-weight: 700;
+}
+
+.container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
 /* ==========================================================================
    CAROUSEL
    ========================================================================== */
 #carouselId {
-    margin: 40px auto;
-    max-width: var(--width-container);
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255, 215, 0, 0.2);
+    margin: 0 auto 60px;
+    max-width: 100%;
 }
 
-/* ==========================================================================
-   SECCIÓN HERO / CARDS DE SERVICIOS
-   ========================================================================== */
-.hero-section {
-    padding: var(--spacing-xxl) var(--spacing-l);
-    background: var(--black);
-    display: flex;
-    justify-content: center;
-}
-
-.card-grid {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    gap: var(--spacing-l);
-    max-width: var(--width-container);
+.carousel-item img {
     width: 100%;
+    height: 600px;
+    object-fit: cover;
 }
 
-@media(min-width: 540px) { .card-grid { grid-template-columns: repeat(2, 1fr); } }
-@media(min-width: 960px) { .card-grid { grid-template-columns: repeat(4, 1fr); } }
-
-.card {
-    list-style: none;
-    position: relative;
-    border: none;
-    background: none;
-}
-
-.card:before {
-    content: '';
-    display: block;
-    padding-bottom: 150%;
-}
-
-.card__background {
-    background-size: cover;
-    background-position: center;
-    border-radius: 15px;
-    position: absolute;
-    bottom: 0; left: 0; right: 0; top: 0;
-    filter: brightness(0.6) saturate(1.2);
-    transition: transform 0.3s ease, filter 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.card:hover .card__background {
-    transform: scale(1.05);
-    filter: brightness(0.8) saturate(1.4);
-    border-color: var(--gold);
-}
-
-.card__content {
-    position: absolute;
-    top: 0; padding: var(--spacing-l);
-}
-
-.card__category {
-    color: var(--gold);
-    font-size: 0.9rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-}
-
-.card__heading {
-    color: var(--white);
-    font-size: 1.4rem;
-    text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+.carousel-caption {
+    background: rgba(0,0,0,0.6);
+    padding: 20px;
+    border-radius: 10px;
 }
 
 /* ==========================================================================
-   OFERTAS Y PRECIOS (MEMBRESÍAS)
-   ========================================================================== */
-.wp-dev-pricing {
-    background: #161616;
-    padding: 80px 20px;
-}
-
-.pricing-header h1 {
-    color: var(--gold);
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 30px;
-}
-
-.pricing-card {
-    background: #1e1e1e;
-    border-radius: 15px;
-    padding: 40px;
-    border: 1px solid #333;
-    transition: all 0.3s ease;
-}
-
-.pricing-card:hover {
-    border-color: var(--gold);
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(255, 215, 0, 0.1);
-}
-
-.pricing-card h3 {
-    color: var(--gold);
-    font-size: 2rem;
-}
-
-.price span {
-    font-size: 2.5rem;
-    color: var(--white);
-}
-
-.unete {
-    background: var(--gold);
-    color: var(--black);
-    border: none;
-    padding: 15px 30px;
-    border-radius: 50px;
-    font-weight: 700;
-    width: 100%;
-    transition: transform 0.2s;
-}
-
-.unete:hover {
-    transform: scale(1.05);
-    background: #e6c200;
-}
-
-/* ==========================================================================
-   SECCIÓN NOSOTROS
+   SECCIÓN SOBRE NOSOTROS (Nuestra historia / por qué unirse)
    ========================================================================== */
 .container-nosotros {
     display: flex;
     align-items: center;
     gap: 50px;
-    max-width: var(--width-container);
-    margin: 100px auto;
+    max-width: var(--container-width);
+    margin: 80px auto;
     padding: 0 20px;
 }
 
-.nosotros-texto h2 {
-    font-size: 2.5rem;
-    color: var(--gold);
-}
-
-.nosotros-texto p {
-    line-height: 1.8;
-    color: rgba(255,255,255,0.8);
-}
-
 .container-nosotros img {
-    width: 450px;
+    width: 45%;
     border-radius: 20px;
-    border: 2px solid var(--gold);
+    border: 3px solid var(--gold);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.container-nosotros .container {
+    width: 50%;
+}
+
+.container-nosotros h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 15px;
+}
+
+.container-nosotros h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 80px;
+    height: 3px;
+    background: var(--gold);
+}
+
+.container-nosotros h5 {
+    color: var(--white);
+    font-weight: 400;
+    line-height: 1.8;
+    opacity: 0.9;
 }
 
 /* ==========================================================================
-   CONTACTO (MINIMALISTA)
+   SECCIÓN DE PLANES (PRICING)
    ========================================================================== */
-.contactos-container {
-    background: #1e1e1e;
-    border: 1px solid rgba(255, 215, 0, 0.1);
-    border-radius: 20px;
-    padding: 50px;
-    margin: 80px auto;
+.wp-dev-pricing {
+    background: var(--dark-gray);
+    padding: 80px 20px;
+    text-align: center;
 }
 
-.btn-submit {
+.wp-dev-pricing h1 {
+    font-size: 3rem;
+    margin-bottom: 50px;
+}
+
+.pricing-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    max-width: var(--container-width);
+    margin: 0 auto 40px;
+}
+
+.pricing-column {
+    flex: 1 1 300px;
+    max-width: 350px;
+}
+
+.pricing-card {
+    background: #252525;
+    border-radius: 20px;
+    padding: 40px 20px;
+    border: 1px solid #444;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+.pricing-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--gold);
+    box-shadow: 0 20px 40px rgba(255, 215, 0, 0.15);
+}
+
+.pricing-card h3 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: var(--gold);
+}
+
+.price {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--white);
+    margin: 20px 0;
+}
+
+.price span {
+    color: var(--gold);
+}
+
+.pricing-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 30px 0;
+    text-align: left;
+}
+
+.pricing-card ul li {
+    padding: 10px 0;
+    border-bottom: 1px solid #333;
+    color: #ccc;
+}
+
+.pricing-card ul li:last-child {
+    border-bottom: none;
+}
+
+.pricing-card.popular {
+    border: 2px solid var(--gold);
+    transform: scale(1.02);
+}
+
+.btn.unete {
+    display: inline-block;
     background: var(--gold);
     color: var(--black);
+    padding: 15px 40px;
+    border-radius: 50px;
     font-weight: 700;
-    border-radius: 10px;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
 }
+
+.btn.unete:hover {
+    background: #e6c200;
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+}
+
+/* ==========================================================================
+   SECCIÓN NUESTROS PLANES (IMAGEN)
+   ========================================================================== */
+.nuestros-planes-imagen {
+    max-width: var(--container-width);
+    margin: 80px auto;
+    padding: 0 20px;
+    text-align: center;
+}
+
+.nuestros-planes-imagen img {
+    width: 100%;
+    max-width: 800px;
+    border-radius: 30px;
+    border: 3px solid var(--gold);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+}
+
+/* ==========================================================================
+   SECCIÓN NUESTRAS INSTALACIONES (CARDS)
+   ========================================================================== */
+.hero-section {
+    padding: 70px 20px;
+    background: var(--black);
+}
+
+.instalaciones-section {
+    margin-top: 80px;   /* Ajusta este valor a tu gusto */
+}
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columnas */
+    gap: 30px;
+    max-width: var(--container-width);
+    margin: 40px auto 0;
+}
+
+@media (max-width: 992px) {
+    .card-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.card {
+    list-style: none;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    height: 350px;
+    text-decoration: none;
+    display: block;
+}
+
+.card__background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.5s;
+}
+
+.card:hover .card__background {
+    transform: scale(1.1);
+}
+
+.card__content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 30px 20px;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+    color: var(--white);
+}
+
+.card__category {
+    color: var(--gold);
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.card__heading {
+    font-size: 1.2rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* ==========================================================================
+   SECCIÓN CONTÁCTANOS
+   ========================================================================== */
+.contactos-container {
+    max-width: var(--container-width);
+    margin: 80px auto;
+    padding: 60px 20px;
+    background: var(--dark-gray);
+    border-radius: 30px;
+    text-align: center;
+}
+
+.contactos-container h2 {
+    font-size: 3rem;
+    margin-bottom: 40px;
+}
+
+.formulario-container {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    flex-wrap: wrap;
+    margin: 40px 0;
+}
+
+.formulario-container div {
+    text-align: center;
+}
+
+.formulario-container h4 {
+    color: var(--gold);
+    margin-bottom: 10px;
+}
+
+.formulario-container h6 {
+    color: var(--white);
+    font-size: 1.2rem;
+    font-weight: 400;
+}
+
+.container-img-contactos img {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 20px;
+    border: 3px solid var(--gold);
+    margin: 40px 0;
+}
+
+
+/* Contenedor principal (fondo gris) - AHORA MÁS PEQUEÑO */
+.contactos-container {
+    max-width: 900px;           
+    margin: 60px auto;
+    padding: 40px 30px;
+    background: #1e1e1e;        
+    border-radius: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.contactos-container h2 {
+    text-align: center;
+    font-size: 2.8rem;
+    color: var(--gold);
+    margin-bottom: 30px;
+}
+
+/* Información de contacto (correo y teléfono) */
+.info-contacto {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.info-contacto h4 {
+    color: var(--gold);
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+}
+
+.info-contacto p {
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 400;
+    margin: 0;
+}
+
+/* Contenedor horizontal (imagen + formulario) */
+.contacto-horizontal {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    margin-bottom: 30px;
+}
+
+/* Imagen */
+.container-img-contactos {
+    flex: 1 1 40%;
+}
+
+.container-img-contactos img {
+    width: 100%;
+    border-radius: 20px;
+    border: 3px solid var(--gold);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+/* Formulario */
+.container-mensaje {
+    flex: 1 1 55%;
+    max-width: none;            /* Elimina el límite anterior */
+    padding: 0;
+}
+
+.container-mensaje h3 {
+    font-size: 2rem;
+    color: var(--gold);
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+/* Campos del formulario */
+.input-inquietud {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 8px 0;
+    background: #252525;
+    border: 1px solid #444;
+    color: #fff;
+    border-radius: 8px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.textarea-inquietud {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* Botón */
+.btn-submit {
+    background: var(--gold);
+    color: #111;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1rem;
+    width: 100%;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-submit:hover {
+    background: #e6c200;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255,215,0,0.3);
+}
+
+
+
+
+/* Responsive */
+@media (max-width: 768px) {
+    .contactos-container {
+        max-width: 95%;
+        padding: 30px 20px;
+    }
+
+    .info-contacto {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .contacto-horizontal {
+        flex-direction: column;
+    }
+
+    .container-img-contactos,
+    .container-mensaje {
+        width: 100%;
+        flex: none;
+    }
+
+    .container-mensaje h3 {
+        text-align: center;
+    }
+}
+

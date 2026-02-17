@@ -1,0 +1,57 @@
+/* RESET GLOBAL - Esto debe estar aquí para asegurar que el body no empuje el nav */
+/* Forzar que el nav sea el primer elemento absoluto si es necesario */
+header, nav {
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden;
+}
+
+/* NAVEGACIÓN - Forzamos medidas fijas */
+#nav-1 {
+    background: #000000 !important;
+    height: 90px !important; /* Altura fija para que nunca cambie entre vistas */
+    padding: 0 20px !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    border-bottom: 2px solid #ffd700 !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5) !important;
+    width: 100% !important;
+}
+
+/* El contenedor interno de Bootstrap suele añadir márgenes que deforman el nav */
+#nav-1 .container, #nav-1 .container-fluid {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100%;
+}
+
+#nav-1 .navbar-brand img {
+    height: 60px !important; /* Tamaño de logo fijo */
+    width: auto !important;
+}
+
+#nav-1 .nav-link {
+    color: #fff8f8 !important;
+    font-size: 15px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+/* BOTONES - Para que no cambien de tamaño entre páginas */
+.btn-nav-custom {
+    padding: 8px 18px !important;
+    font-size: 14px !important;
+    border-radius: 6px !important;
+    font-weight: 700 !important;
+    display: inline-block;
+}

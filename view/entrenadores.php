@@ -173,8 +173,8 @@ $entrenadores = $controller->listar();
                             </button>
 
                             <a href="?eliminar=<?= $e['id_entrenador']; ?>" class="btn btn-sm btn-danger"
-                              onclick="return confirm('¿Seguro que deseas eliminar a este entrenador?')">
-                              Eliminar
+                               onclick="return confirm('¿Seguro que deseas eliminar a este entrenador?')">
+                               Eliminar
                             </a>
                         </td>
                     </tr>

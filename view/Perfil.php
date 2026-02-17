@@ -24,7 +24,9 @@ if (!$datos) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/header.css">
     <link rel="stylesheet" href="../assets/css/Perfil.css">
+    <link rel="stylesheet" href="../assets/css/footer.css">
 </head>
 <body>
     <?php include __DIR__ . '/layout/header.php'; ?>

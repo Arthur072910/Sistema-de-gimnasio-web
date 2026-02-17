@@ -1,341 +1,87 @@
-/* ===== VARIABLES GLOBALES - Paleta Delux Gym ===== */
-:root {
-    --bg-primary: #1a1a1a;
-    --bg-secondary: #000000;
-    --bg-dark-blue: #061421;
-    --bg-card: #252525;
-    --bg-light: #2d2d2d;
-    --accent-primary: #ffe11f;
-    --accent-secondary: #ffd700;
-    --accent-gradient: linear-gradient(90deg, #ffd700, #ffe11f);
-    --text-primary: #ffffff;
-    --text-secondary: #b0b0b0;
-    --text-muted: rgba(255,255,255,0.75);
-    --border-color: rgba(255,255,255,0.1);
-    --shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-    --shadow-hover: 0 12px 30px rgba(255, 225, 31, 0.25);
-    --success: #28a745;
-    --danger: #dc3545;
+/* ==========================================================================
+   CONTENEDOR PRINCIPAL DEL CARRITO
+   ========================================================================== */
+#content-wrapper {
+    background-color: #111111; /* Negro Delux */
+    min-height: 80vh;
+    padding-top: 30px;
+    padding-bottom: 50px;
+    color: #fff8f8;
 }
 
-/* ===== ESTILOS BASE ===== */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-    color: var(--text-primary);
-    font-family: 'Open Sans', sans-serif;
-    min-height: 100vh;
-    padding: 40px 0;
-}
-
-/* ===== CONTENEDOR PRINCIPAL ===== */
-.container {
-    max-width: 1200px;
-    background: var(--bg-card);
-    border-radius: 20px;
-    padding: 40px !important;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border-color);
-    backdrop-filter: blur(10px);
-}
-
-/* ===== TÍTULO ===== */
-h2 {
-    font-size: 2.5rem;
+#content-wrapper h2 {
+    color: #ffd700;
     font-weight: 700;
-    color: var(--text-primary);
     margin-bottom: 30px;
-    position: relative;
-    padding-bottom: 15px;
-    border-bottom: 3px solid var(--accent-primary);
-}
-
-h2 i {
-    color: var(--accent-primary);
-    margin-right: 15px;
-    font-size: 2.5rem;
-}
-
-/* ===== TABLA ===== */
-.table-responsive {
-    border-radius: 15px;
-    overflow: hidden;
-    margin-bottom: 30px;
-}
-
-.table {
-    background: var(--bg-light);
-    color: var(--text-primary);
-    margin-bottom: 0;
-    border-collapse: separate;
-    border-spacing: 0;
-    width: 100%;
-}
-
-/* Cabecera de la tabla */
-.thead-dark {
-    background: var(--accent-gradient);
-}
-
-.thead-dark th {
-    background: transparent;
-    color: #1a1a1a !important;
-    font-weight: 700;
-    font-size: 1rem;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border: none;
-    padding: 15px 12px;
+    letter-spacing: 1px;
 }
 
-/* Cuerpo de la tabla */
-.table tbody tr {
-    transition: all 0.2s ease;
-    border-bottom: 1px solid var(--border-color);
+/* TABLA DEL CARRITO */
+.table {
+    background-color: #1a1a1a;
+    color: #fff8f8 !important;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #333;
 }
 
-.table tbody tr:hover {
-    background: rgba(255, 225, 31, 0.05);
-    transform: scale(1.01);
-    box-shadow: var(--shadow);
+.table thead.thead-dark th {
+    background-color: #000000;
+    border-bottom: 2px solid #ffd700;
+    color: #ffd700;
+    text-transform: uppercase;
+    font-size: 0.9rem;
 }
 
 .table td {
-    padding: 20px 12px;
     vertical-align: middle;
-    color: var(--text-primary);
-    border-bottom: 1px solid var(--border-color);
-    font-size: 1rem;
+    border-top: 1px solid #333;
+    padding: 15px;
 }
 
-/* Cuando no hay productos */
-#lista-carrito tr td {
-    text-align: center;
-    padding: 40px;
-    color: var(--text-muted);
-    font-style: italic;
+.table-hover tbody tr:hover {
+    background-color: rgba(255, 215, 0, 0.03) !important;
+    color: #fff;
 }
 
-/* ===== CANTIDAD ===== */
-.cantidad-control {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    justify-content: center;
-}
-
-.cantidad-btn {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-    background: rgba(255,255,255,0.03);
-    color: var(--text-primary);
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.cantidad-btn:hover {
-    background: var(--accent-gradient);
-    color: #1a1a1a;
-    border-color: var(--accent-primary);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(255, 225, 31, 0.3);
-}
-
-.cantidad-numero {
-    min-width: 30px;
-    text-align: center;
-    font-weight: 600;
-    color: var(--accent-primary);
-}
-
-/* ===== BOTÓN ELIMINAR ===== */
-.btn-eliminar {
-    background: rgba(220, 53, 69, 0.1);
-    color: #ff6b6b;
-    border: 1px solid rgba(220, 53, 69, 0.3);
-    border-radius: 8px;
-    padding: 8px 15px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    transition: all 0.2s ease;
-    cursor: pointer;
-}
-
-.btn-eliminar:hover {
-    background: #dc3545;
+/* INPUTS Y CANTIDADES */
+.cantidad-input {
+    width: 60px;
+    background: #333;
+    border: 1px solid #ffd700;
     color: white;
-    border-color: #dc3545;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
+    text-align: center;
+    border-radius: 5px;
 }
 
-.btn-eliminar i {
-    margin-right: 5px;
-}
-
-/* ===== TOTAL ===== */
+/* TOTAL Y BOTONES */
 #gran-total {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--accent-primary);
-    margin-bottom: 20px;
-    padding: 15px 20px;
-    background: rgba(255, 225, 31, 0.05);
-    border-radius: 15px;
-    border: 1px solid rgba(255, 225, 31, 0.2);
-}
-
-/* ===== BOTONES ===== */
-.btn {
-    padding: 12px 30px;
-    font-weight: 600;
-    border-radius: 10px;
-    transition: all 0.2s ease;
-    font-size: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin: 0 5px;
-}
-
-.btn-outline-secondary {
-    background: transparent;
-    color: var(--text-secondary);
-    border: 2px solid var(--border-color);
-}
-
-.btn-outline-secondary:hover {
-    background: var(--bg-light);
-    color: var(--text-primary);
-    border-color: var(--accent-primary);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow);
+    font-size: 1.8rem;
+    color: #ffd700;
+    border-top: 2px solid #333;
+    padding-top: 20px;
+    margin-top: 20px;
 }
 
 .btn-success {
-    background: var(--accent-gradient);
-    color: #1a1a1a;
+    background-color: #28a745 !important;
     border: none;
-    box-shadow: 0 8px 20px rgba(255, 225, 31, 0.25);
     font-weight: 700;
+    padding: 12px 25px;
 }
 
-.btn-success:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 30px rgba(255, 225, 31, 0.35);
+.btn-outline-light:hover {
+    background-color: #fff;
+    color: #000 !important;
 }
 
-/* ===== MENSAJE CARRITO VACÍO ===== */
-.carrito-vacio {
-    text-align: center;
-    padding: 60px 20px;
-}
-
-.carrito-vacio i {
-    font-size: 5rem;
-    color: var(--text-muted);
-    margin-bottom: 20px;
-}
-
-.carrito-vacio p {
-    font-size: 1.2rem;
-    color: var(--text-muted);
-    margin-bottom: 30px;
-}
-
-/* ===== RESPONSIVE ===== */
+/* RESPONSIVE */
 @media (max-width: 768px) {
-    body {
-        padding: 20px;
+    #content-wrapper {
+        padding-top: 15px;
     }
-    
-    .container {
-        padding: 20px !important;
-    }
-    
-    h2 {
-        font-size: 2rem;
-    }
-    
-    h2 i {
-        font-size: 2rem;
-    }
-    
-    .table td {
-        padding: 15px 8px;
-        font-size: 0.9rem;
-    }
-    
-    .btn {
-        padding: 10px 20px;
-        font-size: 0.9rem;
-        margin: 5px;
-        width: 100%;
-    }
-    
     #gran-total {
-        font-size: 1.5rem;
         text-align: center;
     }
-    
-    .row.justify-content-end {
-        justify-content: center !important;
-    }
-    
-    .col-md-4 {
-        text-align: center !important;
-    }
 }
-
-@media (max-width: 576px) {
-    .table td {
-        padding: 12px 5px;
-    }
-    
-    .cantidad-btn {
-        width: 28px;
-        height: 28px;
-    }
-    
-    .btn-eliminar {
-        padding: 6px 10px;
-        font-size: 0.8rem;
-    }
-}
-
-/* ===== ANIMACIONES ===== */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.container {
-    animation: fadeIn 0.5s ease;
-}
-
-.table tbody tr {
-    animation: fadeIn 0.5s ease;
-    animation-fill-mode: both;
-}
-
-.table tbody tr:nth-child(1) { animation-delay: 0.1s; }
-.table tbody tr:nth-child(2) { animation-delay: 0.2s; }
-.table tbody tr:nth-child(3) { animation-delay: 0.3s; }
-.table tbody tr:nth-child(4) { animation-delay: 0.4s; }
-.table tbody tr:nth-child(5) { animation-delay: 0.5s; }

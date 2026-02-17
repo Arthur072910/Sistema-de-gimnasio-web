@@ -23,6 +23,7 @@
 
     
 <body>
+    <?php session_start(); ?>
     <?php include "../view/layout/header.php"; ?>
 
 <!-- contenedor de suplementos -->

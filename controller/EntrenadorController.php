@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../model/Entrenador.php';
+require_once __DIR__ . '../../config/database.php';
+require_once __DIR__ . '../../model/Entrenador.php';
 
 class EntrenadorController {
     private $db;

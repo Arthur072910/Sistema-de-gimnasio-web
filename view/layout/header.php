@@ -28,6 +28,7 @@
         </a>
         <div class="dropdown-menu">
           <a class="dropdown-item" href="/Sistema-de-gimnasio-web/view/admin.php">Panel Admin</a>
+          <a class="dropdown-item" href="/Sistema-de-gimnasio-web/view/recepcionista.php">Panel Recepcionista</a>
         </div>
       </li>
 

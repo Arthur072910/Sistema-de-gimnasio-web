@@ -33,19 +33,13 @@
                 <li class="nav-item">
                     <a href="#ingresso" class="nav-link" onclick="cambiarVista('ingresso')">
                         <i class="fas fa-sign-in-alt"></i>
-                        Ingresso cliente
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#visite" class="nav-link" onclick="cambiarVista('visite')">
-                        <i class="fas fa-clipboard-list"></i>
-                        Visite clienti
+                        Ingresar nuevo cliente
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="#pagos" class="nav-link" onclick="cambiarVista('pagos')">
                         <i class="fas fa-money-bill-wave"></i>
-                        Registrare pagamento
+                        Registrar pago 
                     </a>
                 </li>
                 <li class="nav-item">
@@ -72,7 +66,7 @@
                 </div>
             </div>
 
-            <!-- VISTA 1: Vettore clienti (Lista de clientes) -->
+            <!-- VISTA 1: Lista de clientes -->
             <div id="vista-clienti" class="vista active">
                 <div class="stats-grid">
                     <div class="stat-card">
@@ -120,9 +114,9 @@
                 <div class="card mt-4">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="card-title">Lista clienti</h5>
+                            <h5 class="card-title">Lista clientes</h5>
                             <button class="btn-nuevo" onclick="cambiarVista('ingresso')">
-                                <i class="fas fa-plus mr-2"></i>Nuovo cliente
+                                <i class="fas fa-plus mr-2"></i>Nuevo cliente
                             </button>
                         </div>
                         <table class="table">
@@ -162,13 +156,13 @@
                 </div>
             </div>
 
-            <!-- VISTA 2: Ingresso cliente (Registro de cliente) -->
+            <!-- VISTA 2: Ingreso cliente (Registro de cliente) -->
             <div id="vista-ingresso" class="vista">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title mb-4">
                             <i class="fas fa-user-plus mr-2"></i>
-                            Registrare cliente
+                            Registrar nuevo cliente
                         </h5>
 
                         <form id="form-cliente">
@@ -222,11 +216,10 @@
                                     <div class="form-group">
                                         <label>Plan <span class="text-danger">*</span></label>
                                         <select class="form-control" id="select-plan">
-                                            <option value="">Selezionare fattura</option>
+                                            <option value="">Seleccionar membresía</option>
                                             <option value="basico">Básico - $30/mes</option>
                                             <option value="estandar">Estándar - $50/mes</option>
                                             <option value="premium">Premium - $80/mes</option>
-                                            <option value="vip">VIP - $120/mes</option>
                                         </select>
                                     </div>
                                 </div>
@@ -246,8 +239,8 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>Número de oficina</label>
-                                        <input type="text" class="form-control" placeholder="OF-001">
+                                        <label>Número de caja</label>
+                                        <input type="text" class="form-control" placeholder="c-001">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -256,12 +249,7 @@
                                         <input type="text" class="form-control" value="Recepcionista" readonly>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Bollo di via</label>
-                                        <input type="text" class="form-control" placeholder="Número">
-                                    </div>
-                                </div>
+                               
                             </div>
 
                             <hr>
@@ -269,7 +257,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Fecha de ingresso</label>
+                                        <label>Fecha de ingreso</label>
                                         <input type="date" class="form-control" value="<?php echo date('Y-m-d'); ?>">
                                     </div>
                                 </div>
@@ -290,7 +278,7 @@
                                 <button type="button" class="btn-cancelar mr-2">Cancelar</button>
                                 <button type="submit" class="btn-registrar">
                                     <i class="fas fa-save mr-2"></i>
-                                    Registrare cliente
+                                    Registrar cliente
                                 </button>
                             </div>
                         </form>
@@ -298,101 +286,14 @@
                 </div>
             </div>
 
-            <!-- VISTA 3: Visite clienti -->
-            <div id="vista-visite" class="vista">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title mb-4">
-                            <i class="fas fa-clipboard-list mr-2"></i>
-                            Visite clienti
-                        </h5>
-
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="info-box">
-                                    <i class="fas fa-university"></i>
-                                    <span>Banca</span>
-                                    <p>Banco Agrícola</p>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="info-box">
-                                    <i class="fas fa-building"></i>
-                                    <span>Azienda</span>
-                                    <p>Delux Gym</p>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="info-box">
-                                    <i class="fas fa-industry"></i>
-                                    <span>Produttiva</span>
-                                    <p>Suplementos</p>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="info-box">
-                                    <i class="fas fa-calculator"></i>
-                                    <span>Contabile</span>
-                                    <p>Facturación</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row mt-3">
-                            <div class="col-md-6">
-                                <div class="info-box">
-                                    <i class="fas fa-info-circle"></i>
-                                    <span>Info</span>
-                                    <p>Visitas del día: 24</p>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="info-box">
-                                    <i class="fas fa-database"></i>
-                                    <span>Registrata</span>
-                                    <p>Total visitas: 1,234</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <table class="table mt-4">
-                            <thead>
-                                <tr>
-                                    <th>Cliente</th>
-                                    <th>DUI</th>
-                                    <th>Hora ingresso</th>
-                                    <th>Hora uscita</th>
-                                    <th>Stato</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Juan Pérez</td>
-                                    <td>12345678-9</td>
-                                    <td>08:30</td>
-                                    <td>-</td>
-                                    <td><span class="badge badge-success">In gym</span></td>
-                                </tr>
-                                <tr>
-                                    <td>María López</td>
-                                    <td>87654321-0</td>
-                                    <td>09:15</td>
-                                    <td>10:30</td>
-                                    <td><span class="badge badge-secondary">Completato</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- VISTA 4: Registrare pagamento -->
+           
+            <!-- VISTA 4: Registrar pago en efectivo -->
             <div id="vista-pagos" class="vista">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title mb-4">
                             <i class="fas fa-money-bill-wave mr-2"></i>
-                            Registrare pagamento en efectivo
+                            Registrar pago en efectivo
                         </h5>
 
                         <div class="row">
@@ -486,7 +387,7 @@
                         <div class="ticket-info mt-4 p-3">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <p><strong>Ticket:</strong> DG-2024-001234</p>
+                                    <p><strong>Ticket:</strong> DG-2026-001234</p>
                                     <p><strong>Cliente:</strong> Juan Pérez López</p>
                                     <p><strong>Fecha:</strong> 17/02/2024</p>
                                 </div>
@@ -580,10 +481,10 @@
             
             // Actualizar título
             let titulos = {
-                'clienti': 'Vettore clienti',
-                'ingresso': 'Ingresso cliente',
-                'visite': 'Visite clienti',
-                'pagos': 'Registrare pagamento',
+                'clienti': 'Clientes registrados',
+                'ingresso': 'Ingreso cliente',
+                'visite': 'Visitas clientes',
+                'pagos': 'Registrar pago',
                 'productos': 'Validar ticket'
             };
             document.getElementById('vista-titulo').textContent = titulos[vista];

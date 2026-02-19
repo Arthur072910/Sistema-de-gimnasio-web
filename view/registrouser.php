@@ -61,7 +61,13 @@
                 <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="fas fa-cog"></i>
-                        Configuración
+                        Horarios
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        Planes
                     </a>
                 </li>
             </ul>

@@ -77,7 +77,10 @@ $entrenadores = $controller->listar();
           <a href="../view/entrenadores.php" class="nav-link text-white">Registro de entrenadores</a>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link text-white">Configuración</a>
+          <a href="#" class="nav-link text-white">Horarios</a>
+        </li>
+         <li class="nav-item">
+          <a href="#" class="nav-link text-white">Planes</a>
         </li>
       </ul>
     </aside>

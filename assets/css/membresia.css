@@ -1,0 +1,216 @@
+/* ===== VARIABLES - Paleta personalizada ===== */
+:root {
+    --bg-primary: #000000;
+    --bg-secondary: #0a0a0a;
+    --bg-dark-blue: #141622;
+    --bg-card: #111111;
+    --bg-sidebar: #061421;
+    --bg-input: #1a1a1a;
+    --bg-hover: #222222;
+    --accent-primary: #ffe11f;
+    --accent-secondary: #ffd700;
+    --accent-gradient: linear-gradient(90deg, #ffd700, #ffe11f);
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --text-muted: #999999;
+    --border-color: #333333;
+    --border-focus: #ffe11f;
+    --shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    --shadow-hover: 0 12px 30px rgba(255, 225, 31, 0.15);
+    --success: #28a745;
+    --warning: #ffc107;
+    --danger: #ff4444;
+    --danger-bg: rgba(255, 68, 68, 0.1);
+}
+
+/* ===== ESTILOS GENERALES ===== */
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+/* ===== TARJETAS (para el formulario y secciones) ===== */
+.card {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+}
+
+.card-title {
+    color: var(--text-primary) !important;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+/* ===== FORMULARIOS ===== */
+.form-control, .form-control:focus {
+    background: var(--bg-input) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    border-radius: 6px;
+    padding: 8px 12px;
+}
+
+.form-control:focus {
+    border-color: var(--border-focus) !important;
+    box-shadow: none;
+}
+
+.form-control::placeholder {
+    color: var(--text-muted);
+}
+
+.form-control option {
+    background: var(--bg-dark-blue);
+    color: var(--text-primary);
+}
+
+label {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* ===== BOTONES ===== */
+.btn-add {
+    background: var(--accent-gradient);
+    color: var(--bg-primary) !important;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.btn-add:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+.btn-edit, .btn-delete {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    margin: 0 5px;
+    padding: 5px 10px;
+    transition: color 0.16s ease;
+    cursor: pointer;
+}
+
+.btn-edit:hover {
+    color: var(--accent-primary);
+}
+
+.btn-delete:hover {
+    color: var(--danger);
+}
+
+/* ===== TABLA ===== */
+.classes-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--bg-card);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.classes-table th {
+    background: var(--bg-dark-blue);
+    color: var(--text-primary);
+    font-weight: 600;
+    padding: 15px;
+    text-align: left;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.classes-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-secondary);
+}
+
+.classes-table tbody tr:hover {
+    background: var(--bg-hover);
+}
+
+/* ===== ESTADOS (activo/inactivo) ===== */
+.class-status {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.status-active {
+    background: var(--success);
+    color: var(--text-primary);
+}
+
+.status-cancelled {
+    background: var(--danger-bg);
+    color: var(--danger);
+    border: 1px solid var(--danger);
+}
+
+/* ===== MODAL ===== */
+.modal-content {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+}
+
+.modal-header, .modal-footer {
+    border-color: var(--border-color) !important;
+}
+
+.modal-title {
+    color: var(--text-primary) !important;
+}
+
+.close {
+    color: var(--text-primary) !important;
+    opacity: 0.8;
+}
+
+.close:hover {
+    opacity: 1;
+}
+
+/* ===== SECCIÓN DE GESTIÓN (encabezado) ===== */
+.classes-section {
+    background: transparent;
+    padding: 20px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-header h3 {
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .classes-table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    .card .form-row {
+        flex-direction: column;
+    }
+    
+    .card .form-group {
+        margin-bottom: 15px;
+    }
+}

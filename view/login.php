@@ -1,7 +1,9 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-if(isset($_SESSION['cliente_id'])) {
+if(isset($_SESSION['usuario_id'])) {
     header("Location: ../index.php");
     exit();
 }
@@ -15,9 +17,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     $resultado = $controller->login($_POST['email'], $_POST['password']);
     
     if($resultado['success']) {
-        $_SESSION['cliente_id'] = $resultado['id_cliente'];
+        $_SESSION['usuario_id']    = $resultado['id_usuario']; // ✅ ahora sí llega
+        $_SESSION['cliente_id']    = $resultado['id_cliente'] ?? null;
         $_SESSION['cliente_nombre'] = $resultado['nombre'];
         $_SESSION['cliente_email'] = $resultado['email'];
+        $_SESSION['rol']           = $resultado['rol'];
+        
         header("Location: ../index.php");
         exit();
     } else {
@@ -31,7 +36,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Delux Gym</title>
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/login.css">
@@ -55,7 +59,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
             
             <form method="POST">
                 <div class="form-group">
-                    <label><i class="fas fa-envelope"></i>Email</label>
+                    <label><i class="fas fa-envelope"></i> Email</label>
                     <div class="input-wrapper">
                         <i class="fas fa-envelope"></i>
                         <input type="email" 
@@ -68,7 +72,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
                 
                 <div class="form-group">
-                    <label><i class="fas fa-lock"></i>Contraseña</label>
+                    <label><i class="fas fa-lock"></i> Contraseña</label>
                     <div class="input-wrapper">
                         <i class="fas fa-lock"></i>
                         <input type="password" 

@@ -1,245 +1,343 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Nunito:wght@300;400;600;700&display=swap');
 
 :root {
-    --black: #111111;
-    --white: #fff8f8;
-    --gold: #ffd700;
-    --gold-dark: #ffd700;
-    --gray-light: rgba(255,255,255,0.05);
-    --shadow: 0 4px 12px rgba(0,0,0,0.4);
+    --black:       #0d0d0d;
+    --black-card:  #161616;
+    --black-soft:  #1e1e1e;
+    --white:       #f0ece4;
+    --gold:        #ffd700;
+    --gold-dark:   #c9a800;
+    --gold-dim:    rgba(255, 215, 0, 0.12);
+    --border:      rgba(255, 215, 0, 0.25);
+    --shadow:      0 8px 32px rgba(0, 0, 0, 0.6);
+    --radius:      14px;
 }
 
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-body{
-    font-family:'Inter', sans-serif;
-    background:var(--black);
-    color:var(--white);
-    padding:2rem 1rem;
+body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--black);
+    color: var(--white);
+    min-height: 100vh;
+    padding-bottom: 3rem;
 }
 
-.container{
-    max-width:1200px;
-    margin:auto;
+/* ─── HEADER ─────────────────────────────────── */
+.header {
+    padding: 2.5rem 0 1.2rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--border);
 }
 
-
-.header{
-    border-bottom:3px solid var(--gold);
-    margin-bottom:2rem;
-    padding-bottom:.8rem;
-}
-
-.header h1{
-    display:flex;
-    align-items:center;
-    gap:.7rem;
-}
-
-.header i{
-    color:var(--gold);
-}
-
-
-.profile-grid{
-    display:grid;
-    grid-template-columns:300px 1fr;
-    gap:2rem;
-}
-
-
-.card{
-    background:var(--black);
-    border:1px solid var(--white);
-    border-radius:12px;
-    padding:1.8rem;
-    margin-bottom:2rem;
-    box-shadow:var(--shadow);
-}
-
-.card h2{
-    border-bottom:1px solid var(--gold);
-    padding-bottom:.6rem;
-    margin-bottom:1rem;
-    display:flex;
-    align-items:center;
-    gap:.6rem;
-}
-
-.card h2 i{
-    color:var(--gold);
-}
-
-
-.profile-card{
-    text-align:center;
-}
-
-.avatar-container{
-    margin-bottom:1rem;
-}
-
-.avatar-container img{
-    width:120px;
-    height:120px;
-    border-radius:50%;
-    border:3px solid var(--gold);
-}
-
-.role{
-    color:var(--gold);
-    margin-bottom:1.2rem;
-}
-
-
-.info-list{
-    text-align:left;
-}
-
-.info-item{
-    display:flex;
-    gap:.7rem;
-    padding:.5rem 0;
-    border-bottom:1px solid rgba(255,255,255,0.1);
-}
-
-.info-item i{
-    color:var(--gold);
-}
-
-
-.info-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:.6rem;
-}
-
-
-.racha-card{
-    border-color:var(--gold);
-}
-
-.racha-content{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-
-.btn{
-    padding:.7rem 1.5rem;
-    border-radius:50px;
-    border:none;
-    cursor:pointer;
-    font-weight:600;
-    display:flex;
-    align-items:center;
-    gap:.5rem;
-}
-
-.btn-gold{
-    background:var(--gold);
-    color:black;
-}
-
-.btn-gold:hover{
-    background:var(--gold-dark);
-}
-
-
-.empty-message{
-    text-align:center;
-    padding:2rem;
-    background:var(--gray-light);
-    border-radius:8px;
-}
-
-
-@media(max-width:900px){
-    .profile-grid{
-        grid-template-columns:1fr;
-    }
-
-    .racha-content{
-        flex-direction:column;
-        gap:1rem;
-    }
-
-    .info-grid{
-        grid-template-columns:1fr;
-    }
-}
-.avatar-container{
-    position: relative;   /* ← ESTO FALTABA */
-    width: 140px;
-    height: 140px;
-    margin: auto;
-}
-
-.btn-notify{
-    position:absolute;
-    top:-10px;
-    left:-60px;   /* ← MÁS A LA IZQUIERDA */
-
-    width:38px;
-    height:38px;
-
-    border-radius:50%;
-    border:none;
-
-    background: var(--gold);
-    color:black;
-
-    cursor:pointer;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    box-shadow:0 4px 10px rgba(0,0,0,0.4);
-    transition: all .3s;
-}
-
-.btn-notify:hover{
-    transform: scale(1.1);
-}
-
-
-
-.suscripcion-box{
+.header h1 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 2px;
     display: flex;
-    gap: 15px;
-    margin-top: 20px;
+    align-items: center;
+    gap: .7rem;
+    text-transform: uppercase;
+}
+
+.header h1 i {
+    color: var(--gold);
+    font-size: 1.8rem;
+}
+
+/* ─── GRID ────────────────────────────────────── */
+.profile-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 1.8rem;
+    align-items: start;
+}
+
+/* ─── CARD BASE ───────────────────────────────── */
+.card {
+    background: var(--black-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.8rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow);
+    transition: border-color .3s;
+}
+
+.card:hover {
+    border-color: rgba(255, 215, 0, 0.5);
+}
+
+.card h2 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.15rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: .7rem;
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+}
+
+.card h2 i {
+    color: var(--gold);
+}
+
+/* ─── PROFILE CARD (sidebar) ──────────────────── */
+.profile-card {
+    text-align: center;
+    position: sticky;
+    top: 1rem;
+}
+
+.avatar-container {
+    position: relative;
+    width: 130px;
+    height: 130px;
+    margin: 0 auto 1.2rem;
+}
+
+.avatar-container img {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    border: 3px solid var(--gold);
+    object-fit: cover;
+    display: block;
+}
+
+.btn-notify {
+    position: absolute;
+    top: 0;
+    right: -8px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 2px solid var(--black-card);
+    background: var(--gold);
+    color: black;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .85rem;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+    transition: transform .25s, background .25s;
+}
+
+.btn-notify:hover {
+    transform: scale(1.15);
+    background: var(--gold-dark);
+}
+
+.profile-card h3 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: .3rem;
+}
+
+.role {
+    display: inline-block;
+    background: var(--gold-dim);
+    color: var(--gold);
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: .25rem .9rem;
+    border-radius: 50px;
+    border: 1px solid var(--border);
+    margin-bottom: 1.4rem;
+}
+
+/* ─── INFO LIST (sidebar) ─────────────────────── */
+.info-list {
+    text-align: left;
+}
+
+.info-list .info-item {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .6rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-size: .92rem;
+    color: rgba(240,236,228,0.85);
+}
+
+.info-list .info-item i {
+    color: var(--gold);
+    width: 18px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+/* ─── INFO GRID (account section) ────────────── */
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.info-grid .info-item {
+    background: var(--black-soft);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    padding: .9rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+}
+
+.info-grid .info-item strong {
+    font-size: .75rem;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--gold);
+}
+
+.info-grid .info-item span {
+    font-size: .98rem;
+    color: var(--white);
+}
+
+/* ─── MEMBRESÍA CARD ──────────────────────────── */
+.racha-card {
+    border-color: rgba(255, 215, 0, 0.4);
+    background: linear-gradient(135deg, var(--black-card) 70%, rgba(255,215,0,0.04));
+}
+
+.racha-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.racha-content p {
+    font-size: .97rem;
+    color: rgba(240,236,228,0.8);
+    margin-bottom: .4rem;
+}
+
+.racha-content p strong {
+    color: var(--white);
+}
+
+.racha-content .role {
+    margin-bottom: 0;
+}
+
+/* ─── BOTONES MEMBRESÍA ───────────────────────── */
+.suscripcion-box {
+    display: flex;
+    gap: .75rem;
+    flex-wrap: wrap;
+    margin-top: .5rem;
 }
 
 .btn-suscripcion,
-.btn-tarjeta{
-    padding: 10px 18px;
+.btn-tarjeta {
+    padding: .55rem 1.2rem;
     border-radius: 8px;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: .85rem;
+    letter-spacing: .5px;
+    transition: all .25s;
+    cursor: pointer;
+    border: none;
 }
 
-.btn-gold{
-    background: #d4af37;
-    color: white;
+.btn-gold {
+    background: var(--gold);
+    color: #111;
 }
 
-.btn-dark{
-    background: #222;
-    color: white;
+.btn-gold:hover {
+    background: var(--gold-dark);
+    color: #111;
+    text-decoration: none;
 }
 
-.btn-gold:hover{
-    background: #b8952e;
+.btn-dark {
+    background: var(--black-soft);
+    color: var(--white);
+    border: 1px solid rgba(255,255,255,0.15);
 }
 
-.btn-dark:hover{
-    background: #000;
+.btn-dark:hover {
+    background: #2a2a2a;
+    color: var(--white);
+    text-decoration: none;
 }
 
+/* ─── BOTONES INFERIORES (tarjeta / recomend.) ── */
+.suscripcion-box.bottom-actions {
+    justify-content: center;
+    margin: 1.5rem auto 0;
+    max-width: 600px;
+    padding: 0 1rem;
+}
 
+.suscripcion-box.bottom-actions .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .7rem 1.6rem;
+    border-radius: 50px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: all .25s;
+    text-decoration: none;
+}
+
+/* ─── RESPONSIVE ──────────────────────────────── */
+@media (max-width: 900px) {
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-card {
+        position: static;
+    }
+
+    .racha-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 1.5rem;
+    }
+
+    .suscripcion-box.bottom-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .suscripcion-box.bottom-actions .btn {
+        justify-content: center;
+    }
+}

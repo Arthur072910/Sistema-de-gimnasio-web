@@ -1,17 +1,45 @@
 <?php
 session_start();
-if(!isset($_SESSION['cliente_id'])) {
+
+if(!isset($_SESSION['usuario_id'])) {
     header("Location: login.php");
     exit();
 }
 
 require_once __DIR__ . '/../controller/ClienteController.php';
-$controller = new ClienteController();
-$datos = $controller->obtenerDatosCompletos($_SESSION['cliente_id']);
 
-if (!$datos) {
-    echo "Error al cargar los datos del perfil.";
-    exit();
+$controller = new ClienteController();
+$rol = $_SESSION['rol'] ?? 'cliente';
+
+if($rol == 'cliente' && isset($_SESSION['cliente_id'])) {
+    $datos = $controller->obtenerDatosCompletos($_SESSION['cliente_id']);
+
+    if(!$datos) {
+        $datos = [
+            'nombre'            => $_SESSION['cliente_nombre'] ?? 'Usuario',
+            'apellido'          => '',
+            'email'             => $_SESSION['cliente_email'] ?? '',
+            'rol'               => $rol,
+            'telefono'          => null,
+            'fecha_nacimiento'  => null,
+            'plan'              => null,
+            'fecha_vencimiento' => null,
+        ];
+    }
+} else {
+    $nombreCompleto = $_SESSION['cliente_nombre'] ?? 'Administrador';
+    $partes = explode(' ', $nombreCompleto, 2);
+
+    $datos = [
+        'nombre'            => $partes[0] ?? $nombreCompleto,
+        'apellido'          => $partes[1] ?? '',
+        'email'             => $_SESSION['cliente_email'] ?? '',
+        'rol'               => $rol,
+        'telefono'          => 'N/A',
+        'fecha_nacimiento'  => 'N/A',
+        'plan'              => 'Acceso Total',
+        'fecha_vencimiento' => 'Sin vencimiento',
+    ];
 }
 ?>
 <!DOCTYPE html>
@@ -20,30 +48,38 @@ if (!$datos) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Perfil - Delux Gym</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/header.css">
     <link rel="stylesheet" href="../assets/css/Perfil.css">
     <link rel="stylesheet" href="../assets/css/footer.css">
 </head>
 <body>
-    <?php include __DIR__ . '/layout/header.php'; ?>
+    <?php include "../layout/header.php"; ?>
 
-    <div class="container"> <header class="header">
-            <h1><i class="fas fa-user-circle"></i> MI PERFIL</h1>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-user-circle"></i> Mi Perfil</h1>
         </header>
 
         <div class="profile-grid">
+
+            <!-- ── SIDEBAR ── -->
             <aside class="profile-card card">
                 <div class="avatar-container">
-                    <button class="btn-notify"><i class="fas fa-bell"></i></button>
-                    <img src="<?php echo file_exists('../assets/img/avatar-placeholder.png') ? '../assets/img/avatar-placeholder.png' : 'https://ui-avatars.com/api/?name=' . urlencode($datos['nombre']); ?>" alt="Avatar">
+                    <img src="<?php echo file_exists('../assets/img/avatar-placeholder.png')
+                        ? '../assets/img/avatar-placeholder.png'
+                        : 'https://ui-avatars.com/api/?name=' . urlencode($datos['nombre']) . '&background=ffd700&color=111&bold=true'; ?>"
+                        alt="Avatar">
+                    <button class="btn-notify" title="Notificaciones">
+                        <i class="fas fa-bell"></i>
+                    </button>
                 </div>
+
                 <h3><?php echo htmlspecialchars($datos['nombre'] . ' ' . $datos['apellido']); ?></h3>
-                <p class="role"><?php echo strtoupper($datos['rol']); ?></p>
-                
+                <span class="role"><?php echo strtoupper($datos['rol']); ?></span>
+
                 <div class="info-list">
                     <div class="info-item">
                         <i class="fas fa-envelope"></i>
@@ -52,21 +88,25 @@ if (!$datos) {
                 </div>
             </aside>
 
+            <!-- ── DETALLE ── -->
             <main class="profile-details">
+
+                <!-- Información de la cuenta -->
                 <section class="card">
                     <h2><i class="fas fa-id-card"></i> Información de la Cuenta</h2>
                     <div class="info-grid">
                         <div class="info-item">
-                            <strong>Teléfono:</strong>
+                            <strong>Teléfono</strong>
                             <span><?php echo htmlspecialchars($datos['telefono'] ?? 'No registrado'); ?></span>
                         </div>
                         <div class="info-item">
-                            <strong>Fecha de Nacimiento:</strong>
+                            <strong>Fecha de Nacimiento</strong>
                             <span><?php echo htmlspecialchars($datos['fecha_nacimiento'] ?? 'No registrada'); ?></span>
                         </div>
                     </div>
                 </section>
 
+                <!-- Estado de membresía -->
                 <section class="card racha-card">
                     <h2><i class="fas fa-crown"></i> Estado de Membresía</h2>
                     <div class="racha-content">
@@ -75,35 +115,43 @@ if (!$datos) {
                             <p>Vence el: <span class="role"><?php echo htmlspecialchars($datos['fecha_vencimiento'] ?? 'N/A'); ?></span></p>
                         </div>
                         <div class="suscripcion-box">
-                            <a href="#" class="btn-suscripcion btn-gold">RENOVAR</a>
-                            <a href="#" class="btn-tarjeta btn-dark">MÉTODOS DE PAGO</a>
+                            <a href="#" class="btn-suscripcion btn-gold">
+                                <i class="fas fa-sync-alt"></i> Renovar
+                            </a>
+                            <a href="#" class="btn-tarjeta btn-dark">
+                                <i class="fas fa-credit-card"></i> Métodos de Pago
+                            </a>
                         </div>
                     </div>
                 </section>
+
             </main>
+        </div><!-- /.profile-grid -->
+
+        <!-- Botones inferiores solo para clientes -->
+        <?php if($rol == 'cliente'): ?>
+        <div class="suscripcion-box bottom-actions">
+            <form action="tarjeta.php" method="get">
+                <button type="submit" class="btn btn-gold">
+                    <i class="fa-solid fa-id-card"></i>
+                    Tarjeta de inscripción
+                </button>
+            </form>
+            <form action="recomendaciones.php" method="get">
+                <button type="submit" class="btn btn-gold">
+                    <i class="fa-solid fa-dumbbell"></i>
+                    Recomendaciones
+                </button>
+            </form>
         </div>
-    </div>
+        <?php endif; ?>
 
-    <div class="suscripcion-box">
+    </div><!-- /.container -->
 
-    
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-    <form action="tarjeta.php" method="get">
-        <button type="submit" class="  btn btn-gold"  >
-            <i class="fa-solid fa-id-card"></i>
-            Tarjeta de inscripción
-        </button>
-    </form>
-    <form action="recomendaciones.php" method="get">
-        <button type="submit" class="  btn btn-gold"  >
-            <i class="fa-solid fa-credit-card"></i>
-            Recomendaciones
-        </button>
-    </form>
-
-</div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <?php include "../layout/footer.php"; ?>
 </body>
 </html>

@@ -1,57 +1,284 @@
-/* RESET GLOBAL - Esto debe estar aquí para asegurar que el body no empuje el nav */
-/* Forzar que el nav sea el primer elemento absoluto si es necesario */
-header, nav {
-    position: relative;
-    top: 0;
-    left: 0;
-    right: 0;
+/* ============================================ */
+/* HEADER - DELUX GYM (VERSIÓN HERMOSA)         */
+/* ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --gold: #ffd700;
+    --gold-light: rgba(255, 215, 0, 0.1);
+    --gold-medium: rgba(255, 215, 0, 0.2);
+    --dark: #0a0a0a;
+    --dark-light: #1a1a1a;
+    --text-light: #f0f0f0;
+    --text-muted: #b0b0b0;
 }
 
-html, body {
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow-x: hidden;
-}
-
-/* NAVEGACIÓN - Forzamos medidas fijas */
 #nav-1 {
-    background: #000000 !important;
-    height: 90px !important; /* Altura fija para que nunca cambie entre vistas */
-    padding: 0 20px !important;
-    margin: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    border-bottom: 2px solid #ffd700 !important;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5) !important;
-    width: 100% !important;
-}
-
-/* El contenedor interno de Bootstrap suele añadir márgenes que deforman el nav */
-#nav-1 .container, #nav-1 .container-fluid {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    width: 100%;
+    background: linear-gradient(135deg, #000000 0%, #0a0a0a 100%);
+    border-bottom: 1px solid var(--gold);
+    padding: 0.8rem 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    font-family: 'Montserrat', sans-serif;
 }
 
 #nav-1 .navbar-brand img {
-    height: 60px !important; /* Tamaño de logo fijo */
-    width: auto !important;
+    height: 55px;
+    width: auto;
+    transition: transform 0.3s ease;
+    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.3));
 }
 
-#nav-1 .nav-link {
-    color: #fff8f8 !important;
-    font-size: 15px !important;
-    font-family: 'Montserrat', sans-serif !important;
+#nav-1 .navbar-brand img:hover {
+    transform: scale(1.05);
+}
+
+#nav-1 .navbar-nav {
+    align-items: center;
+}
+
+#nav-1 .navbar-nav .nav-link {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    font-weight: 500;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0.6rem 1.2rem;
+    margin: 0 0.2rem;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+#nav-1 .navbar-nav .nav-link:hover {
+    color: var(--text-light);
+    background: var(--gold-light);
+}
+
+#nav-1 .navbar-nav .nav-item.active .nav-link {
+    color: var(--gold);
+    font-weight: 600;
+    background: var(--gold-light);
+}
+
+#nav-1 .navbar-nav .nav-item.active .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 2px;
+    background: var(--gold);
+    border-radius: 2px;
+    box-shadow: 0 0 8px var(--gold);
+}
+
+/* Dropdown */
+#nav-1 .dropdown-menu {
+    background: var(--dark-light);
+    border: 1px solid var(--gold);
+    border-radius: 15px;
+    padding: 0.6rem 0;
+    margin-top: 0.6rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    animation: dropdownFade 0.2s ease;
+}
+
+@keyframes dropdownFade {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#nav-1 .dropdown-item {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.7rem 1.8rem;
+    transition: all 0.3s ease;
+}
+
+#nav-1 .dropdown-item:hover {
+    background: var(--gold-light);
+    color: var(--gold);
+    padding-left: 2.2rem;
+}
+
+#nav-1 .dropdown-item.active {
+    background: var(--gold-medium);
+    color: var(--gold);
     font-weight: 600;
 }
 
-/* BOTONES - Para que no cambien de tamaño entre páginas */
-.btn-nav-custom {
-    padding: 8px 18px !important;
-    font-size: 14px !important;
-    border-radius: 6px !important;
-    font-weight: 700 !important;
-    display: inline-block;
+/* Botones */
+#nav-1 .btn-outline-warning {
+    color: var(--gold);
+    border: 2px solid var(--gold);
+    background: transparent;
+    border-radius: 30px;
+    padding: 0.4rem 1.5rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.1);
+}
+
+#nav-1 .btn-outline-warning:hover {
+    background: var(--gold);
+    color: #000000;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+}
+
+#nav-1 .btn-warning {
+    background: var(--gold);
+    border: none;
+    color: #000000;
+    border-radius: 30px;
+    padding: 0.4rem 1.5rem;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+}
+
+#nav-1 .btn-warning:hover {
+    background: #e6c200;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5);
+}
+
+#nav-1 .btn-outline-danger {
+    color: #ff6b7c;
+    border: 2px solid #ff6b7c;
+    background: transparent;
+    border-radius: 30px;
+    padding: 0.4rem 1.5rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+#nav-1 .btn-outline-danger:hover {
+    background: #ff6b7c;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(255, 107, 124, 0.4);
+}
+
+/* Nombre de usuario */
+#nav-1 .text-warning {
+    color: var(--gold) !important;
+    font-weight: 700;
+    background: var(--gold-light);
+    border-radius: 30px;
+    padding: 0.4rem 1.5rem !important;
+    transition: all 0.3s ease;
+}
+
+#nav-1 .text-warning:hover {
+    background: var(--gold-medium);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.2);
+}
+
+/* Toggler móvil */
+#nav-1 .navbar-toggler {
+    border: 2px solid var(--gold);
+    background: transparent;
+    padding: 0.4rem 0.7rem;
+    transition: all 0.3s ease;
+}
+
+#nav-1 .navbar-toggler:hover {
+    background: var(--gold-light);
+    transform: scale(1.05);
+}
+
+#nav-1 .navbar-toggler-icon {
+    width: 25px;
+    height: 25px;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='%23ffd700' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    #nav-1 {
+        padding: 0.8rem 1rem;
+    }
+    
+    #nav-1 .navbar-collapse {
+        background: linear-gradient(135deg, #0a0a0a 0%, #151515 100%);
+        margin-top: 1rem;
+        padding: 1.2rem;
+        border-radius: 20px;
+        border: 1px solid var(--gold);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+    
+    #nav-1 .navbar-nav {
+        align-items: stretch;
+    }
+    
+    #nav-1 .navbar-nav .nav-link {
+        text-align: center;
+        margin: 0.3rem 0;
+        padding: 0.8rem;
+    }
+    
+    #nav-1 .btn-outline-warning,
+    #nav-1 .btn-warning,
+    #nav-1 .btn-outline-danger,
+    #nav-1 .text-warning {
+        width: 100%;
+        margin: 0.3rem 0 !important;
+        text-align: center;
+    }
+    
+    #nav-1 .dropdown-menu {
+        width: 100%;
+        text-align: center;
+    }
+    
+    #nav-1 .dropdown-item:hover {
+        padding-left: 1.8rem;
+    }
+}
+
+@media (max-width: 768px) {
+    #nav-1 .navbar-brand img {
+        height: 45px;
+    }
+}
+
+/* Animaciones adicionales */
+@keyframes glow {
+    0% {
+        box-shadow: 0 0 5px var(--gold);
+    }
+    50% {
+        box-shadow: 0 0 20px var(--gold);
+    }
+    100% {
+        box-shadow: 0 0 5px var(--gold);
+    }
+}
+
+#nav-1 .btn-warning {
+    animation: glow 3s infinite;
 }

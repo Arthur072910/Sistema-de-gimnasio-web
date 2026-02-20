@@ -1,199 +1,409 @@
 /* ============================================ */
-/* TIENDA - DELUX GYM                           */
-/* Basado en paleta: Negro, grises, acento amarillo (#ffe11f) */
+/* TIENDA - DELUX GYM (VERSIÓN MEJORADA)        */
 /* ============================================ */
 
-/* --- ESTILOS GENERALES --- */
+/* -------------------------------------------- */
+/* VARIABLES                                     */
+/* -------------------------------------------- */
+:root {
+    --gold: #ffd700;
+    --gold-light: #ffe11f;
+    --gold-soft: rgba(255, 215, 0, 0.1);
+    --gold-medium: rgba(255, 215, 0, 0.2);
+    --dark-bg: #0a0a0a;
+    --dark-card: #111111;
+    --dark-surface: #1a1a1a;
+    --text-primary: #ffffff;
+    --text-secondary: #e0e0e0;
+    --text-muted: #b0b0b0;
+    --border-radius: 20px;
+    --transition-smooth: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* -------------------------------------------- */
+/* ESTILOS GENERALES                             */
+/* -------------------------------------------- */
 body {
-    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-    color: #ffffff;
-    font-family: 'Open Sans', sans-serif;
-    margin: 0;
-    padding: 0;
+    background: linear-gradient(135deg, var(--dark-bg) 0%, var(--dark-surface) 100%);
+    color: var(--text-primary);
+    font-family: 'Montserrat', sans-serif;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
-/* --- HEADER (si usas clases de Bootstrap) --- */
-.navbar {
-    background: #000000 !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
-    padding: 10px 20px;
+/* Efecto de partículas de fondo (como en login) */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        radial-gradient(2px 2px at 15% 30%, rgba(255, 215, 0, 0.1), transparent),
+        radial-gradient(2px 2px at 75% 60%, rgba(255, 215, 0, 0.1), transparent),
+        radial-gradient(1px 1px at 30% 80%, rgba(255, 215, 0, 0.08), transparent),
+        radial-gradient(1px 1px at 85% 20%, rgba(255, 215, 0, 0.08), transparent);
+    animation: particleFloat 25s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
 }
 
-.navbar-brand img {
-    height: 56px;
-    width: auto;
+@keyframes particleFloat {
+    0%, 100% { background-position: 0% 0%; }
+    50% { background-position: 100% 100%; }
 }
 
-.navbar-nav .nav-link {
-    color: #b0b0b0 !important;
-    font-weight: 600;
-    padding: 8px 14px !important;
-    transition: all 0.16s ease-in-out;
-    font-size: 18px;
-}
-
-.navbar-nav .nav-link:hover {
-    color: #e0e0e0 !important;
-    background: rgba(255,255,255,0.04);
-    border-radius: 6px;
-}
-
-/* Dropdown */
-.dropdown-menu {
-    background: #ffffff;
-    border-radius: 8px;
-    padding: 6px 0;
-}
-
-.dropdown-item {
-    color: #222222;
-}
-
-.dropdown-item:hover {
-    background: #f0f0f0;
-}
-
-/* Contador del carrito */
-#cart-count {
-    background-color: #ffe11f;
-    color: #1a1a1a;
-}
-
-/* --- TÍTULOS DE SECCIÓN --- */
+/* -------------------------------------------- */
+/* TÍTULOS DE SECCIÓN (COMO EN LOGIN)           */
+/* -------------------------------------------- */
 .contenedor-texto {
     text-align: center;
-    margin: 50px 0 30px 0;
-    padding: 0 20px;
+    margin: 4rem 0 3rem;
+    padding: 0 1.5rem;
+    position: relative;
+    z-index: 2;
+}
+
+.contenedor-texto::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    z-index: 1;
 }
 
 .texto {
     font-size: 2.5rem;
-    font-weight: 700;
-    color: #ffe11f;
+    font-weight: 800;
+    color: var(--gold);
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 3px;
     position: relative;
+    z-index: 2;
     display: inline-block;
-    padding-bottom: 10px;
+    padding: 0 2rem 0.8rem;
+    margin: 0;
+    background: linear-gradient(135deg, var(--dark-bg) 0%, var(--dark-surface) 100%);
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    border-radius: 50px;
 }
 
-.texto::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 25%;
-    width: 50%;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, #ffe11f, transparent);
-}
-
-/* --- TARJETAS DE PRODUCTO --- */
+/* -------------------------------------------- */
+/* TARJETAS DE PRODUCTO (ESTILO ELEGANTE)       */
+/* -------------------------------------------- */
 .card {
-    background: #252525;
-    border: 1px solid #333;
-    border-radius: 10px;
-    transition: all 0.3s ease;
-    color: #ffffff;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-    height: 100%;               /* Para que todas tengan la misma altura en fila */
+    background: linear-gradient(145deg, var(--dark-card) 0%, #1e1e1e 100%);
+    border: 1px solid rgba(255, 215, 0, 0.15);
+    border-radius: var(--border-radius);
+    color: var(--text-primary);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    height: 100%;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+    transition: var(--transition-smooth);
+    position: relative;
+    z-index: 2;
+}
+
+.card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.05), transparent);
+    transition: left 0.8s ease;
+}
+
+.card:hover::after {
+    left: 100%;
 }
 
 .card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 25px rgba(255, 225, 31, 0.2);
-    border-color: #ffe11f;
+    transform: translateY(-12px);
+    border-color: var(--gold);
+    box-shadow: 0 25px 45px rgba(255, 215, 0, 0.2);
 }
 
-/* Imagen de la tarjeta - CORREGIDO */
-.card-img-top {
+/* Imagen de la tarjeta */
+.card-img-custom {
     width: 100%;
-    height: 220px;
-    object-fit: cover;          /* Cambiado de contain a cover */
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    background-color: #1a1a1a;  /* Fondo por si la imagen tiene transparencia */
+    height: 260px;
+    object-fit: cover;
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+    background-color: var(--dark-surface);
+    border-bottom: 2px solid var(--gold);
+    transition: transform 0.6s ease;
+}
+
+.card:hover .card-img-custom {
+    transform: scale(1.08);
 }
 
 /* Cuerpo de la tarjeta */
 .card-body {
-    background-color: #252525;
-    flex: 1;                    /* Ocupa el espacio restante */
-    padding: 1.25rem;
+    background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.8));
+    flex: 1;
+    padding: 1.8rem 1.5rem 1rem;
+    text-align: center;
 }
 
 .card-title {
-    color: #ffe11f;
+    color: var(--gold);
     font-weight: 700;
-    font-size: 1.5rem;
-    margin-bottom: 15px;
+    font-size: 1.4rem;
+    margin-bottom: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    display: inline-block;
+}
+
+.card-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 2px;
+    background: var(--gold);
+    border-radius: 2px;
+    opacity: 0.5;
 }
 
 .card-text {
-    color: rgba(255,255,255,0.75);
-    font-size: 0.95rem;
-    min-height: 70px;           /* Para alinear alturas */
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    min-height: 70px;
+    margin: 1.2rem 0 0.8rem;
 }
 
 .card-body h5 {
-    color: #ffffff;
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-top: 15px;
+    color: var(--gold);
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 1rem 0 0;
+    position: relative;
+    display: inline-block;
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
 }
 
+.card-body h5::before {
+    content: '$';
+    font-size: 1.2rem;
+    margin-right: 2px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
 
+/* Footer de la tarjeta */
+.card-footer {
+    background: transparent;
+    border-top: 1px solid rgba(255, 215, 0, 0.2);
+    padding: 1.5rem;
+}
 
-/* --- BOTONES --- */
+/* -------------------------------------------- */
+/* BOTONES (COMO EN LOGIN)                      */
+/* -------------------------------------------- */
 .btn-warning {
-    background: linear-gradient(90deg, #ffd700, #ffe11f);
-    color: #1a1a1a;
+    background: linear-gradient(135deg, var(--gold) 0%, #f0c800 50%, var(--gold) 100%);
+    background-size: 200% 100%;
+    color: #000000;
     font-weight: 700;
     border: none;
-    padding: 12px 16px;
-    border-radius: 10px;
-    box-shadow: 0 8px 20px rgba(255, 225, 31, 0.25);
-    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    padding: 0.9rem 1rem;
+    border-radius: 50px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 1.5px;
+    font-size: 0.85rem;
+    width: 100%;
+    transition: all 0.4s ease;
+    box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-warning::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.5s;
+}
+
+.btn-warning:hover::before {
+    left: 100%;
 }
 
 .btn-warning:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 30px rgba(255, 225, 31, 0.4);
+    background-position: 100% 0;
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(255, 215, 0, 0.5);
     color: #000000;
-    background: linear-gradient(90deg, #ffd700, #ffe11f);
 }
 
-/* --- SEPARACIÓN Y CONTENEDORES --- */
-.container.my-5, .container.my-3 {
-    margin-top: 20px !important;
-    margin-bottom: 40px !important;
+.btn-warning:active {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 15px rgba(255, 215, 0, 0.4);
 }
 
-/* Responsive */
+/* -------------------------------------------- */
+/* CONTENEDORES                                  */
+/* -------------------------------------------- */
+.container {
+    width: 100%;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 2;
+}
+
+/* Ajuste para filas y columnas */
+.row {
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+.col-lg-3, .col-md-6 {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+/* -------------------------------------------- */
+/* ANIMACIONES DE ENTRADA                        */
+/* -------------------------------------------- */
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.card {
+    animation: fadeInScale 0.5s ease forwards;
+    opacity: 0;
+}
+
+.card:nth-child(1) { animation-delay: 0.1s; }
+.card:nth-child(2) { animation-delay: 0.2s; }
+.card:nth-child(3) { animation-delay: 0.3s; }
+.card:nth-child(4) { animation-delay: 0.4s; }
+.card:nth-child(5) { animation-delay: 0.5s; }
+.card:nth-child(6) { animation-delay: 0.6s; }
+.card:nth-child(7) { animation-delay: 0.7s; }
+.card:nth-child(8) { animation-delay: 0.8s; }
+
+/* -------------------------------------------- */
+/* RESPONSIVE                                    */
+/* -------------------------------------------- */
+@media (max-width: 1200px) {
+    .card-img-custom {
+        height: 230px;
+    }
+    
+    .card-title {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .texto {
+        font-size: 2.2rem;
+    }
+    
+    .card-img-custom {
+        height: 220px;
+    }
+}
+
 @media (max-width: 768px) {
     .texto {
-        font-size: 2rem;
+        font-size: 1.8rem;
+        padding: 0 1.5rem 0.6rem;
     }
-}
-
-@media (max-width: 480px) {
-    .texto {
+    
+    .card-img-custom {
+        height: 200px;
+    }
+    
+    .card-title {
+        font-size: 1.2rem;
+    }
+    
+    .card-text {
+        font-size: 0.85rem;
+        min-height: 60px;
+    }
+    
+    .card-body h5 {
         font-size: 1.8rem;
     }
+    
+    .btn-warning {
+        padding: 0.8rem;
+        font-size: 0.8rem;
+    }
 }
 
-/* Ajustes para móvil */
-@media (max-width: 991px) {
-    .navbar-collapse {
-        background: #000000;
-        padding: 20px;
-        border-radius: 10px;
-        margin-top: 10px;
+@media (max-width: 576px) {
+    .contenedor-texto {
+        margin: 2.5rem 0 2rem;
+    }
+    
+    .texto {
+        font-size: 1.5rem;
+        padding: 0 1rem 0.5rem;
+    }
+    
+    .card-img-custom {
+        height: 180px;
+    }
+    
+    .card-body {
+        padding: 1.2rem;
+    }
+    
+    .card-title {
+        font-size: 1.1rem;
+    }
+    
+    .card-text {
+        font-size: 0.8rem;
+        min-height: auto;
+    }
+    
+    .card-body h5 {
+        font-size: 1.5rem;
+    }
+    
+    .row {
+        margin-right: -10px;
+        margin-left: -10px;
+    }
+    
+    .col-lg-3, .col-md-6 {
+        padding-right: 10px;
+        padding-left: 10px;
     }
 }

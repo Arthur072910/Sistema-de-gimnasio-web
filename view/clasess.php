@@ -73,7 +73,6 @@ $entrenadores = $controller->listarEntrenadores(); // para el select
                 <li class="nav-item">
                     <a href="#" class="nav-link text-white">Planes</a>
                 </li>
-            </ul>
         </aside>
 
         <!-- Main Content -->

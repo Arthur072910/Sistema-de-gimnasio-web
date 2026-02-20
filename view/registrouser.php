@@ -70,6 +70,11 @@
                         Planes
                     </a>
                 </li>
+                    <a href="../view/reportes.php" class="nav-link">
+                        <i class="fas fa-file-alt"></i>
+                        Reportes
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

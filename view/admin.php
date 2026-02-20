@@ -67,6 +67,12 @@
                         Planes
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="../view/reportes.php" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        Reportes
+                    </a>
+                </li>
             </ul>
         </div>
 

@@ -1,0 +1,123 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: radial-gradient(circle at center, #111 0%, #000 100%);
+    color: #fff;
+    font-family: 'Roboto Mono', monospace;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+body.exito {
+    background: radial-gradient(circle, #002b15 0%, #000 100%);
+}
+
+body.error {
+    background: radial-gradient(circle, #2b0000 0%, #000 100%);
+}
+
+.contenedor {
+    text-align: center;
+}
+
+.logo img {
+    width: 300px;
+    margin-bottom: 3rem;
+    opacity: 0.9;
+}
+
+.titulo {
+    font-size: 1rem;
+    color: #888;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+
+.reloj {
+    font-size: clamp(4rem, 12vw, 8rem);
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: #ffd700;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+}
+
+.fecha {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    color: #aaa;
+    letter-spacing: 2px;
+}
+
+.hint {
+    margin-top: 2rem;
+    font-size: 1rem;
+    color: #888;
+    letter-spacing: 2px;
+}
+
+
+.overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    align-items: center;
+    justify-content: center;
+}
+
+.overlay.show {
+    display: flex;
+}
+
+.modal {
+    background: #111;
+    border-radius: 15px;
+    padding: 3rem 4rem;
+    text-align: center;
+    border: 3px solid #333;
+    min-width: 400px;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal.bienvenido {
+    border-color: #00ff88;
+}
+
+.modal.desconocido {
+    border-color: #ff0033;
+}
+
+.modal-icono {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.modal-estado {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.modal-nombre {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    color: #ccc;
+}
+
+.modal-codigo {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #888;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}

@@ -29,6 +29,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
       <li class="nav-item <?php echo ($current_page == 'productos.php') ? 'active' : ''; ?>">
         <a class="nav-link" href="<?php echo $base_url; ?>/view/productos.php">Tienda</a>
       </li>
+      <li class="nav-item <?php echo ($current_page == 'asistencia.php') ? 'active' : ''; ?>">
+        <a class="nav-link" href="<?php echo $base_url; ?>/view/asistencia.php">Asistencia</a>
+      </li>
 
       <?php if($rol != 'visitante'): ?>
       <li class="nav-item <?php echo ($current_page == 'carrito.php') ? 'active' : ''; ?>">

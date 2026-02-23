@@ -4,12 +4,10 @@
     <meta charset="UTF-8">
     <title>Reportes | DeluxGym</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <!-- Tu CSS personalizado -->
     <link rel="stylesheet" href="../assets/css/admin.css">
-    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/reportes.css">
 </head>
 <body>
     <div class="dashboard">
@@ -47,55 +45,43 @@
                 </div>
             </div>
 
-            <!-- Cards de resumen -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-info">
-                        <h4>Ingresos del Mes</h4>
-                        <h2>$0.00</h2>
-                        <span>Mes actual</span>
-                    </div>
-                    <div class="stat-icon green">
-                        <i class="fas fa-calendar-day"></i>
-                    </div>
+            <!-- Filtros -->
+            <div class="classes-section mb-4">
+                <div class="section-header">
+                    <h3 class="chart-title">Reportes</h3>
                 </div>
 
-                <div class="stat-card">
-                    <div class="stat-info">
-                        <h4>Ingresos del Año</h4>
-                        <h2>$0.00</h2>
-                        <span>Año actual</span>
-                    </div>
-                    <div class="stat-icon">
-                        <i class="fas fa-calendar"></i>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-info">
-                        <h4>Miembros Activos</h4>
-                        <h2>0</h2>
-                        <span>Membresías vigentes</span>
-                    </div>
-                    <div class="stat-icon blue">
-                        <i class="fas fa-users"></i>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-info">
-                        <h4>Miembros Vencidos</h4>
-                        <h2>0</h2>
-                        <span>Membresías vencidas</span>
-                    </div>
-                    <div class="stat-icon pink">
-                        <i class="fas fa-user-times"></i>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="form-row align-items-end">
+                            <div class="form-group col-md-3">
+                                <label>Desde</label>
+                                <input type="date" class="form-control" id="desde" name="desde">
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label>Hasta</label>
+                                <input type="date" class="form-control" id="hasta" name="hasta">
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label>Tipo de reporte</label>
+                                <select class="form-control" id="tipo_reporte" name="tipo_reporte">
+                                    <option value="pagos">Pagos</option>
+                                    <option value="miembros">Miembros</option>
+                                    <option value="ingresos">Ingresos</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <button class="btn-add w-100">
+                                    <i class="fas fa-search"></i> Descargar PDF
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Tabla de Pagos -->
-            <div class="classes-section mt-4">
+            <div class="classes-section">
                 <div class="section-header">
                     <h3 class="chart-title">Tabla de Pagos</h3>
                 </div>
@@ -123,7 +109,6 @@
         </div>
     </div>
 
-    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>

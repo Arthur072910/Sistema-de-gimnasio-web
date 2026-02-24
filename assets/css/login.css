@@ -556,3 +556,47 @@ input[type="password"].form-control {
 .form-control:focus {
     animation: inputGlow 2s infinite;
 }
+/* ============================================ */
+/* BOTÓN DE GOOGLE - ESTILO CLÁSICO             */
+/* ============================================ */
+.google-login {
+    display: flex;
+    justify-content: center;
+    margin: 1.5rem 0;
+}
+
+.btn-google {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    width: auto;
+    min-width: 260px;
+    padding: 0.8rem 2rem;
+    background: #ffffff;
+    color: #5f6368;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    font-family: 'Poppins', sans-serif;
+    text-decoration: none;
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.btn-google i {
+    color: #4285f4;
+    font-size: 1.2rem;
+}
+
+.btn-google:hover {
+    background: #f8f9fa;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    border-color: #dadce0;
+}
+
+.btn-google:active {
+    background: #f1f3f4;
+    box-shadow: none;
+}

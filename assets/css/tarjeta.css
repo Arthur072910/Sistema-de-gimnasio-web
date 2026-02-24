@@ -69,18 +69,17 @@ body{
 }
 
 
+
 .lado-der{
     width:230px;      
-    background:#141414;
     position:relative;
     display:flex;
     flex-direction:column;
-    justify-content:center;
     align-items:center;
-    overflow:hidden;
+    justify-content:space-between;
+    padding:25px 15px;
     background:#000; 
 }
-
 
 .lado-der::before{
     content:"";
@@ -89,20 +88,20 @@ body{
     right:-90px;
     width:180px;
     height:380px;
-    background: linear-gradient(180deg, #ffe11f, #ffe11f);
+    background:#ffe11f;
     transform:rotate(25deg);
     border-radius:40px;
     opacity:0.85;
+    z-index:1;
 }
-
 
 .logo{
-    width:95px;      
-    margin-bottom:20px;
+    width:150px;
+    height:auto;
     position:relative;
     z-index:2;
+    margin-top: 30px;   
 }
-
 
 .barcode{
     width:170px;
@@ -118,6 +117,7 @@ body{
     position:relative;
     z-index:2;
 }
+
 
 
 .btn-print{
@@ -152,7 +152,51 @@ body{
 }
 
 
-.logo{
-    width: 220px;   
-    height: auto;
+
+
+
+.codigo-texto{
+    margin-top: 4px;
+    font-size: 12px;
+    color: #000;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.barcode-box{
+    background: #fff;
+    padding: 8px;
+    border-radius: 6px;
+    text-align: center;
+    display: inline-block;
+    position: relative;
+    z-index: 3;  
+}
+
+
+
+
+.barcode-box{
+    background: #fff;
+    padding: 8px;
+    border-radius: 6px;
+    text-align: center;
+    position: relative;
+    z-index: 5;
+}
+
+
+#barcode{
+    width: 120px;
+    height: 25px;
+    display: block;
+}
+
+
+.codigo-texto{
+    margin-top: 5px;
+    font-size: 12px;
+    color: #000;
+    font-weight: 600;
+    letter-spacing: 1px;
 }

@@ -12,7 +12,7 @@ $mensaje = '';
 $tipo = '';
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Validar que las contraseñas coincidan
+    
     if($_POST['password'] !== $_POST['confirmar']) {
         $mensaje = 'Las contraseñas no coinciden';
         $tipo = 'danger';
@@ -59,7 +59,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="registro-card">
             
             <div class="logo">
-                <img src="../assets/img/ChatGPT Image 30 ene 2026, 10_35_11 p.m..png" alt="Delux Gym">
+                <img src="../assets/img/logo_deluxGym.png" alt="Delux Gym">
                 <h1>Delux Gym</h1>
                 <p>CREA TU CUENTA</p>
             </div>

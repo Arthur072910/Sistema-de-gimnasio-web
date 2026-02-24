@@ -97,8 +97,10 @@
     </div>
 
     <div style="text-align: center; margin-top: 30px;">
-        <a href="#contact" class="btn unete">Únete a nosotros</a>
+        <a href="view/plan.php" class="btn unete">Únete a nosotros</a>
     </div>
+
+    
 </div>
 
 <!-- ==================== NUESTRAS INSTALACIONES ==================== -->

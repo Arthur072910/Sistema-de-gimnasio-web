@@ -1,4 +1,104 @@
+<?php
+session_start();
+require_once "../config/database.php";
 
+$database = new Database();
+$conn = $database->getConnection();
+
+/* ==============================
+   VALIDAR QUE ESTÉ LOGUEADO
+============================== */
+if (!isset($_SESSION['cliente_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+/* ==============================
+   VALIDAR QUE HAYA PLAN
+============================== */
+if (!isset($_SESSION['id_membresia'])) {
+    header("Location: plan.php");
+    exit();
+}
+
+/* ==============================
+   PROCESAR PAGO
+============================== */
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['procesar_pago'])) {
+
+    $id_cliente   = $_SESSION['cliente_id'];
+    $id_tipo      = $_SESSION['id_membresia']; // id del tipo de membresía
+    $metodo_pago  = $_POST['metodo_pago'];
+    $monto        = $_SESSION['precio_plan'];
+
+    try {
+
+        // 🔹 Iniciar transacción
+        $conn->beginTransaction();
+
+        // 1️⃣ Crear membresía
+        $fecha_inicio = date("Y-m-d");
+        $fecha_fin    = date("Y-m-d", strtotime("+30 days"));
+        $codigo_qr    = uniqid('GYM-' . $id_cliente . '-');
+
+        $sqlM = "INSERT INTO membresias 
+                (id_cliente, id_tipo_membresia, fecha_inicio, fecha_vencimiento, codigo_qr, estado)
+                VALUES (?, ?, ?, ?, ?, 'activa')";
+
+        $stmtM = $conn->prepare($sqlM);
+        $stmtM->execute([
+            $id_cliente,
+            $id_tipo,
+            $fecha_inicio,
+            $fecha_fin,
+            $codigo_qr
+        ]);
+
+        // Obtener id real de membresía creada
+        $id_membresia_real = $conn->lastInsertId();
+        // Generar código de 12 dígitos
+$codigo_qr = str_pad($id_membresia_real, 12, "0", STR_PAD_LEFT);
+
+// Actualizar la membresía con el nuevo código
+$update = $conn->prepare("UPDATE membresias SET codigo_qr = ? WHERE id_membresia = ?");
+$update->execute([$codigo_qr, $id_membresia_real]);
+
+
+        // 2️⃣ Registrar pago
+        $sqlP = "INSERT INTO pagos 
+                (id_cliente, id_membresia, monto_total, metodo_pago, estado_pago, tipo_transaccion, fecha_pago)
+                VALUES (?, ?, ?, ?, ?, ?, NOW())";
+
+        $stmtP = $conn->prepare($sqlP);
+        $stmtP->execute([
+            $id_cliente,
+            $id_membresia_real,
+            $monto,
+            $metodo_pago,
+            'pagado',
+            'membresia'
+        ]);
+
+        // 🔹 Confirmar transacción
+        $conn->commit();
+
+        // Limpiar sesión
+        unset($_SESSION['id_membresia']);
+        unset($_SESSION['nombre_plan']);
+        unset($_SESSION['precio_plan']);
+
+        echo "<script>
+            alert('Pago realizado correctamente 🎉');
+            window.location='plan.php';
+        </script>";
+        exit();
+
+    } catch (Exception $e) {
+        $conn->rollBack();
+        echo "Error al procesar el pago: " . $e->getMessage();
+    }
+}
+?>
 <!doctype html>
 <html lang="es">
 <head>
@@ -63,43 +163,29 @@
 
                         <!-- TARJETA -->
                         <div id="metodo-tarjeta" class="metodo-panel active">
-                            <form id="form-tarjeta">
-                                <div class="form-group">
-                                    <label>Número de tarjeta</label>
-                                    <input type="text" class="form-control" id="card-number" placeholder="1234 5678 9012 3456">
-                                </div>
-                                
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label>Vence</label>
-                                            <input type="text" class="form-control" id="card-expiry" placeholder="MM/AA">
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label>CVV</label>
-                                            <input type="text" class="form-control" id="card-cvv" placeholder="123">
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <div class="form-group">
-                                    <label>Nombre del titular</label>
-                                    <input type="text" class="form-control" id="card-name" placeholder="Como aparece en la tarjeta">
-                                </div>
+    <form method="POST" action="">
 
-                                <div class="form-group">
-                                    <label>Correo electrónico</label>
-                                    <input type="email" class="form-control" id="card-email" placeholder="ejemplo@correo.com">
-                                </div>
+        <input type="hidden" name="procesar_pago" value="1">
+        <input type="hidden" name="metodo_pago" value="Tarjeta">
+        <input type="hidden" name="tipo_transaccion" value="membresia">
 
-                                <button type="submit" class="btn-pago btn-block mt-4">
-                                    <i class="fas fa-lock mr-2"></i>
-                                    PAGAR $3,050.80
-                                </button>
-                            </form>
-                        </div>
+        <div class="form-group">
+            <label>Número de tarjeta</label>
+            <input type="text" class="form-control" name="numero_tarjeta" placeholder="1234 5678 9012 3456" required>
+        </div>
+        
+       
+
+       
+
+        <button type="submit" class="btn-pago btn-block mt-4">
+    <i class="fas fa-lock mr-2"></i>
+    PAGAR $<?= $_SESSION['precio_plan'] ?? '0.00' ?>
+</button>
+
+    </form>
+</div>
 
                         <!-- PAYPAL -->
                         <div id="metodo-paypal" class="metodo-panel">
@@ -209,60 +295,22 @@
             <div class="col-lg-4">
                 <div class="card resumen-card">
                     <div class="card-body">
-                        <h5 class="card-title mb-3">Resumen</h5>
+                        <div class="resumen">
+    <h3>Resumen</h3>
 
-                        <!-- Productos -->
-                        <div class="productos-resumen mb-3">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span>Proteína Whey <small>x2</small></span>
-                                <span>$45.00</span>
-                            </div>
-                            <div class="d-flex justify-content-between mb-2">
-                                <span>Creatina <small>x1</small></span>
-                                <span>$30.00</span>
-                            </div>
-                            <div class="d-flex justify-content-between mb-2">
-                                <span>Shaker <small>x1</small></span>
-                                <span>$10.00</span>
-                            </div>
-                        </div>
+    <p>
+        <?= $_SESSION['nombre_plan'] ?? 'Sin plan seleccionado' ?>
+    </p>
 
-                        <hr>
+    <hr>
 
-                        <!-- Totales -->
-                        <div class="totales-simple">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span>Subtotal:</span>
-                                <span>$85.00</span>
-                            </div>
-                            <div class="d-flex justify-content-between mb-2">
-                                <span>Envío:</span>
-                                <span class="text-success">Gratis</span>
-                            </div>
-                            <div class="d-flex justify-content-between mb-2">
-                                <span>IVA (13% SV):</span>
-                                <span>$.......</span>
-                            </div>
-                            <div class="d-flex justify-content-between font-weight-bold mt-2">
-                                <span>TOTAL:</span>
-                                <span class="total-final">$85.00</span>
-                            </div>
-                        </div>
-
-                        <!-- Cupón simple -->
-                        <div class="cupon-simple mt-3">
-                            <input type="text" class="form-control form-control-sm" placeholder="¿Cupón?" id="cupon">
-                            <button class="btn-aplicar btn-sm mt-2" onclick="aplicarCupon()">Aplicar</button>
-                        </div>
-
-                        <!-- Seguridad -->
-                        <div class="text-center mt-3">
-                            <small class="text-muted">
-                                <i class="fas fa-lock mr-1"></i>
-                                Pago seguro SSL
-                            </small>
-                        </div>
-                    </div>
+    <p>
+        TOTAL:
+        <strong>
+            $<?= $_SESSION['precio_plan'] ?? '0.00' ?>
+        </strong>
+    </p>
+</div>
                 </div>
             </div>
         </div>

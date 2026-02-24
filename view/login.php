@@ -17,7 +17,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     $resultado = $controller->login($_POST['email'], $_POST['password']);
     
     if($resultado['success']) {
-        $_SESSION['usuario_id']    = $resultado['id_usuario']; // ✅ ahora sí llega
+        $_SESSION['usuario_id']    = $resultado['id_usuario']; 
         $_SESSION['cliente_id']    = $resultado['id_cliente'] ?? null;
         $_SESSION['cliente_nombre'] = $resultado['nombre'];
         $_SESSION['cliente_email'] = $resultado['email'];
@@ -45,7 +45,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="login-card">
             
             <div class="logo">
-                <img src="../assets/img/ChatGPT Image 30 ene 2026, 10_35_11 p.m..png" alt="Delux Gym">
+                <img src="../assets/img/logo_deluxgym.png" alt="Delux Gym">
                 <h1>Delux Gym</h1>
                 <p>BIENVENIDO DE VUELTA</p>
             </div>

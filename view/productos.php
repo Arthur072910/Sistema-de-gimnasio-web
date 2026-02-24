@@ -112,7 +112,7 @@ if(!isset($_SESSION['usuario_id'])) {
                     <div class="card-body text-center">
                         <h4 class="card-title">Multivitamínicos / Omega 3</h4>
                         <p class="card-text">Blindaje total para tu salud.</p>
-                        <h5 class="font-weight-bold">$15.00</h5>
+                        <h5 >$15.00</h5>
                     </div>
                     <div class="card-footer bg-transparent border-0">
                         <a href="#" class="btn btn-warning btn-block font-weight-bold">COMPRAR</a>

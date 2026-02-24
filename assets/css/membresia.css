@@ -1,4 +1,4 @@
-/* ===== VARIABLES - Paleta personalizada ===== */
+
 :root {
     --bg-primary: #000000;
     --bg-secondary: #0a0a0a;
@@ -23,13 +23,13 @@
     --danger-bg: rgba(255, 68, 68, 0.1);
 }
 
-/* ===== ESTILOS GENERALES ===== */
+
 body {
     background-color: var(--bg-primary);
     color: var(--text-primary);
 }
 
-/* ===== TARJETAS (para el formulario y secciones) ===== */
+
 .card {
     background: var(--bg-card) !important;
     border: 1px solid var(--border-color) !important;
@@ -43,7 +43,7 @@ body {
     font-weight: 600;
 }
 
-/* ===== FORMULARIOS ===== */
+
 .form-control, .form-control:focus {
     background: var(--bg-input) !important;
     border: 1px solid var(--border-color) !important;
@@ -71,7 +71,7 @@ label {
     font-weight: 500;
 }
 
-/* ===== BOTONES ===== */
+
 .btn-add {
     background: var(--accent-gradient);
     color: var(--bg-primary) !important;
@@ -106,7 +106,7 @@ label {
     color: var(--danger);
 }
 
-/* ===== TABLA ===== */
+
 .classes-table {
     width: 100%;
     border-collapse: collapse;
@@ -135,7 +135,7 @@ label {
     background: var(--bg-hover);
 }
 
-/* ===== ESTADOS (activo/inactivo) ===== */
+
 .class-status {
     padding: 4px 12px;
     border-radius: 20px;
@@ -155,7 +155,7 @@ label {
     border: 1px solid var(--danger);
 }
 
-/* ===== MODAL ===== */
+
 .modal-content {
     background: var(--bg-card) !important;
     border: 1px solid var(--border-color) !important;
@@ -180,7 +180,7 @@ label {
     opacity: 1;
 }
 
-/* ===== SECCIÓN DE GESTIÓN (encabezado) ===== */
+
 .classes-section {
     background: transparent;
     padding: 20px;
@@ -199,7 +199,6 @@ label {
     font-weight: 600;
 }
 
-/* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
     .classes-table {
         display: block;

@@ -65,7 +65,7 @@ if($rol == 'cliente' && isset($_SESSION['cliente_id'])) {
 
         <div class="profile-grid">
 
-            <!-- ── SIDEBAR ── -->
+            
             <aside class="profile-card card">
                 <div class="avatar-container">
                     <img src="<?php echo file_exists('../assets/img/avatar-placeholder.png')
@@ -88,10 +88,10 @@ if($rol == 'cliente' && isset($_SESSION['cliente_id'])) {
                 </div>
             </aside>
 
-            <!-- ── DETALLE ── -->
+          
             <main class="profile-details">
 
-                <!-- Información de la cuenta -->
+                
                 <section class="card">
                     <h2><i class="fas fa-id-card"></i> Información de la Cuenta</h2>
                     <div class="info-grid">
@@ -106,7 +106,7 @@ if($rol == 'cliente' && isset($_SESSION['cliente_id'])) {
                     </div>
                 </section>
 
-                <!-- Estado de membresía -->
+               
                 <section class="card racha-card">
                     <h2><i class="fas fa-crown"></i> Estado de Membresía</h2>
                     <div class="racha-content">
@@ -126,9 +126,9 @@ if($rol == 'cliente' && isset($_SESSION['cliente_id'])) {
                 </section>
 
             </main>
-        </div><!-- /.profile-grid -->
+        </div>
 
-        <!-- Botones inferiores solo para clientes -->
+       
         <?php if($rol == 'cliente'): ?>
         <div class="suscripcion-box bottom-actions">
             <form action="tarjeta.php" method="get">
@@ -146,7 +146,7 @@ if($rol == 'cliente' && isset($_SESSION['cliente_id'])) {
         </div>
         <?php endif; ?>
 
-    </div><!-- /.container -->
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>

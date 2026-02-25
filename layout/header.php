@@ -46,9 +46,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </a>
         <div class="dropdown-menu">
           <a class="dropdown-item <?php echo ($current_page == 'admin.php') ? 'active' : ''; ?>" 
-             href="<?php echo $base_url; ?>/view/admin.php">Panel Admin</a>
-          <a class="dropdown-item <?php echo ($current_page == 'recepcionista.php') ? 'active' : ''; ?>" 
-             href="<?php echo $base_url; ?>/view/recepcionista.php">Panel Recepcionista</a>
+             href="<?php echo $base_url; ?>/view/admin.php">Panel Administrador</a>
         </div>
       </li>
       <?php endif; ?>

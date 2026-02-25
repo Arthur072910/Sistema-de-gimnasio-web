@@ -1,8 +1,9 @@
 {
     "require": {
-        "mpdf/mpdf": "^8.2"
+        "mpdf/mpdf": "^8.2",
+        "composer/semver": "3.3",
+        "google/apiclient": "^2.19"
     }
 
     
 }
-

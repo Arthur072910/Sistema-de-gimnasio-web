@@ -1,32 +1,3 @@
-<?php
-// Al principio del archivo, antes de cualquier HTML
-session_start();
-
-// Verificar sesión
-if (!isset($_SESSION['usuario_id'])) {
-    header("Location: login.php");
-    exit();
-}
-
-// Aquí incluimos los controladores que necesitamos
-require_once __DIR__ . '/controller/ProductoController.php';
-
-// Procesar acciones de productos ANTES de cualquier HTML
-$mensaje_producto = '';
-$tipo_mensaje_producto = '';
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['accion_producto'])) {
-    $productoController = new ProductoController();
-    
-    switch ($_POST['accion_producto']) {
-        case 'agregar':
-            $resultado = $productoController->agregar($_POST);
-            $mensaje_producto = $resultado['message'];
-            $tipo_mensaje_producto = $resultado['success'] ? 'success' : 'danger';
-            break;
-    }
-}
-?>
 <!DOCTYPE html>
 <html lang="es">
 <head>

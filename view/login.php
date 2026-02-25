@@ -17,11 +17,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     $resultado = $controller->login($_POST['email'], $_POST['password']);
     
     if($resultado['success']) {
-<<<<<<< HEAD
         $_SESSION['usuario_id']    = $resultado['id_usuario']; 
-=======
-        $_SESSION['usuario_id']    = $resultado['id_usuario'];
->>>>>>> origin/BackEnd1
         $_SESSION['cliente_id']    = $resultado['id_cliente'] ?? null;
         $_SESSION['cliente_nombre'] = $resultado['nombre'];
         $_SESSION['cliente_email'] = $resultado['email'];

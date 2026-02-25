@@ -48,88 +48,105 @@ if (isset($_GET['error'])) {
     <link rel="stylesheet" href="../assets/css/login.css">
 </head>
 <body>
-    <div class="login-container">
-        <div class="login-card">
-            
-            <div class="logo">
-                <img src="../assets/img/logo_deluxgym.png" alt="Delux Gym">
-                <h1>Delux Gym</h1>
-                <p>BIENVENIDO DE VUELTA</p>
-            </div>
-            
-            <?php if($error): ?>
-            <div class="error-message">
-                <i class="fas fa-exclamation-circle"></i>
-                <span><?php echo htmlspecialchars($error); ?></span>
-            </div>
-            <?php endif; ?>
-            
-            <form method="POST">
-                <div class="form-group">
-                    <label><i class="fas fa-envelope"></i> Email</label>
-                    <div class="input-wrapper">
-                        <i class="fas fa-envelope"></i>
-                        <input type="email" 
-                               name="email" 
-                               class="form-control" 
-                               placeholder="tu@email.com" 
-                               value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>" 
-                               required>
-                    </div>
+    <div class="split-card">
+        <!-- LADO IZQUIERDO - LOGO GRANDE -->
+        <div class="split-left">
+            <div class="left-content">
+                <div class="logo-large">
+                    <img src="../assets/img/logo_deluxgym.png" alt="Delux Gym">
                 </div>
+                <h1>¡Hola!</h1>
+                <h2>Inicia sesión en tu cuenta</h2>
+            </div>
+        </div>
+        
+        <!-- LÍNEA SEPARADORA DORADA -->
+        <div class="split-divider"></div>
+        
+        <!-- LADO DERECHO - FORMULARIO LOGIN -->
+        <div class="split-right">
+            <div class="login-card-compact">
                 
-                <div class="form-group">
-                    <label><i class="fas fa-lock"></i> Contraseña</label>
-                    <div class="input-wrapper">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" 
-                               name="password" 
-                               class="form-control" 
-                               placeholder="••••••••"
-                               required>
-                    </div>
+                <?php if($error): ?>
+                <div class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span><?php echo htmlspecialchars($error); ?></span>
                 </div>
+                <?php endif; ?>
                 
-                <button type="submit" class="btn-login">
-                    <i class="fas fa-sign-in-alt"></i> INICIAR SESIÓN
-                </button>
-            </form>
+                <form method="POST">
+                    <div class="form-group">
+                        <label>E-MAIL</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" 
+                                   name="email" 
+                                   class="form-control" 
+                                   placeholder="tu@email.com" 
+                                   value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>" 
+                                   required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>CONTRASEÑA</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" 
+                                   name="password" 
+                                   class="form-control" 
+                                   placeholder="··········"
+                                   required>
+                            <button type="button" class="toggle-password" onclick="togglePassword()">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn-login">
+                        INICIAR SESIÓN
+                    </button>
+                </form>
 
-            <!-- ======================================== -->
-            <!-- BOTÓN DE GOOGLE - NUEVO                  -->
-            <!-- ======================================== -->
-            <div class="google-login">
-                <a href="google-auth.php" class="btn-google">
-                    <i class="fab fa-google"></i>
-                    CONTINUAR CON GOOGLE
-                </a>
+                <div class="google-login">
+                    <a href="google-auth.php" class="btn-google">
+                        <i class="fab fa-google"></i>
+                        CONTINUAR CON GOOGLE
+                    </a>
+                </div>
+                
+                <div class="divider">
+                    <span class="divider-line"></span>
+                    <span class="divider-text">O</span>
+                    <span class="divider-line"></span>
+                </div>
+                
+                <div class="register-section">
+                    <p class="register-text">¿No tienes una cuenta?</p>
+                    <a href="registro.php" class="register-link">
+                        CREAR CUENTA
+                    </a>
+                </div>
+                
             </div>
-            
-            <!-- ======================================== -->
-            <!-- SEPARADOR                                -->
-            <!-- ======================================== -->
-            <div class="divider">
-                <span class="divider-line"></span>
-                <span class="divider-text">O</span>
-                <span class="divider-line"></span>
-            </div>
-            
-            <div class="register-section">
-                <p class="register-text">Únete a la comunidad Delux Gym</p>
-                <a href="registro.php" class="register-link">
-                    CREAR CUENTA <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-            
-            <div class="terms">
-                Al iniciar sesión aceptas nuestros 
-                <a href="#">términos</a> y 
-                <a href="#">política de privacidad</a>
-            </div>
-            
         </div>
     </div>
     
-    <script src="../assets/js/login.js"></script>
+    <script>
+    function togglePassword() {
+        const passwordInput = document.querySelector('input[name="password"]');
+        const toggleIcon = document.querySelector('.toggle-password i');
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleIcon.classList.remove('fa-eye');
+            toggleIcon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            toggleIcon.classList.remove('fa-eye-slash');
+            toggleIcon.classList.add('fa-eye');
+        }
+    }
+    </script>
 </body>
 </html>

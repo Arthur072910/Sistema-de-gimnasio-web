@@ -17,7 +17,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     $resultado = $controller->login($_POST['email'], $_POST['password']);
     
     if($resultado['success']) {
+<<<<<<< HEAD
         $_SESSION['usuario_id']    = $resultado['id_usuario']; 
+=======
+        $_SESSION['usuario_id']    = $resultado['id_usuario'];
+>>>>>>> origin/BackEnd1
         $_SESSION['cliente_id']    = $resultado['id_cliente'] ?? null;
         $_SESSION['cliente_nombre'] = $resultado['nombre'];
         $_SESSION['cliente_email'] = $resultado['email'];
@@ -27,6 +31,13 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     } else {
         $error = $resultado['message'];
+    }
+}
+
+// Verificar si hay error de Google
+if (isset($_GET['error'])) {
+    if ($_GET['error'] == 'google_error') {
+        $error = "Error al iniciar sesión con Google. Intenta de nuevo.";
     }
 }
 ?>
@@ -87,10 +98,23 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <i class="fas fa-sign-in-alt"></i> INICIAR SESIÓN
                 </button>
             </form>
+
+            <!-- ======================================== -->
+            <!-- BOTÓN DE GOOGLE - NUEVO                  -->
+            <!-- ======================================== -->
+            <div class="google-login">
+                <a href="google-auth.php" class="btn-google">
+                    <i class="fab fa-google"></i>
+                    CONTINUAR CON GOOGLE
+                </a>
+            </div>
             
+            <!-- ======================================== -->
+            <!-- SEPARADOR                                -->
+            <!-- ======================================== -->
             <div class="divider">
                 <span class="divider-line"></span>
-                <span class="divider-text">¿Nuevo aquí?</span>
+                <span class="divider-text">O</span>
                 <span class="divider-line"></span>
             </div>
             
@@ -99,6 +123,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <a href="registro.php" class="register-link">
                     CREAR CUENTA <i class="fas fa-arrow-right"></i>
                 </a>
+            </div>
+            
+            <div class="terms">
+                Al iniciar sesión aceptas nuestros 
+                <a href="#">términos</a> y 
+                <a href="#">política de privacidad</a>
             </div>
             
         </div>

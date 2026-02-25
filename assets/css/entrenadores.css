@@ -1,0 +1,131 @@
+/* ===== PALETA Y VARIABLES ===== */
+:root {
+    --black: #111111;
+    --white: #fff8f8;
+    --gold: #ffd700;
+    --dark-grey: #1a1a1a;
+    --border: #333333;
+}
+
+body {
+    background-color: var(--black);
+    color: var(--white);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Ajuste del contenido para el sidebar fixed */
+.main-content {
+    margin-left: 280px; /* Ancho del sidebar */
+    padding: 40px;
+    min-height: 100vh;
+}
+
+/* ===== ENCABEZADO ===== */
+.title-gym {
+    color: var(--gold);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.subtitle-gym {
+    color: var(--white);
+    opacity: 0.7;
+}
+
+/* ===== TARJETAS ===== */
+.card-gym {
+    background-color: var(--dark-grey);
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.card-title-gym {
+    color: var(--gold);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+}
+
+/* ===== FORMULARIOS ===== */
+.form-control-gym {
+    background-color: var(--black) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--white) !important;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.form-control-gym:focus {
+    border-color: var(--gold) !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 215, 0, 0.15);
+}
+
+.btn-gold-gym {
+    background-color: var(--gold);
+    color: var(--black);
+    border: none;
+    padding: 12px;
+    font-weight: bold;
+    border-radius: 8px;
+    transition: 0.3s;
+    text-transform: uppercase;
+}
+
+.btn-gold-gym:hover {
+    background-color: #e6c200;
+    transform: translateY(-2px);
+}
+
+/* ===== TABLA ===== */
+.table-gym {
+    color: var(--white);
+}
+
+.table-gym thead th {
+    background-color: #000;
+    color: var(--gold);
+    border: none;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+}
+
+.table-gym td {
+    border-top: 1px solid var(--border);
+    vertical-align: middle;
+}
+
+.badge-specialty {
+    background-color: rgba(255, 215, 0, 0.1);
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+}
+
+/* ===== BOTONES DE ACCIÓN ===== */
+.btn-action {
+    border: none;
+    background: transparent;
+    padding: 8px;
+    font-size: 1.1rem;
+    transition: 0.2s;
+}
+
+.btn-action.edit { color: var(--gold); }
+.btn-action.delete { color: #ff4444; }
+
+.btn-action:hover {
+    transform: scale(1.2);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+}

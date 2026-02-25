@@ -1,0 +1,41 @@
+/* Namespace único para evitar conflictos */
+.gym-sidebar {
+    --gym-black: #111111;
+    --gym-white: #fff8f8;
+    --gym-gold: #ffd700;
+    
+    width: 280px;
+    background-color: var(--gym-black) !important;
+    min-height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    border-right: 1px solid #333;
+    z-index: 9999; /* Siempre por encima */
+}
+
+.gym-sidebar .nav-link {
+    color: var(--gym-white) !important;
+    padding: 15px 20px !important;
+    display: flex;
+    align-items: center;
+    transition: 0.3s;
+}
+
+.gym-sidebar .nav-link i {
+    color: var(--gym-gold);
+    margin-right: 12px;
+    width: 20px;
+    text-align: center;
+}
+
+.gym-sidebar .nav-link:hover, 
+.gym-sidebar .nav-link.active {
+    background-color: var(--gym-gold) !important;
+    color: var(--gym-black) !important;
+}
+
+.gym-sidebar .nav-link:hover i,
+.gym-sidebar .nav-link.active i {
+    color: var(--gym-black) !important;
+}

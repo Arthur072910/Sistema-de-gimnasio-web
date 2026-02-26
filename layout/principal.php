@@ -153,23 +153,7 @@
 </section>
 
 <!-- ==================== CONTÁCTANOS ==================== -->
-<!-- ==================== CONTÁCTANOS ==================== -->
 <div class="contactos-container">
-    <h2>CONTÁCTANOS</h2>
-
-    <!-- Información de contacto (correo y teléfono) -->
-    <div class="info-contacto">
-        <div>
-            <h4>CORREO ELECTRÓNICO</h4>
-            <p>deluxgym2026@gmail.com</p>
-        </div>
-        <div>
-            <h4>NÚMERO DE TELÉFONO</h4>
-            <p>+503 1111-1111</p>
-        </div>
-    </div>
-
-    <!-- Contenedor horizontal: imagen + formulario -->
     <div class="contacto-horizontal">
         <div class="container-img-contactos">
             <img src="assets/img/caminadora.jpg" alt="Caminadora">
@@ -177,14 +161,29 @@
 
         <div class="container-mensaje">
             <h3>Preguntas o inquietud</h3>
-            <form action="">
-                <input type="text" placeholder="NOMBRE" class="input-inquietud">
-                <input type="email" placeholder="CORREO" class="input-inquietud">
-                <textarea placeholder="ESCRIBE TU MENSAJE" class="input-inquietud textarea-inquietud"></textarea>
+            
+            <form id="formContacto" action="view/correos/ProcesarContacto.php" method="POST">
+                
+                <?php if (isset($_SESSION['usuario_id'])): ?>
+                    <div style="color: #ffd700; margin-bottom: 15px; border: 1px solid #333; padding: 10px; background: rgba(255,215,0,0.05);">
+                        <i class="fas fa-user-circle"></i> 
+                        Hola, <strong><?php echo $_SESSION['cliente_nombre']; ?></strong>. 
+                    </div>
+                    <input type="hidden" name="nombre" value="<?php echo $_SESSION['cliente_nombre']; ?>">
+                    <input type="hidden" name="email" value="<?php echo $_SESSION['cliente_email']; ?>">
+
+                <?php else: ?>
+                    <input type="text" name="nombre" placeholder="NOMBRE" class="input-inquietud" required>
+                    <input type="email" name="email" placeholder="CORREO" class="input-inquietud" required>
+                <?php endif; ?>
+
+                <textarea name="mensaje" placeholder="ESCRIBE TU MENSAJE" class="input-inquietud textarea-inquietud" required></textarea>
+                
                 <button type="submit" class="btn-submit">Enviar mensaje</button>
             </form>
         </div>
     </div>
-
-    
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="assets/js/contacto.js"></script>

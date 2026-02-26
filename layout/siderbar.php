@@ -19,7 +19,7 @@ $base_url = '/Sistema-de-gimnasio-web';
             <i class="fas fa-user-tie"></i> Entrenadores
         </a>
 
-        <a class="nav-link <?php echo ($pagina_actual == 'miembros.php') ? 'active' : ''; ?>" href="#">
+        <a class="nav-link <?php echo ($pagina_actual == 'miembros.php') ? 'active' : ''; ?>" href="miembros.php">
             <i class="fas fa-users"></i> Miembros
         </a>
 

@@ -1,245 +1,336 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+session_start();
+if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador') {
+    header("Location: ../index.php");
+    exit();
+}
 
 require_once __DIR__ . '/../controller/PlanController.php';
 
 $controller = new PlanController();
+$mensaje = '';
+$error = '';
 
-// AGREGAR
-if (isset($_POST['accion']) && $_POST['accion'] == 'agregar') {
-    $controller->agregar($_POST);
-    header('Location: planes.php');
-    exit();
+// Procesar formulario
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['accion'])) {
+    if ($_POST['accion'] == 'agregar') {
+        $resultado = $controller->agregar($_POST);
+        if ($resultado['success']) {
+            $mensaje = $resultado['message'];
+        } else {
+            $error = $resultado['message'];
+        }
+    } elseif ($_POST['accion'] == 'editar') {
+        $resultado = $controller->actualizar($_POST);
+        if ($resultado['success']) {
+            $mensaje = $resultado['message'];
+        } else {
+            $error = $resultado['message'];
+        }
+    } elseif ($_POST['accion'] == 'eliminar') {
+        $resultado = $controller->eliminar($_POST['id_tipo_membresia']);
+        if ($resultado['success']) {
+            $mensaje = $resultado['message'];
+        } else {
+            $error = $resultado['message'];
+        }
+    }
 }
 
-// ACTUALIZAR
-if (isset($_POST['accion']) && $_POST['accion'] == 'actualizar') {
-    $controller->actualizar($_POST);
-    header('Location: planes.php');
-    exit();
-}
-
-// ELIMINAR
-if (isset($_GET['eliminar'])) {
-    $controller->eliminar($_GET['eliminar']);
-    header('Location: planes.php');
-    exit();
-}
-
+// Obtener lista de planes
 $planes = $controller->listar();
+
+// Obtener plan para editar
+$plan_editar = null;
+if (isset($_GET['editar'])) {
+    $resultado = $controller->obtener($_GET['editar']);
+    if ($resultado['success']) {
+        $plan_editar = $resultado['data'];
+    }
+}
+
+// Estadísticas
+$total_planes = count($planes);
+$precio_promedio = 0;
+$duracion_promedio = 0;
+if ($total_planes > 0) {
+    $suma_precios = 0;
+    $suma_duracion = 0;
+    foreach($planes as $p) {
+        $suma_precios += $p['precio'];
+        $suma_duracion += $p['duracion_dias'];
+    }
+    $precio_promedio = $suma_precios / $total_planes;
+    $duracion_promedio = $suma_duracion / $total_planes;
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Gestión de Planes | DeluxGym</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Planes · Delux Gym Admin</title>
+    
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <!-- Tu CSS personalizado -->
-    <link rel="stylesheet" href="../assets/css/admin.css">
-    <link rel="stylesheet" href="../assets/css/membresia.css">
-    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../assets/css/sidebar-global.css">
+    <link rel="stylesheet" href="../assets/css/planes.css">
 </head>
 <body>
-    <div class="dashboard">
-        <!-- Sidebar (ajusta según tu proyecto) -->
-        <div class="sidebar">
-            <div class="logo-area">
-                <img src="../assets/img/logo_deluxGym.png" alt="Logo" style="height: 100px;">
-            </div>
-            <ul class="nav-menu">
-                <li class="nav-item"><a href="admin.php" class="nav-link"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
-                <li class="nav-item"><a href="registrouser.php" class="nav-link"><i class="fas fa-users"></i> Registrar usuarios</a></li>
-                <li class="nav-item"><a href="miembros.php" class="nav-link"><i class="fas fa-users"></i> Miembros</a></li>
-                <li class="nav-item"><a href="clasess.php" class="nav-link"><i class="fas fa-calendar-alt"></i> Clases</a></li>
-                <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-credit-card"></i> Pagos</a></li>
-                <li class="nav-item"><a href="entrenadores.php" class="nav-link"><i class="fas fa-chart-line"></i> Registro de entrenadores</a></li>
-                <li class="nav-item"><a href="horarios.php" class="nav-link"><i class="fas fa-clock"></i> Horarios</a></li>
-                <li class="nav-item"><a href="planes.php" class="nav-link active"><i class="fas fa-cog"></i> Planes</a></li>
-            </ul>
-        </div>
+    <!-- Sidebar -->
+    <?php include dirname(__DIR__) . '/layout/siderbar.php'; ?>
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Header -->
-            <div class="header">
-                <div class="search-area">
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Buscar plan...">
-                    </div>
+    <!-- Botón para móvil -->
+    <button class="sidebar-toggle d-lg-none" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Contenido principal -->
+    <main class="main-content">
+        
+        <!-- Header con estadísticas -->
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-tags"></i>
                 </div>
-                <div class="admin-profile">
-                    <i class="fas fa-bell"></i>
-                    <div class="admin-avatar">AD</div>
+                <div class="stat-info">
+                    <h3><?php echo $total_planes; ?></h3>
+                    <p>Total planes</p>
                 </div>
             </div>
-
-            <!-- Contenido principal -->
-            <div class="classes-section">
-                <div class="section-header">
-                    <h3 class="chart-title">Gestión de Planes de Membresía</h3>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-dollar-sign"></i>
                 </div>
-
-                <!-- Formulario AGREGAR -->
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">Agregar Nuevo Plan</h5>
-                        <form method="POST" action="">
-                            <input type="hidden" name="accion" value="agregar">
-                            <div class="form-row">
-                                <div class="form-group col-md-4">
-                                    <label>Nombre</label>
-                                    <input type="text" name="nombre" class="form-control" placeholder="Ej. Premium" required>
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <label>Precio ($)</label>
-                                    <input type="number" step="0.01" name="precio" class="form-control" placeholder="49.99" required>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label>Duración (días)</label>
-                                    <input type="number" name="duracion_dias" class="form-control" placeholder="30" required>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label>Estado</label>
-                                    <select name="estado" class="form-control">
-                                        <option value="activo">Activo</option>
-                                        <option value="inactivo">Inactivo</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Descripción</label>
-                                <textarea name="descripcion" class="form-control" rows="2" placeholder="Beneficios del plan..."></textarea>
-                            </div>
-                            <button type="submit" class="btn-add">Guardar Plan</button>
-                        </form>
-                    </div>
+                <div class="stat-info">
+                    <h3>$<?php echo number_format($precio_promedio, 2); ?></h3>
+                    <p>Precio promedio</p>
                 </div>
-
-                <!-- Tabla de Planes -->
-                <table class="classes-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Precio</th>
-                            <th>Duración (días)</th>
-                            <th>Descripción</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (count($planes) > 0): ?>
-                            <?php foreach ($planes as $plan): ?>
-                                <tr>
-                                    <td><?= htmlspecialchars($plan['id_tipo_membresia']) ?></td>
-                                    <td><?= htmlspecialchars($plan['nombre']) ?></td>
-                                    <td>$<?= number_format($plan['precio'], 2) ?></td>
-                                    <td><?= htmlspecialchars($plan['duracion_dias']) ?></td>
-                                    <td><?= htmlspecialchars($plan['descripcion']) ?></td>
-                                    <td>
-                                        <?php if ($plan['estado'] == 'activo'): ?>
-                                            <span class="class-status status-active">Activo</span>
-                                        <?php else: ?>
-                                            <span class="class-status status-cancelled">Inactivo</span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <button class="btn-edit" data-toggle="modal" data-target="#modalEditar"
-                                            onclick="cargarDatos(
-                                                '<?= $plan['id_tipo_membresia'] ?>',
-                                                '<?= htmlspecialchars(addslashes($plan['nombre'])) ?>',
-                                                '<?= $plan['precio'] ?>',
-                                                '<?= $plan['duracion_dias'] ?>',
-                                                '<?= htmlspecialchars(addslashes($plan['descripcion'])) ?>',
-                                                '<?= $plan['estado'] ?>'
-                                            )">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <a href="?eliminar=<?= $plan['id_tipo_membresia'] ?>" class="btn-delete" onclick="return confirm('¿Seguro que deseas eliminar este plan?')">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td colspan="7" class="text-center" style="color: var(--text-secondary);">No hay planes registrados</td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="stat-info">
+                    <h3><?php echo round($duracion_promedio); ?> días</h3>
+                    <p>Duración promedio</p>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Modal Editar Plan -->
-    <div class="modal fade" id="modalEditar" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Editar Plan</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form method="POST" action="">
-                    <div class="modal-body">
-                        <input type="hidden" name="accion" value="actualizar">
-                        <input type="hidden" name="id_tipo_membresia" id="edit_id">
+        <!-- Mensajes de éxito/error -->
+        <?php if($mensaje): ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle mr-2"></i>
+                <?php echo htmlspecialchars($mensaje); ?>
+                <button type="button" class="close" data-dismiss="alert">
+                    <span>&times;</span>
+                </button>
+            </div>
+        <?php endif; ?>
 
-                        <div class="form-group">
-                            <label>Nombre</label>
-                            <input type="text" name="nombre" id="edit_nombre" class="form-control" required>
+        <?php if($error): ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-circle mr-2"></i>
+                <?php echo htmlspecialchars($error); ?>
+                <button type="button" class="close" data-dismiss="alert">
+                    <span>&times;</span>
+                </button>
+            </div>
+        <?php endif; ?>
+
+        <!-- Formulario de registro/edición -->
+        <div class="card-gym mb-4">
+            <div class="card-header-gym">
+                <i class="fas <?php echo $plan_editar ? 'fa-edit' : 'fa-plus-circle'; ?> mr-2"></i>
+                <?php echo $plan_editar ? 'Editar Plan' : 'Registrar Nuevo Plan'; ?>
+            </div>
+            <div class="card-body">
+                <form method="POST" class="plan-form">
+                    <input type="hidden" name="accion" value="<?php echo $plan_editar ? 'editar' : 'agregar'; ?>">
+                    <?php if($plan_editar): ?>
+                        <input type="hidden" name="id_tipo_membresia" value="<?php echo $plan_editar['id_tipo_membresia']; ?>">
+                    <?php endif; ?>
+                    
+                    <div class="row">
+                        <!-- Nombre del plan -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-tag mr-2"></i>
+                                Nombre del plan
+                            </label>
+                            <input type="text" 
+                                   name="nombre" 
+                                   class="form-control-gym" 
+                                   placeholder="Ej. Plan Básico" 
+                                   value="<?php echo $plan_editar ? htmlspecialchars($plan_editar['nombre']) : ''; ?>"
+                                   required>
                         </div>
-                        <div class="form-group">
-                            <label>Precio ($)</label>
-                            <input type="number" step="0.01" name="precio" id="edit_precio" class="form-control" required>
+
+                        <!-- Precio -->
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-dollar-sign mr-2"></i>
+                                Precio ($)
+                            </label>
+                            <input type="number" 
+                                   name="precio" 
+                                   class="form-control-gym" 
+                                   step="0.01" 
+                                   min="0.01" 
+                                   placeholder="0.00" 
+                                   value="<?php echo $plan_editar ? htmlspecialchars($plan_editar['precio']) : ''; ?>"
+                                   required>
                         </div>
-                        <div class="form-group">
-                            <label>Duración (días)</label>
-                            <input type="number" name="duracion_dias" id="edit_duracion" class="form-control" required>
+
+                        <!-- Duración (días) -->
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-calendar-alt mr-2"></i>
+                                Duración (días)
+                            </label>
+                            <input type="number" 
+                                   name="duracion_dias" 
+                                   class="form-control-gym" 
+                                   min="1" 
+                                   placeholder="30" 
+                                   value="<?php echo $plan_editar ? htmlspecialchars($plan_editar['duracion_dias']) : ''; ?>"
+                                   required>
                         </div>
-                        <div class="form-group">
-                            <label>Descripción</label>
-                            <textarea name="descripcion" id="edit_descripcion" class="form-control" rows="2"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Estado</label>
-                            <select name="estado" id="edit_estado" class="form-control">
-                                <option value="activo">Activo</option>
-                                <option value="inactivo">Inactivo</option>
+
+                        <!-- Estado -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-toggle-on mr-2"></i>
+                                Estado
+                            </label>
+                            <select name="estado" class="form-control-gym" required>
+                                <option value="activo" <?php echo ($plan_editar && $plan_editar['estado'] == 'activo') ? 'selected' : ''; ?>>Activo</option>
+                                <option value="inactivo" <?php echo ($plan_editar && $plan_editar['estado'] == 'inactivo') ? 'selected' : ''; ?>>Inactivo</option>
                             </select>
                         </div>
+
+                        <!-- Descripción -->
+                        <div class="col-12 mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-align-left mr-2"></i>
+                                Descripción
+                            </label>
+                            <textarea name="descripcion" 
+                                      class="form-control-gym" 
+                                      rows="4" 
+                                      placeholder="Describe los beneficios y características del plan"><?php echo $plan_editar ? htmlspecialchars($plan_editar['descripcion']) : ''; ?></textarea>
+                        </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn-add">Actualizar</button>
+
+                    <div class="form-actions">
+                        <?php if($plan_editar): ?>
+                            <a href="planes.php" class="btn btn-secondary-gym mr-2">
+                                <i class="fas fa-times mr-2"></i>
+                                Cancelar edición
+                            </a>
+                        <?php endif; ?>
+                        <button type="submit" class="btn-gold-gym">
+                            <i class="fas <?php echo $plan_editar ? 'fa-save' : 'fa-plus-circle'; ?> mr-2"></i>
+                            <?php echo $plan_editar ? 'Actualizar Plan' : 'Guardar Plan'; ?>
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
-    </div>
 
-    <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <!-- Tabla de planes existentes -->
+        <div class="card-gym">
+            <div class="card-header-gym">
+                <i class="fas fa-list mr-2"></i>
+                Planes Registrados
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table-gym">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                                <th>Precio</th>
+                                <th>Duración</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if(empty($planes)): ?>
+                                <tr>
+                                    <td colspan="7" class="text-center py-4">
+                                        <i class="fas fa-tags fa-3x mb-3" style="color: #333;"></i>
+                                        <p>No hay planes registrados</p>
+                                    </td>
+                                </tr>
+                            <?php else: ?>
+                                <?php foreach($planes as $plan): ?>
+                                <tr>
+                                    <td><?php echo $plan['id_tipo_membresia']; ?></td>
+                                    <td>
+                                        <strong><?php echo htmlspecialchars($plan['nombre']); ?></strong>
+                                    </td>
+                                    <td>
+                                        <small class="text-muted"><?php echo htmlspecialchars(substr($plan['descripcion'], 0, 100)); ?><?php echo strlen($plan['descripcion']) > 100 ? '...' : ''; ?></small>
+                                    </td>
+                                    <td class="text-warning font-weight-bold">$<?php echo number_format($plan['precio'], 2); ?></td>
+                                    <td>
+                                        <span class="badge-duracion">
+                                            <?php echo $plan['duracion_dias']; ?> días
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge-estado <?php echo $plan['estado']; ?>">
+                                            <?php echo ucfirst($plan['estado']); ?>
+                                        </span>
+                                    </td>
+                                    <td class="acciones">
+                                        <a href="?editar=<?php echo $plan['id_tipo_membresia']; ?>" class="btn-action edit" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <form method="POST" style="display: inline;" onsubmit="return confirm('¿Estás seguro de eliminar este plan?');">
+                                            <input type="hidden" name="accion" value="eliminar">
+                                            <input type="hidden" name="id_tipo_membresia" value="<?php echo $plan['id_tipo_membresia']; ?>">
+                                            <button type="submit" class="btn-action delete" title="Eliminar">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Script para toggle sidebar en móvil -->
     <script>
-        function cargarDatos(id, nombre, precio, duracion, descripcion, estado) {
-            document.getElementById('edit_id').value = id;
-            document.getElementById('edit_nombre').value = nombre;
-            document.getElementById('edit_precio').value = precio;
-            document.getElementById('edit_duracion').value = duracion;
-            document.getElementById('edit_descripcion').value = descripcion;
-            document.getElementById('edit_estado').value = estado;
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('show');
         }
     </script>
+
+    <!-- Scripts Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

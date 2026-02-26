@@ -39,3 +39,18 @@
 .gym-sidebar .nav-link.active i {
     color: var(--gym-black) !important;
 }
+
+/* Estilo para el botón de regresar */
+.back-to-home {
+    margin-top: 10px;
+    border-top: 1px solid transparent;
+}
+
+.back-to-home i {
+    color: var(--gold);
+    transition: transform 0.3s ease;
+}
+
+.back-to-home:hover i {
+    transform: translateX(-5px);
+}

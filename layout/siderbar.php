@@ -1,6 +1,7 @@
 <?php
-// Detecta el nombre del archivo actual (ej: entrenadores.php)
+// Detecta el nombre del archivo actual
 $pagina_actual = basename($_SERVER['PHP_SELF']);
+$base_url = '/Sistema-de-gimnasio-web';
 ?>
 
 <div class="gym-sidebar">
@@ -9,7 +10,8 @@ $pagina_actual = basename($_SERVER['PHP_SELF']);
     </div>
     
     <nav class="nav flex-column">
-        <a class="nav-link <?php echo ($pagina_actual == 'index.php' || $pagina_actual == 'admin.php') ? 'active' : ''; ?>" href="admin.php">
+        <!-- DASHBOARD -->
+        <a class="nav-link <?php echo ($pagina_actual == 'admin.php') ? 'active' : ''; ?>" href="admin.php">
             <i class="fas fa-tachometer-alt"></i> Dashboard
         </a>
 
@@ -25,7 +27,7 @@ $pagina_actual = basename($_SERVER['PHP_SELF']);
             <i class="fas fa-chalkboard-teacher"></i> Clases
         </a>
 
-        <a class="nav-link <?php echo ($pagina_actual == 'productos.php') ? 'active' : ''; ?>" href="#">
+        <a class="nav-link <?php echo ($pagina_actual == 'registroproductos.php') ? 'active' : ''; ?>" href="registroproductos.php">
             <i class="fas fa-box"></i> Productos
         </a>
 
@@ -33,8 +35,16 @@ $pagina_actual = basename($_SERVER['PHP_SELF']);
             <i class="fas fa-credit-card"></i> Pagos
         </a>
 
-        <a class="nav-link <?php echo ($pagina_actual == 'membresias.php') ? 'active' : ''; ?>" href="#">
+        <a class="nav-link <?php echo ($pagina_actual == 'planes.php') ? 'active' : ''; ?>" href="planes.php">
             <i class="fas fa-id-card"></i> Planes
+        </a>
+
+        <!-- SEPARADOR -->
+        <div class="sidebar-divider"></div>
+
+        <!-- REGRESAR AL INICIO (sin cerrar sesión) -->
+        <a class="nav-link back-to-home" href="<?php echo $base_url; ?>/index.php">
+            <i class="fas fa-arrow-left"></i> Regresar al inicio
         </a>
     </nav>
 </div>

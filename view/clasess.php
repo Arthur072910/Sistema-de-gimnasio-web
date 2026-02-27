@@ -39,7 +39,7 @@ $entrenadores = $controller->listarEntrenadores();
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/css/sidebar-global.css">
-    <link rel="stylesheet" href="../assets/css/dashboard-global.css"> <link rel="stylesheet" href="../assets/css/clasess.css">
+    <link rel="stylesheet" href="../assets/css/dashboard-global.css">
     <link rel="stylesheet" href="../assets/css/clasess.css">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">

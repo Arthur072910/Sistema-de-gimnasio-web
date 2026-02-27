@@ -8,43 +8,23 @@
     <link rel="stylesheet" href="../assets/css/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/reportes.css">
+    <link rel="stylesheet" href="../assets/css/sidebar-global.css">
+        <link rel="stylesheet" href="../assets/css/dashboard-global.css">
+
 </head>
 <body>
-    <div class="dashboard">
-    
-        <div class="sidebar">
-            <div class="logo-area">
-                <img src="../assets/img/logo_deluxGym.png" alt="Logo" style="height: 100px;">
-            </div>
-            <ul class="nav-menu">
-                <li class="nav-item"><a href="admin.php" class="nav-link"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
-                <li class="nav-item"><a href="registrouser.php" class="nav-link"><i class="fas fa-users"></i> Registrar usuarios</a></li>
-                <li class="nav-item"><a href="miembros.php" class="nav-link"><i class="fas fa-users"></i> Miembros</a></li>
-                <li class="nav-item"><a href="clasess.php" class="nav-link"><i class="fas fa-calendar-alt"></i> Clases</a></li>
-                <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-credit-card"></i> Pagos</a></li>
-                <li class="nav-item"><a href="entrenadores.php" class="nav-link"><i class="fas fa-chart-line"></i> Registro de entrenadores</a></li>
-                <li class="nav-item"><a href="horarios.php" class="nav-link"><i class="fas fa-clock"></i> Horarios</a></li>
-                <li class="nav-item"><a href="planes.php" class="nav-link"><i class="fas fa-cog"></i> Planes</a></li>
-                <li class="nav-item"><a href="reportes.php" class="nav-link active"><i class="fas fa-file-alt"></i> Reportes</a></li>
-            </ul>
-        </div>
+    <?php include dirname(__DIR__) . '/layout/siderbar.php'; ?>
 
         <!-- Main Content -->
-        <div class="main-content">
+        <div class="main-content" style="flex: 1;">
+             <?php 
+                $dashboard_path = realpath(__DIR__ . '/../layout/dashboard.php');
+                if ($dashboard_path) {
+                    include $dashboard_path;
+                }
+            ?>
             <!-- Header -->
-            <div class="header">
-                <div class="search-area">
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Buscar...">
-                    </div>
-                </div>
-                <div class="admin-profile">
-                    <i class="fas fa-bell"></i>
-                    <div class="admin-avatar">AD</div>
-                </div>
-            </div>
-
+            
             <!-- Filtros -->
             <div class="classes-section mb-4">
                 <div class="section-header">
@@ -70,9 +50,9 @@
                                     <option value="ingresos">Ingresos</option>
                                 </select>
                             </div>
-                            <div class="form-group col-md-3">
+                            <div class="form-group col-md-1">
                                 <button class="btn-add w-100">
-                                    <i class="fas fa-search"></i> Descargar PDF
+                                    <i class="fas fa-print"> </i>
                                 </button>
                             </div>
                         </div>
@@ -107,7 +87,6 @@
             </div>
 
         </div>
-    </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>

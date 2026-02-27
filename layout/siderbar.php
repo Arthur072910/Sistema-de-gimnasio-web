@@ -39,12 +39,17 @@ $base_url = '/Sistema-de-gimnasio-web';
             <i class="fas fa-id-card"></i> Planes
         </a>
 
-        <!-- SEPARADOR -->
-        <div class="sidebar-divider"></div>
+        <a class="nav-link <?php echo ($pagina_actual == 'reportes.php') ? 'active' : ''; ?>" href="reportes.php">
+            <i class="fas fa-file-alt"></i> Reportes
+        </a>
+
+     
 
         <!-- REGRESAR AL INICIO (sin cerrar sesión) -->
         <a class="nav-link back-to-home" href="<?php echo $base_url; ?>/index.php">
             <i class="fas fa-arrow-left"></i> Regresar al inicio
         </a>
+        <!-- SEPARADOR -->
+         <div class="sidebar-divider"></div>
     </nav>
 </div>

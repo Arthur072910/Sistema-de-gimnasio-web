@@ -6,7 +6,7 @@ class PlanModel {
     public $id_tipo_membresia;
     public $nombre;
     public $precio;
-    public $duracion_dias;  // en la tabla es duracion_dias (int)
+    public $duracion_dias;  
     public $descripcion;
     public $estado;
 
@@ -14,21 +14,20 @@ class PlanModel {
         $this->conn = $db;
     }
 
-    // Crear nuevo plan
+  
     public function crear() {
         $query = "INSERT INTO " . $this->table_name . "
                   SET nombre=:nombre, precio=:precio, duracion_dias=:duracion_dias,
                       descripcion=:descripcion, estado=:estado";
         $stmt = $this->conn->prepare($query);
 
-        // Limpiar datos
         $this->nombre = htmlspecialchars(strip_tags($this->nombre));
         $this->precio = htmlspecialchars(strip_tags($this->precio));
         $this->duracion_dias = htmlspecialchars(strip_tags($this->duracion_dias));
         $this->descripcion = htmlspecialchars(strip_tags($this->descripcion));
         $this->estado = htmlspecialchars(strip_tags($this->estado));
 
-        // Vincular
+      
         $stmt->bindParam(":nombre", $this->nombre);
         $stmt->bindParam(":precio", $this->precio);
         $stmt->bindParam(":duracion_dias", $this->duracion_dias);
@@ -41,7 +40,7 @@ class PlanModel {
         return false;
     }
 
-    // Obtener todos los planes
+   
     public function obtenerTodos() {
         $query = "SELECT * FROM " . $this->table_name . " ORDER BY id_tipo_membresia DESC";
         $stmt = $this->conn->prepare($query);
@@ -49,7 +48,7 @@ class PlanModel {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Obtener un plan por ID
+   
     public function obtenerPorId($id) {
         $query = "SELECT * FROM " . $this->table_name . " WHERE id_tipo_membresia = ? LIMIT 1";
         $stmt = $this->conn->prepare($query);
@@ -58,7 +57,7 @@ class PlanModel {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Actualizar plan
+   
     public function actualizar() {
         $query = "UPDATE " . $this->table_name . "
                   SET nombre=:nombre, precio=:precio, duracion_dias=:duracion_dias,
@@ -66,7 +65,7 @@ class PlanModel {
                   WHERE id_tipo_membresia = :id_tipo_membresia";
         $stmt = $this->conn->prepare($query);
 
-        // Limpiar
+     
         $this->nombre = htmlspecialchars(strip_tags($this->nombre));
         $this->precio = htmlspecialchars(strip_tags($this->precio));
         $this->duracion_dias = htmlspecialchars(strip_tags($this->duracion_dias));
@@ -74,7 +73,7 @@ class PlanModel {
         $this->estado = htmlspecialchars(strip_tags($this->estado));
         $this->id_tipo_membresia = htmlspecialchars(strip_tags($this->id_tipo_membresia));
 
-        // Vincular
+     
         $stmt->bindParam(":nombre", $this->nombre);
         $stmt->bindParam(":precio", $this->precio);
         $stmt->bindParam(":duracion_dias", $this->duracion_dias);
@@ -88,7 +87,7 @@ class PlanModel {
         return false;
     }
 
-    // Eliminar plan
+   
     public function eliminar($id) {
         $query = "DELETE FROM " . $this->table_name . " WHERE id_tipo_membresia = ?";
         $stmt = $this->conn->prepare($query);

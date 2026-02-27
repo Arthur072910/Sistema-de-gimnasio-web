@@ -6,7 +6,6 @@ $database = new Database();
 $conn = $database->getConnection();
 
 if (isset($_GET['action']) && $_GET['action'] === 'validar_codigo') {
-
     $codigo = trim($_GET['codigo']);
 
     if (!$codigo) {
@@ -15,43 +14,31 @@ if (isset($_GET['action']) && $_GET['action'] === 'validar_codigo') {
     }
 
     try {
-
         
-        $sql = "SELECT id_usuario, email, estado 
-                FROM usuarios 
-                WHERE email = ?";
+        $sql = "SELECT m.id_membresia, m.id_cliente, m.estado, c.nombre, c.apellido
+                FROM membresias m
+                INNER JOIN clientes c ON m.id_cliente = c.id_cliente
+                WHERE m.codigo_qr = ?
+                ORDER BY m.fecha_inicio DESC
+                LIMIT 1";
         $stmt = $conn->prepare($sql);
         $stmt->execute([$codigo]);
-        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+        $membresia = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (!$usuario) {
+        if (!$membresia) {
             echo json_encode(["status" => "no_encontrado"]);
             exit;
         }
 
-        if ($usuario['estado'] !== 'activo') {
+        if ($membresia['estado'] !== 'activa') {
             echo json_encode([
                 "status" => "vencido",
-                "nombre" => $usuario['email']
+                "nombre" => $membresia['nombre'] . " " . $membresia['apellido']
             ]);
             exit;
         }
 
-        $id_usuario = $usuario['id_usuario'];
-
-        $sql = "SELECT id_cliente 
-                FROM clientes 
-                WHERE id_usuario = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([$id_usuario]);
-        $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$cliente) {
-            echo json_encode(["status" => "no_encontrado"]);
-            exit;
-        }
-
-        $id_cliente = $cliente['id_cliente'];
+        $id_cliente = $membresia['id_cliente'];
 
        
         $sql = "SELECT id_asistencia 
@@ -59,14 +46,12 @@ if (isset($_GET['action']) && $_GET['action'] === 'validar_codigo') {
                 WHERE id_cliente = ?
                 AND DATE(fecha_entrada) = CURDATE()
                 AND fecha_salida IS NULL";
-
         $stmt = $conn->prepare($sql);
         $stmt->execute([$id_cliente]);
         $asistencia = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$asistencia) {
-
-           
+            
             $sql = "INSERT INTO asistencias 
                     (id_cliente, fecha_entrada, validado_con_qr)
                     VALUES (?, NOW(), 1)";
@@ -75,13 +60,11 @@ if (isset($_GET['action']) && $_GET['action'] === 'validar_codigo') {
 
             echo json_encode([
                 "status" => "activo",
-                "nombre" => $usuario['email'],
+                "nombre" => $membresia['nombre'] . " " . $membresia['apellido'],
                 "tipo"   => "entrada"
             ]);
-
         } else {
-
-          
+         
             $sql = "UPDATE asistencias
                     SET fecha_salida = NOW()
                     WHERE id_asistencia = ?";
@@ -90,13 +73,12 @@ if (isset($_GET['action']) && $_GET['action'] === 'validar_codigo') {
 
             echo json_encode([
                 "status" => "activo",
-                "nombre" => $usuario['email'],
+                "nombre" => $membresia['nombre'] . " " . $membresia['apellido'],
                 "tipo"   => "salida"
             ]);
         }
 
     } catch (PDOException $e) {
-
         echo json_encode([
             "status" => "error",
             "mensaje" => $e->getMessage()

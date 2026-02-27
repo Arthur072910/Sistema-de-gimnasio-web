@@ -57,7 +57,7 @@
                     <li>✓ Sin entrenador personal</li>
                     <li>✓ Vestidores</li>
                 </ul>
-                <a href="#" class="btn unete">Seleccionar</a>
+               
             </div>
         </div>
 
@@ -74,7 +74,7 @@
                     <li>✓ 1 evaluación mensual</li>
                     <li>✓ Estacionamiento</li>
                 </ul>
-                <a href="#" class="btn unete">Seleccionar</a>
+                
             </div>
         </div>
 
@@ -91,7 +91,7 @@
                     <li>✓ Nutricionista</li>
                     <li>✓ Acceso a spa</li>
                 </ul>
-                <a href="#" class="btn unete">Seleccionar</a>
+                
             </div>
         </div>
     </div>

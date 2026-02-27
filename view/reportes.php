@@ -11,7 +11,7 @@
 </head>
 <body>
     <div class="dashboard">
-        <!-- Sidebar -->
+    
         <div class="sidebar">
             <div class="logo-area">
                 <img src="../assets/img/logo_deluxGym.png" alt="Logo" style="height: 100px;">

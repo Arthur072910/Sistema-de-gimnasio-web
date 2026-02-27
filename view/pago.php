@@ -5,38 +5,32 @@ require_once "../config/database.php";
 $database = new Database();
 $conn = $database->getConnection();
 
-/* ==============================
-   VALIDAR QUE ESTÉ LOGUEADO
-============================== */
+
 if (!isset($_SESSION['cliente_id'])) {
     header("Location: login.php");
     exit();
 }
 
-/* ==============================
-   VALIDAR QUE HAYA PLAN
-============================== */
+
 if (!isset($_SESSION['id_membresia'])) {
     header("Location: plan.php");
     exit();
 }
 
-/* ==============================
-   PROCESAR PAGO
-============================== */
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['procesar_pago'])) {
 
     $id_cliente   = $_SESSION['cliente_id'];
-    $id_tipo      = $_SESSION['id_membresia']; // id del tipo de membresía
+    $id_tipo      = $_SESSION['id_membresia']; 
     $metodo_pago  = $_POST['metodo_pago'];
     $monto        = $_SESSION['precio_plan'];
 
     try {
 
-        // 🔹 Iniciar transacción
+       
         $conn->beginTransaction();
 
-        // 1️⃣ Crear membresía
+      
         $fecha_inicio = date("Y-m-d");
         $fecha_fin    = date("Y-m-d", strtotime("+30 days"));
         $codigo_qr    = uniqid('GYM-' . $id_cliente . '-');
@@ -54,17 +48,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['procesar_pago'])) {
             $codigo_qr
         ]);
 
-        // Obtener id real de membresía creada
+        
         $id_membresia_real = $conn->lastInsertId();
-        // Generar código de 12 dígitos
+       
 $codigo_qr = str_pad($id_membresia_real, 12, "0", STR_PAD_LEFT);
 
-// Actualizar la membresía con el nuevo código
+
 $update = $conn->prepare("UPDATE membresias SET codigo_qr = ? WHERE id_membresia = ?");
 $update->execute([$codigo_qr, $id_membresia_real]);
 
 
-        // 2️⃣ Registrar pago
+      
         $sqlP = "INSERT INTO pagos 
                 (id_cliente, id_membresia, monto_total, metodo_pago, estado_pago, tipo_transaccion, fecha_pago)
                 VALUES (?, ?, ?, ?, ?, ?, NOW())";
@@ -79,10 +73,9 @@ $update->execute([$codigo_qr, $id_membresia_real]);
             'membresia'
         ]);
 
-        // 🔹 Confirmar transacción
         $conn->commit();
 
-        // Limpiar sesión
+        
         unset($_SESSION['id_membresia']);
         unset($_SESSION['nombre_plan']);
         unset($_SESSION['precio_plan']);
@@ -106,17 +99,17 @@ $update->execute([$codigo_qr, $id_membresia_real]);
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
-    <!-- Bootstrap CSS -->
+   
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <!-- Font Awesome -->
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Google Fonts -->
+    
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <!-- CSS Personalizado -->
+    
     <link rel="stylesheet" href="../assets/css/pago.css">
 </head>
 <body>
-    <!-- Navbar simple -->
+    
     <nav class="navbar navbar-expand" id="navegacion">
         <img src="../assets/img/logo_deluxGym.png" alt="Logo" width="50" height="auto" id="logo">
         <div class="collapse navbar-collapse">
@@ -129,15 +122,15 @@ $update->execute([$codigo_qr, $id_membresia_real]);
     </nav>
 
     <div class="container py-4">
-        <!-- Título simple -->
+        
         <h3 class="mb-4"><i class="fas fa-credit-card mr-2"></i>Finalizar Compra</h3>
 
         <div class="row">
-            <!-- Columna izquierda - Formulario de pago -->
+            
             <div class="col-lg-8 mb-4">
                 <div class="card pago-card">
                     <div class="card-body">
-                        <!-- Selector de método de pago simple -->
+                       
                         <div class="metodos-pago-simple mb-4">
                             <div class="row">
                                 <div class="col-4">
@@ -161,7 +154,7 @@ $update->execute([$codigo_qr, $id_membresia_real]);
                             </div>
                         </div>
 
-                        <!-- TARJETA -->
+                       
                         <div id="metodo-tarjeta" class="metodo-panel active">
 
     <form method="POST" action="">
@@ -187,7 +180,7 @@ $update->execute([$codigo_qr, $id_membresia_real]);
     </form>
 </div>
 
-                        <!-- PAYPAL -->
+                       
                         <div id="metodo-paypal" class="metodo-panel">
                             <div class="text-center py-4">
                                 <i class="fab fa-paypal" style="font-size: 60px; color: #003087;"></i>
@@ -201,7 +194,7 @@ $update->execute([$codigo_qr, $id_membresia_real]);
                             </div>
                         </div>
 
-                        <!-- EFECTIVO / FACTURA DIGITAL (VERSIÓN EL SALVADOR) -->
+                        
                         <div id="metodo-efectivo" class="metodo-panel">
                             <div class="alert alert-info py-2">
                                 <i class="fas fa-info-circle mr-2"></i>
@@ -210,7 +203,7 @@ $update->execute([$codigo_qr, $id_membresia_real]);
 
                             <h6 class="mb-3">Datos para factura</h6>
                             
-                            <!-- DUI (Documento Único de Identidad) -->
+                            
                             <div class="form-group">
                                 <label>DUI <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="dui" placeholder="00000000-0" required>
@@ -254,7 +247,7 @@ $update->execute([$codigo_qr, $id_membresia_real]);
 
                             <hr>
 
-                            <!-- Resumen de factura -->
+                            
                             <div class="factura-simple mb-3">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
@@ -291,7 +284,7 @@ $update->execute([$codigo_qr, $id_membresia_real]);
                 </div>
             </div>
 
-            <!-- Columna derecha - Resumen simple -->
+          
             <div class="col-lg-4">
                 <div class="card resumen-card">
                     <div class="card-body">
@@ -301,6 +294,7 @@ $update->execute([$codigo_qr, $id_membresia_real]);
     <p>
         <?= $_SESSION['nombre_plan'] ?? 'Sin plan seleccionado' ?>
     </p>
+    
 
     <hr>
 
@@ -316,21 +310,21 @@ $update->execute([$codigo_qr, $id_membresia_real]);
         </div>
     </div>
 
-    <!-- Scripts -->
+   
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     
     <script>
-        // Cambiar entre métodos de pago
+       
         function cambiarMetodo(metodo) {
-            // Actualizar clases de los items
+            
             document.querySelectorAll('.metodo-item').forEach(item => {
                 item.classList.remove('active');
             });
             event.currentTarget.classList.add('active');
             
-            // Mostrar panel correspondiente
+           
             document.querySelectorAll('.metodo-panel').forEach(panel => {
                 panel.classList.remove('active');
             });

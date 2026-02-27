@@ -14,7 +14,7 @@ class PlanController {
 
     public function agregar($datos) {
         try {
-            // Validaciones
+            
             if(empty($datos['nombre'])) {
                 return ['success' => false, 'message' => 'El nombre del plan es requerido'];
             }
@@ -27,7 +27,7 @@ class PlanController {
                 return ['success' => false, 'message' => 'La duración debe ser un número válido de días'];
             }
 
-            // Asignar valores al modelo
+            
             $this->plan->nombre = trim($datos['nombre']);
             $this->plan->precio = floatval($datos['precio']);
             $this->plan->duracion_dias = intval($datos['duracion_dias']);
@@ -79,7 +79,7 @@ class PlanController {
                 return ['success' => false, 'message' => 'ID inválido'];
             }
             
-            // Validaciones
+           
             if(empty($datos['nombre'])) {
                 return ['success' => false, 'message' => 'El nombre del plan es requerido'];
             }
@@ -92,7 +92,7 @@ class PlanController {
                 return ['success' => false, 'message' => 'La duración debe ser un número válido de días'];
             }
 
-            // Asignar valores al modelo
+            
             $this->plan->id_tipo_membresia = intval($datos['id_tipo_membresia']);
             $this->plan->nombre = trim($datos['nombre']);
             $this->plan->precio = floatval($datos['precio']);

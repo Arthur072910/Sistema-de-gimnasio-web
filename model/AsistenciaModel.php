@@ -10,15 +10,21 @@ class AsistenciaModel {
         $this->conn = $database->getConnection();
     }
 
-    public function obtenerUsuarioPorCodigo($codigo) {
+    public function obtenerMembresiaPorCodigo($codigo) {
+    $sql = "SELECT m.id_membresia, m.id_cliente, m.estado, c.nombre, c.apellido
+            FROM membresias m
+            INNER JOIN clientes c ON m.id_cliente = c.id_cliente
+            WHERE m.codigo_qr = :codigo
+            ORDER BY m.fecha_inicio DESC
+            LIMIT 1";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindParam(":codigo", $codigo);
+    $stmt->execute();
 
-        $sql = "SELECT * FROM usuarios WHERE email = :codigo LIMIT 1";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(":codigo", $codigo);
-        $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
 
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
+
 
     public function registrarAsistencia($id_usuario) {
 

@@ -36,5 +36,19 @@ $_SESSION['nombre_plan']  = $plan['nombre'];
 $_SESSION['precio_plan']  = $plan['precio'];
 
 
+try {
+    $tipoAccion = "intento_renovacion";
+    $descripcion = "El usuario inició el proceso de renovación del plan: " . $plan['nombre'];
+    
+    $stmtHistorial = $conn->prepare("
+        INSERT INTO historial (id_cliente, tipo_accion, descripcion, fecha_accion) 
+        VALUES (?, ?, ?, NOW())
+    ");
+    $stmtHistorial->execute([$id_cliente, $tipoAccion, $descripcion]);
+} catch (Exception $e) {
+    
+}
+
+
 header("Location: pago.php");
 exit();

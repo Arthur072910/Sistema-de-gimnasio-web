@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Nunito:wght@300;400;600;700&display=swap');
 
+
 :root {
     --black:       #0d0d0d;
     --black-card:  #161616;
@@ -90,7 +91,7 @@ body {
     color: var(--gold);
 }
 
-/* ─── PROFILE CARD (sidebar) ──────────────────── */
+
 .profile-card {
     text-align: center;
     position: sticky;
@@ -159,7 +160,7 @@ body {
     margin-bottom: 1.4rem;
 }
 
-/* ─── INFO LIST (sidebar) ─────────────────────── */
+
 .info-list {
     text-align: left;
 }
@@ -181,7 +182,7 @@ body {
     flex-shrink: 0;
 }
 
-/* ─── INFO GRID (account section) ────────────── */
+
 .info-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -210,7 +211,7 @@ body {
     color: var(--white);
 }
 
-/* ─── MEMBRESÍA CARD ──────────────────────────── */
+
 .racha-card {
     border-color: rgba(255, 215, 0, 0.4);
     background: linear-gradient(135deg, var(--black-card) 70%, rgba(255,215,0,0.04));
@@ -238,7 +239,7 @@ body {
     margin-bottom: 0;
 }
 
-/* ─── BOTONES MEMBRESÍA ───────────────────────── */
+
 .suscripcion-box {
     display: flex;
     gap: .75rem;
@@ -282,7 +283,7 @@ body {
     text-decoration: none;
 }
 
-/* ─── BOTONES INFERIORES (tarjeta / recomend.) ── */
+
 .suscripcion-box.bottom-actions {
     justify-content: center;
     margin: 1.5rem auto 0;
@@ -307,7 +308,7 @@ body {
     text-decoration: none;
 }
 
-/* ─── RESPONSIVE ──────────────────────────────── */
+
 @media (max-width: 900px) {
     .profile-grid {
         grid-template-columns: 1fr;
@@ -341,3 +342,132 @@ body {
         justify-content: center;
     }
 }
+
+
+
+
+
+
+
+
+
+
+table {
+    color: #ffffff;
+}
+
+table th {
+    color: #ffd700;
+}
+
+table td {
+    color: #ffffff;
+}
+
+table tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+
+
+.btn-notify {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 38px;
+    height: 38px;
+    background: var(--gold);
+    color: #111;
+    border: 3px solid var(--black-card);
+    border-radius: 50% !important; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+.btn-notify:hover {
+    transform: scale(1.1) rotate(15deg);
+    background: #fff; 
+}
+
+
+.pulse-gold {
+    animation: pulse-animation 2s infinite;
+}
+
+@keyframes pulse-animation {
+    0% { box-shadow: 0 0 0 0px rgba(255, 215, 0, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 215, 0, 0); }
+    100% { box-shadow: 0 0 0 0px rgba(255, 215, 0, 0); }
+}
+
+.avatar-container {
+    position: relative;
+    width: 130px;
+    height: 130px;
+    margin: 0 auto 1.2rem;
+}
+
+
+.btn-notify {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 35px;
+    height: 35px;
+    background: #ffd700; 
+    color: #111;
+    border: 3px solid #161616; 
+    border-radius: 50% !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    z-index: 5;
+}
+
+
+.pulse-gold {
+    animation: pulse-border 2s infinite;
+}
+
+@keyframes pulse-border {
+    0% { box-shadow: 0 0 0 0px rgba(255, 215, 0, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 215, 0, 0); }
+    100% { box-shadow: 0 0 0 0px rgba(255, 215, 0, 0); }
+}
+
+.popover {
+    border: 1px solid var(--gold);
+    background-color: #fff; 
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+.popover-body {
+    padding: 15px;
+}
+
+
+
+.popover {
+    background-color: #1a1a1a;
+    border: 1px solid var(--gold);
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.7);
+}
+
+.popover-body {
+    color: #ffffff !important;
+    padding: 1rem;
+}
+
+.popover .arrow::after {
+    border-right-color: #1a1a1a !important; 
+}
+

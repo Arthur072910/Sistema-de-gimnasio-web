@@ -88,25 +88,33 @@ switch ($tipo_reporte) {
         $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         break;
         
-    case 'clases':
-        $query = "SELECT 
-                    c.id_clase as ID,
-                    c.nombre as Nombre,
-                    COALESCE(c.descripcion, '-') as Descripción,
-                    c.cupo_maximo as Cupo,
-                    (SELECT COUNT(*) FROM inscripciones_clases ic WHERE ic.id_clase = c.id_clase AND ic.estado = 'activa') as Inscritos,
-                    COALESCE(e.nombre, 'Sin asignar') as Entrenador,
-                    c.estado as Estado,
-                    DATE_FORMAT(c.fecha_creacion, '%d/%m/%Y') as 'Fecha Creación'
-                FROM clases c
-                LEFT JOIN entrenadores e ON c.id_entrenador = e.id_entrenador
-                WHERE c.estado = 'activo'
-                ORDER BY c.nombre";
-        
-        $stmt = $db->prepare($query);
-        $stmt->execute();
-        $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        break;
+   case 'clases':
+    $query = "SELECT 
+                c.id_clase as ID,
+                c.nombre as Nombre,
+                COALESCE(c.descripcion, '-') as Descripción,
+                c.cupo_maximo as Cupo,
+                COALESCE(
+                    (SELECT COUNT(*) FROM inscripciones_clases ic 
+                     WHERE ic.id_clase = c.id_clase AND ic.estado = 'activa'), 
+                    0
+                ) as Inscritos,
+                COALESCE(e.nombre, 'Sin asignar') as Entrenador,
+                c.estado as Estado,
+                DATE_FORMAT(c.fecha_creacion, '%d/%m/%Y') as 'Fecha Creación'
+            FROM clases c
+            LEFT JOIN entrenadores e ON c.id_entrenador = e.id_entrenador
+            ORDER BY c.id_clase DESC";
+    
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+    $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Si no hay datos, al menos mostrar un mensaje
+    if (empty($datos)) {
+        error_log("No hay clases en la base de datos");
+    }
+    break;
         
     case 'productos':
         $query = "SELECT 

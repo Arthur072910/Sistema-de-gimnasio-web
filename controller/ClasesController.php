@@ -7,23 +7,27 @@ class ClasesController {
     private $clase;
 
     public function __construct() {
-        $database = new database();
+        $database = new Database();
         $this->db = $database->getConnection();
         $this->clase = new Clase($this->db);
     }
 
     public function agregar($datos) {
+        // Validar datos requeridos
+        if(empty($datos['nombre']) || empty($datos['cupo_maximo']) || empty($datos['id_entrenador'])) {
+            return ['success' => false, 'message' => 'Todos los campos son requeridos'];
+        }
+
         $this->clase->nombre = $datos['nombre'];
         $this->clase->descripcion = $datos['descripcion'] ?? '';
         $this->clase->cupo_maximo = $datos['cupo_maximo'];
         $this->clase->id_entrenador = $datos['id_entrenador'];
         $this->clase->estado = $datos['estado'] ?? 'activo';
-        $this->clase->fecha_creacion = date('Y-m-d H:i:s'); // fecha actual
 
         if ($this->clase->crear()) {
-            return ['success' => true, 'message' => 'Clase registrada'];
+            return ['success' => true, 'message' => 'Clase registrada exitosamente'];
         }
-        return ['success' => false, 'message' => 'Error al registrar'];
+        return ['success' => false, 'message' => 'Error al registrar la clase'];
     }
 
     public function listar() {
@@ -47,16 +51,16 @@ class ClasesController {
         $this->clase->estado = $datos['estado'];
 
         if ($this->clase->actualizar()) {
-            return ['success' => true, 'message' => 'Clase actualizada'];
+            return ['success' => true, 'message' => 'Clase actualizada exitosamente'];
         }
-        return ['success' => false, 'message' => 'Error al actualizar'];
+        return ['success' => false, 'message' => 'Error al actualizar la clase'];
     }
 
     public function eliminar($id) {
         if ($this->clase->eliminar($id)) {
-            return ['success' => true, 'message' => 'Clase eliminada'];
+            return ['success' => true, 'message' => 'Clase eliminada exitosamente'];
         }
-        return ['success' => false, 'message' => 'Error al eliminar'];
+        return ['success' => false, 'message' => 'Error al eliminar la clase'];
     }
 
     public function listarEntrenadores() {

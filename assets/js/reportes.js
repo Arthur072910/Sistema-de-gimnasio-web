@@ -5,22 +5,22 @@ document.getElementById('tipo_reporte').addEventListener('change', function() {
     
     switch(tipo) {
         case 'pagos':
-            tituloTabla.textContent = 'Reporte de Pagos';
+            tituloTabla.textContent = 'Tabla de Pagos';
             thead.innerHTML = `
                 <th>ID</th>
                 <th>Cliente</th>
                 <th>Monto</th>
-                <th>Método</th>
+                <th>Método de Pago</th>
                 <th>Tipo</th>
                 <th>Estado</th>
                 <th>Fecha</th>
             `;
             break;
         case 'miembros':
-            tituloTabla.textContent = 'Reporte de Miembros';
+            tituloTabla.textContent = 'Lista de Miembros';
             thead.innerHTML = `
                 <th>ID</th>
-                <th>Nombre</th>
+                <th>Nombre Completo</th>
                 <th>Email</th>
                 <th>Membresía</th>
                 <th>Vencimiento</th>
@@ -29,71 +29,20 @@ document.getElementById('tipo_reporte').addEventListener('change', function() {
             `;
             break;
         case 'ingresos':
-            tituloTabla.textContent = 'Reporte de Ingresos';
+            tituloTabla.textContent = 'Resumen de Ingresos';
             thead.innerHTML = `
                 <th>Fecha</th>
-                <th>Transacciones</th>
-                <th>Total</th>
+                <th>Total Ingresos</th>
                 <th>Membresías</th>
                 <th>Productos</th>
-            `;
-            break;
-        case 'entrenadores':
-            tituloTabla.textContent = 'Reporte de Entrenadores';
-            thead.innerHTML = `
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Especialidad</th>
-                <th>Teléfono</th>
-                <th>Email</th>
-                <th>Fecha Registro</th>
-                <th>Estado</th>
-            `;
-            break;
-        case 'clases':
-            tituloTabla.textContent = 'Reporte de Clases';
-            thead.innerHTML = `
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Descripción</th>
-                <th>Cupo</th>
-                <th>Inscritos</th>
-                <th>Entrenador</th>
-                <th>Estado</th>
-                <th>Fecha Creación</th>
-            `;
-            break;
-        case 'productos':
-            tituloTabla.textContent = 'Reporte de Productos';
-            thead.innerHTML = `
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Categoría</th>
-                <th>Precio</th>
-                <th>Stock</th>
-                <th>Descripción</th>
-                <th>Estado</th>
-            `;
-            break;
-        case 'planes':
-            tituloTabla.textContent = 'Reporte de Planes';
-            thead.innerHTML = `
-                <th>ID</th>
-                <th>Plan</th>
-                <th>Duración</th>
-                <th>Precio</th>
-                <th>Miembros Activos</th>
-                <th>Descripción</th>
-                <th>Estado</th>
+                <th>Transacciones</th>
             `;
             break;
     }
     
-    // Cargar datos en la tabla
     cargarDatosTabla();
 });
 
-// Función para cargar datos en la tabla (vista previa)
 function cargarDatosTabla() {
     const desde = document.getElementById('desde').value;
     const hasta = document.getElementById('hasta').value;
@@ -101,49 +50,21 @@ function cargarDatosTabla() {
     
     if (!desde || !hasta) return;
     
-    // Mostrar loading
-    document.querySelector('.classes-table tbody').innerHTML = `
-        <tr>
-            <td colspan="10" class="text-center">
-                <i class="fas fa-spinner fa-spin"></i> Cargando...
-            </td>
-        </tr>
-    `;
-    
     fetch(`reportes/obtener_datos_tabla.php?desde=${desde}&hasta=${hasta}&tipo_reporte=${tipo}`)
         .then(response => response.json())
         .then(data => {
             const tbody = document.querySelector('.classes-table tbody');
             
             if (data.length === 0) {
-                // Obtener el número de columnas según el tipo de reporte
-                let columnCount = 7; // default
-                switch(tipo) {
-                    case 'clases': columnCount = 8; break;
-                    case 'pagos': columnCount = 7; break;
-                    case 'miembros': columnCount = 7; break;
-                    case 'ingresos': columnCount = 5; break;
-                    case 'entrenadores': columnCount = 7; break;
-                    case 'productos': columnCount = 7; break;
-                    case 'planes': columnCount = 7; break;
-                }
-                
-                tbody.innerHTML = `<tr><td colspan="${columnCount}" class="text-center" style="color: var(--text-secondary);">No hay registros para el período seleccionado</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="color: var(--text-secondary);">No hay registros para el período seleccionado</td></tr>`;
                 return;
             }
             
             let html = '';
             data.forEach(row => {
                 html += '<tr>';
-                // Iterar en el orden correcto según las columnas definidas
                 for (let key in row) {
-                    let valor = row[key];
-                    // Formatear montos si es necesario
-                    if (typeof valor === 'number' || (!isNaN(parseFloat(valor)) && valor.toString().includes('$'))) {
-                        html += `<td>${valor}</td>`;
-                    } else {
-                        html += `<td>${valor}</td>`;
-                    }
+                    html += `<td>${row[key]}</td>`;
                 }
                 html += '</tr>';
             });
@@ -151,17 +72,9 @@ function cargarDatosTabla() {
         })
         .catch(error => {
             console.error('Error:', error);
-            document.querySelector('.classes-table tbody').innerHTML = `
-                <tr>
-                    <td colspan="10" class="text-center text-danger">
-                        Error al cargar los datos
-                    </td>
-                </tr>
-            `;
         });
 }
 
-// Función para generar PDF
 document.querySelector('.btn-add').addEventListener('click', function(e) {
     e.preventDefault();
     
@@ -177,11 +90,9 @@ document.querySelector('.btn-add').addEventListener('click', function(e) {
     window.open(`reportes/generar_reporte.php?desde=${desde}&hasta=${hasta}&tipo_reporte=${tipo}`, '_blank');
 });
 
-// Cargar datos iniciales
 document.getElementById('desde').addEventListener('change', cargarDatosTabla);
 document.getElementById('hasta').addEventListener('change', cargarDatosTabla);
 
-// Cargar datos al iniciar la página
 window.addEventListener('load', function() {
     const hoy = new Date().toISOString().split('T')[0];
     const primerDia = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0];

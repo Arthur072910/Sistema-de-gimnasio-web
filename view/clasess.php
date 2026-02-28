@@ -46,54 +46,6 @@ $entrenadores = $controller->listarEntrenadores();
     <link rel="stylesheet" href="../assets/css/clasess.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
-    <style>
-        .alert {
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-left: 4px solid;
-        }
-        .alert-success {
-            background-color: #d4edda;
-            color: #155724;
-            border-left-color: #28a745;
-        }
-        .alert-error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border-left-color: #dc3545;
-        }
-        .alert .close {
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: inherit;
-        }
-        .modal-content {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-        }
-        .modal-header {
-            border-bottom: 1px solid var(--border-color);
-            padding: 20px;
-        }
-        .modal-title {
-            color: var(--accent-gold);
-            font-weight: bold;
-        }
-        .modal-body {
-            padding: 25px;
-        }
-        .modal-footer {
-            border-top: 1px solid var(--border-color);
-            padding: 20px;
-        }
-    </style>
 </head>
 <body>
     <div style="display: flex">

@@ -13,7 +13,7 @@ $tipo_reporte = $_GET['tipo_reporte'] ?? 'pagos';
 $database = new Database();
 $db = $database->getConnection();
 
-// Configurar mPDF - CORREGIDO
+// Configurar mPDF
 $mpdf = new Mpdf([
     'mode' => 'utf-8',
     'format' => 'A4',
@@ -21,8 +21,8 @@ $mpdf = new Mpdf([
     'margin_bottom' => 25,
     'margin_left' => 20,
     'margin_right' => 20,
-    'tempDir' => __DIR__ . '/../../temp', // Directorio temporal
-    'default_font' => 'dejavusans', // Fuente por defecto
+    'tempDir' => __DIR__ . '/../../temp',
+    'default_font' => 'dejavusans',
     'default_font_size' => 10
 ]);
 
@@ -55,45 +55,13 @@ switch ($tipo_reporte) {
         $columnas = ['Fecha', 'Total Ingresos', 'Membresías', 'Productos', 'Transacciones'];
         $datos = obtenerReporteIngresos($db, $desde, $hasta);
         break;
-
-    case 'entrenadores':
-        $titulo = 'REPORTE DE ENTRENADORES';
-        $columnas = ['ID', 'Nombre', 'Especialidad', 'Teléfono', 'Email', 'Fecha Registro', 'Estado'];
-        $datos = obtenerReporteEntrenadores($db);
-        break;
-    
-    case 'clases':
-        $titulo = 'REPORTE DE CLASES';
-        $columnas = ['ID', 'Nombre', 'Descripción', 'Cupo', 'Inscritos', 'Entrenador', 'Estado', 'Fecha Creación'];
-        $datos = obtenerReporteClases($db);
-        break;
-    
-    case 'productos':
-        $titulo = 'REPORTE DE PRODUCTOS';
-        $columnas = ['ID', 'Nombre', 'Categoría', 'Precio', 'Stock', 'Descripción', 'Estado'];
-        $datos = obtenerReporteProductos($db);
-        break;
-    
-    case 'planes':
-        $titulo = 'REPORTE DE PLANES';
-        $columnas = ['ID', 'Plan', 'Duración', 'Precio', 'Miembros Activos', 'Descripción', 'Estado'];
-        $datos = obtenerReportePlanes($db);
-        break;
 }
 
-// Generar HTML del reporte
 $html = generarHTMLReporte($titulo, $columnas, $datos, $desde, $hasta, $tipo_reporte);
-
-// CORRECCIÓN: Limpiar HTML antes de enviar a mPDF
 $html = mb_convert_encoding($html, 'UTF-8', 'UTF-8');
 
-// Escribir al PDF
 $mpdf->WriteHTML($html);
-
-// Nombre del archivo
 $nombre_archivo = 'reporte_' . $tipo_reporte . '_' . date('Y-m-d') . '.pdf';
-
-// Salida al navegador
 $mpdf->Output($nombre_archivo, 'I');
 
 /**
@@ -178,7 +146,6 @@ function obtenerReporteIngresos($db, $desde, $hasta) {
         $totales['total_transacciones'] += $row['total_transacciones'];
     }
     
-    // Agregar fila de totales si hay datos
     if (!empty($datos)) {
         $datos[] = [
             'fecha' => 'TOTALES',
@@ -190,92 +157,6 @@ function obtenerReporteIngresos($db, $desde, $hasta) {
     }
     
     return $datos;
-}
-
-/**
- * REPORTE DE ENTRENADORES
- */
-function obtenerReporteEntrenadores($db) {
-    $query = "SELECT 
-                id_entrenador,
-                nombre,
-                especialidad,
-                COALESCE(telefono, '-') as telefono,
-                email,
-                DATE_FORMAT(fecha_registro, '%d/%m/%Y') as fecha_registro,
-                estado
-            FROM entrenadores
-            WHERE estado = 'activo'
-            ORDER BY nombre";
-    
-    $stmt = $db->prepare($query);
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
-/**
- * REPORTE DE CLASES
- */
-function obtenerReporteClases($db) {
-    $query = "SELECT 
-                c.id_clase,
-                c.nombre,
-                COALESCE(c.descripcion, '-') as descripcion,
-                c.cupo_maximo,
-                (SELECT COUNT(*) FROM inscripciones_clases ic WHERE ic.id_clase = c.id_clase AND ic.estado = 'activa') as inscritos,
-                COALESCE(e.nombre, 'Sin asignar') as entrenador,
-                c.estado,
-                DATE_FORMAT(c.fecha_creacion, '%d/%m/%Y') as fecha_creacion
-            FROM clases c
-            LEFT JOIN entrenadores e ON c.id_entrenador = e.id_entrenador
-            WHERE c.estado = 'activo'
-            ORDER BY c.nombre";
-    
-    $stmt = $db->prepare($query);
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
-/**
- * REPORTE DE PRODUCTOS
- */
-function obtenerReporteProductos($db) {
-    $query = "SELECT 
-                id_producto,
-                nombre,
-                categoria,
-                precio,
-                stock,
-                COALESCE(descripcion, '-') as descripcion,
-                estado
-            FROM productos
-            WHERE estado = 'activo'
-            ORDER BY nombre";
-    
-    $stmt = $db->prepare($query);
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
-/**
- * REPORTE DE PLANES (MEMBRESÍAS)
- */
-function obtenerReportePlanes($db) {
-    $query = "SELECT 
-                tm.id_tipo_membresia,
-                tm.nombre,
-                CONCAT(tm.duracion_dias, ' días') as duracion,
-                tm.precio,
-                (SELECT COUNT(*) FROM membresias m WHERE m.id_tipo_membresia = tm.id_tipo_membresia AND m.estado = 'activa') as miembros_activos,
-                COALESCE(tm.descripcion, '-') as descripcion,
-                tm.estado
-            FROM tipo_membresia tm
-            WHERE tm.estado = 'activo'
-            ORDER BY tm.precio";
-    
-    $stmt = $db->prepare($query);
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function generarHTMLReporte($titulo, $columnas, $datos, $desde, $hasta, $tipo_reporte) {
@@ -295,7 +176,6 @@ function generarHTMLReporte($titulo, $columnas, $datos, $desde, $hasta, $tipo_re
             padding: 20px;
         }
         
-        /* HEADER CON FONDO NEGRO */
         .header {
             background-color: #111111;
             padding: 15px 20px;
@@ -304,7 +184,7 @@ function generarHTMLReporte($titulo, $columnas, $datos, $desde, $hasta, $tipo_re
             border-bottom: 3px solid #ffd700;
             display: flex;
             align-items: center;
-            gap: 15px; /* Espacio entre logo y texto */
+            gap: 15px;
         }
 
         .logo {
@@ -334,7 +214,6 @@ function generarHTMLReporte($titulo, $columnas, $datos, $desde, $hasta, $tipo_re
             margin: 2px 0 0 0;
         }
         
-        /* INFO CARDS MEJORADAS */
         .info-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -372,7 +251,6 @@ function generarHTMLReporte($titulo, $columnas, $datos, $desde, $hasta, $tipo_re
             margin-left: 5px;
         }
         
-        /* TÍTULO SECCIÓN */
         .section-title {
             font-size: 18pt;
             font-weight: 800;
@@ -395,7 +273,6 @@ function generarHTMLReporte($titulo, $columnas, $datos, $desde, $hasta, $tipo_re
             background: #ffd700;
         }
         
-        /* TABLA MEJORADA */
         .table-container {
             background: #ffffff;
             border-radius: 15px;
@@ -432,11 +309,6 @@ function generarHTMLReporte($titulo, $columnas, $datos, $desde, $hasta, $tipo_re
             background-color: #fafafa;
         }
         
-        tr:hover {
-            background-color: #fff2e6;
-        }
-        
-        /* BADGES MEJORADOS */
         .badge {
             display: inline-block;
             padding: 6px 12px;
@@ -468,22 +340,6 @@ function generarHTMLReporte($titulo, $columnas, $datos, $desde, $hasta, $tipo_re
             border-bottom: 2px solid #943126;
         }
         
-        .badge-activa {
-            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
-            color: white;
-        }
-        
-        .badge-vencida {
-            background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
-            color: white;
-        }
-        
-        .badge-default {
-            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
-            color: white;
-        }
-        
-        /* MEMBRESÍA TAG */
         .membresia-tag {
             background: linear-gradient(135deg, #ffd700 0%, #f1c40f 100%);
             color: #111111;
@@ -496,7 +352,6 @@ function generarHTMLReporte($titulo, $columnas, $datos, $desde, $hasta, $tipo_re
             border-bottom: 2px solid #d4ac0d;
         }
         
-        /* MONTO */
         .monto {
             font-weight: 700;
             color: #111111;
@@ -504,7 +359,6 @@ function generarHTMLReporte($titulo, $columnas, $datos, $desde, $hasta, $tipo_re
             font-size: 10.5pt;
         }
         
-        /* EMAIL Y TELÉFONO */
         .email {
             color: #2980b9;
             text-decoration: none;
@@ -517,7 +371,6 @@ function generarHTMLReporte($titulo, $columnas, $datos, $desde, $hasta, $tipo_re
             color: #111111;
         }
         
-        /* FOOTER */
         .footer {
             text-align: center;
             margin-top: 40px;
@@ -540,7 +393,6 @@ function generarHTMLReporte($titulo, $columnas, $datos, $desde, $hasta, $tipo_re
             letter-spacing: 0.5px;
         }
         
-        /* NO DATA */
         .no-data {
             text-align: center;
             padding: 40px;
@@ -562,7 +414,6 @@ function generarHTMLReporte($titulo, $columnas, $datos, $desde, $hasta, $tipo_re
     </head>
     <body>';
     
-    // HEADER CON LOGO
     $html .= '
         <div class="header">
             <img src="../../assets/img/logo_deluxGym.png" class="logo" alt="DeluxGym Logo">
@@ -572,7 +423,6 @@ function generarHTMLReporte($titulo, $columnas, $datos, $desde, $hasta, $tipo_re
             </div>
         </div>';
     
-    // INFO CARDS
     $total_registros = !empty($datos) ? count($datos) : 0;
     if ($tipo_reporte == 'ingresos' && !empty($datos)) {
         $total_registros = $total_registros - 1;
@@ -594,10 +444,8 @@ function generarHTMLReporte($titulo, $columnas, $datos, $desde, $hasta, $tipo_re
             </div>
         </div>';
     
-    // TÍTULO DE SECCIÓN
     $html .= '<div class="section-title">📋 DETALLE DEL REPORTE</div>';
     
-    // TABLA
     if (empty($datos)) {
         $html .= '<div class="no-data">No hay datos disponibles para el período seleccionado</div>';
     } else {
@@ -615,7 +463,6 @@ function generarHTMLReporte($titulo, $columnas, $datos, $desde, $hasta, $tipo_re
                 $valor_original = $valor;
                 $valor = htmlspecialchars($valor);
                 
-                // CORRECCIÓN: Detectar estado completado
                 if ($key == 'Estado' || $key == 'estado' || $key == 'ESTADO') {
                     $badge_class = 'badge-default';
                     $estado_lower = strtolower($valor_original);
@@ -628,30 +475,24 @@ function generarHTMLReporte($titulo, $columnas, $datos, $desde, $hasta, $tipo_re
                         $badge_class = 'badge-fallido';
                     }
                     
-                    // Si está vacío, mostrar un badge por defecto
                     if (empty($valor_original) || $valor_original == '-') {
                         $html .= '<td><span class="badge badge-default">SIN ESTADO</span></td>';
                     } else {
                         $html .= '<td><span class="badge ' . $badge_class . '">' . strtoupper($valor) . '</span></td>';
                     }
-                }
-                elseif ($key == 'Email' || $key == 'email' || $key == 'EMAIL') {
+                } elseif ($key == 'Email' || $key == 'email' || $key == 'EMAIL') {
                     $html .= '<td><span class="email">' . $valor . '</span></td>';
-                }
-                elseif ($key == 'Teléfono' || $key == 'telefono' || $key == 'TELÉFONO') {
+                } elseif ($key == 'Teléfono' || $key == 'telefono' || $key == 'TELÉFONO') {
                     $html .= '<td><span class="telefono">' . $valor . '</span></td>';
-                }
-                elseif ($key == 'Membresía' || $key == 'membresia' || $key == 'MEMBRESÍA') {
+                } elseif ($key == 'Membresía' || $key == 'membresia' || $key == 'MEMBRESÍA') {
                     if ($valor != 'Sin membresía' && $valor != '-') {
                         $html .= '<td><span class="membresia-tag">' . $valor . '</span></td>';
                     } else {
                         $html .= '<td>' . $valor . '</td>';
                     }
-                }
-                elseif (strpos($key, 'Monto') !== false || strpos($key, 'Ingresos') !== false || $key == 'total_ingresos') {
+                } elseif (strpos($key, 'Monto') !== false || strpos($key, 'Ingresos') !== false || $key == 'total_ingresos') {
                     $html .= '<td class="monto">$ ' . $valor . '</td>';
-                }
-                else {
+                } else {
                     $html .= '<td>' . $valor . '</td>';
                 }
             }
@@ -662,7 +503,6 @@ function generarHTMLReporte($titulo, $columnas, $datos, $desde, $hasta, $tipo_re
         $html .= '</div>';
     }
     
-    // FOOTER
     $html .= '
         <div class="footer">
             <p class="footer-bold">DeluxGym - Sistema de Gestión Deportiva</p>

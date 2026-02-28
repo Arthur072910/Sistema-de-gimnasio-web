@@ -186,7 +186,6 @@ function generarHTMLReporte($titulo, $columnas, $datos, $desde, $hasta, $tipo_re
         }
         
         /* HEADER CON FONDO NEGRO */
-        /* HEADER - Logo izquierda, texto centrado */
         .header {
             background-color: #111111;
             padding: 15px 20px;
@@ -195,6 +194,7 @@ function generarHTMLReporte($titulo, $columnas, $datos, $desde, $hasta, $tipo_re
             border-bottom: 3px solid #ffd700;
             display: flex;
             align-items: center;
+            gap: 15px; /* Espacio entre logo y texto */
         }
 
         .logo {
@@ -203,12 +203,11 @@ function generarHTMLReporte($titulo, $columnas, $datos, $desde, $hasta, $tipo_re
             border-radius: 50%;
             border: 2px solid #ffd700;
             object-fit: cover;
-            margin-right: 20px;
         }
 
         .header-text {
-            flex: 1;
-            text-align: left;
+            display: flex;
+            flex-direction: column;
         }
 
         .header-title {
@@ -454,7 +453,6 @@ function generarHTMLReporte($titulo, $columnas, $datos, $desde, $hasta, $tipo_re
     <body>';
     
     // HEADER CON LOGO
-    // HEADER CON LOGO Y TEXTO JUNTOS
     $html .= '
         <div class="header">
             <img src="../../assets/img/logo_deluxGym.png" class="logo" alt="DeluxGym Logo">

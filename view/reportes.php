@@ -48,6 +48,10 @@
                                     <option value="pagos">Pagos</option>
                                     <option value="miembros">Miembros</option>
                                     <option value="ingresos">Ingresos</option>
+                                    <option value="entrenadores">Entrenadores</option>
+                                    <option value="clases">Clases</option>
+                                    <option value="planes">Planes</option>
+                                    <option value="productos">Productos</option>
                                 </select>
                             </div>
                             <div class="form-group col-md-1">

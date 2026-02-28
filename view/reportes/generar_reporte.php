@@ -55,6 +55,30 @@ switch ($tipo_reporte) {
         $columnas = ['Fecha', 'Total Ingresos', 'Membresías', 'Productos', 'Transacciones'];
         $datos = obtenerReporteIngresos($db, $desde, $hasta);
         break;
+
+    case 'entrenadores':
+        $titulo = 'REPORTE DE ENTRENADORES';
+        $columnas = ['ID', 'Nombre', 'Especialidad', 'Teléfono', 'Email', 'Fecha Registro', 'Estado'];
+        $datos = obtenerReporteEntrenadores($db);
+        break;
+    
+    case 'clases':
+        $titulo = 'REPORTE DE CLASES';
+        $columnas = ['ID', 'Nombre', 'Descripción', 'Cupo', 'Inscritos', 'Entrenador', 'Estado', 'Fecha Creación'];
+        $datos = obtenerReporteClases($db);
+        break;
+    
+    case 'productos':
+        $titulo = 'REPORTE DE PRODUCTOS';
+        $columnas = ['ID', 'Nombre', 'Categoría', 'Precio', 'Stock', 'Descripción', 'Estado'];
+        $datos = obtenerReporteProductos($db);
+        break;
+    
+    case 'planes':
+        $titulo = 'REPORTE DE PLANES';
+        $columnas = ['ID', 'Plan', 'Duración', 'Precio', 'Miembros Activos', 'Descripción', 'Estado'];
+        $datos = obtenerReportePlanes($db);
+        break;
 }
 
 // Generar HTML del reporte
@@ -166,6 +190,92 @@ function obtenerReporteIngresos($db, $desde, $hasta) {
     }
     
     return $datos;
+}
+
+/**
+ * REPORTE DE ENTRENADORES
+ */
+function obtenerReporteEntrenadores($db) {
+    $query = "SELECT 
+                id_entrenador,
+                nombre,
+                especialidad,
+                COALESCE(telefono, '-') as telefono,
+                email,
+                DATE_FORMAT(fecha_registro, '%d/%m/%Y') as fecha_registro,
+                estado
+            FROM entrenadores
+            WHERE estado = 'activo'
+            ORDER BY nombre";
+    
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+/**
+ * REPORTE DE CLASES
+ */
+function obtenerReporteClases($db) {
+    $query = "SELECT 
+                c.id_clase,
+                c.nombre,
+                COALESCE(c.descripcion, '-') as descripcion,
+                c.cupo_maximo,
+                (SELECT COUNT(*) FROM inscripciones_clases ic WHERE ic.id_clase = c.id_clase AND ic.estado = 'activa') as inscritos,
+                COALESCE(e.nombre, 'Sin asignar') as entrenador,
+                c.estado,
+                DATE_FORMAT(c.fecha_creacion, '%d/%m/%Y') as fecha_creacion
+            FROM clases c
+            LEFT JOIN entrenadores e ON c.id_entrenador = e.id_entrenador
+            WHERE c.estado = 'activo'
+            ORDER BY c.nombre";
+    
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+/**
+ * REPORTE DE PRODUCTOS
+ */
+function obtenerReporteProductos($db) {
+    $query = "SELECT 
+                id_producto,
+                nombre,
+                categoria,
+                precio,
+                stock,
+                COALESCE(descripcion, '-') as descripcion,
+                estado
+            FROM productos
+            WHERE estado = 'activo'
+            ORDER BY nombre";
+    
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+/**
+ * REPORTE DE PLANES (MEMBRESÍAS)
+ */
+function obtenerReportePlanes($db) {
+    $query = "SELECT 
+                tm.id_tipo_membresia,
+                tm.nombre,
+                CONCAT(tm.duracion_dias, ' días') as duracion,
+                tm.precio,
+                (SELECT COUNT(*) FROM membresias m WHERE m.id_tipo_membresia = tm.id_tipo_membresia AND m.estado = 'activa') as miembros_activos,
+                COALESCE(tm.descripcion, '-') as descripcion,
+                tm.estado
+            FROM tipo_membresia tm
+            WHERE tm.estado = 'activo'
+            ORDER BY tm.precio";
+    
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function generarHTMLReporte($titulo, $columnas, $datos, $desde, $hasta, $tipo_reporte) {

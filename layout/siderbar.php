@@ -31,10 +31,6 @@ $base_url = '/Sistema-de-gimnasio-web';
             <i class="fas fa-box"></i> Productos
         </a>
 
-        <a class="nav-link <?php echo ($pagina_actual == 'pagos.php') ? 'active' : ''; ?>" href="#">
-            <i class="fas fa-credit-card"></i> Pagos
-        </a>
-
         <a class="nav-link <?php echo ($pagina_actual == 'planes.php') ? 'active' : ''; ?>" href="planes.php">
             <i class="fas fa-id-card"></i> Planes
         </a>

@@ -218,10 +218,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['procesar_pago'])) {
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn-gold-gym w-100 mt-4" id="btn-pagar">
-                                <i class="fas fa-lock mr-2"></i>
-                                PAGAR
-                            </button>
+                            <!-- BOTONES JUNTOS Y SIMÉTRICOS (MEJORA 1) -->
+                            <div class="row mt-4">
+                                <div class="col-md-6 mb-2">
+                                    <a href="#" onclick="cancelarCompra(event)" class="btn-cancelar btn-block">
+                                        <i class="fas fa-arrow-left mr-2"></i>
+                                        Cancelar
+                                    </a>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <button type="submit" class="btn-pagar btn-block" id="btn-pagar">
+                                        <i class="fas fa-lock mr-2"></i>
+                                        PAGAR
+                                    </button>
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -237,6 +248,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['procesar_pago'])) {
                     <div class="card-body" id="resumen-container">
                         <p class="text-center text-muted">Cargando...</p>
                     </div>
+                    
+                    <!-- TOTAL ÚNICO EN EL FOOTER (MEJORA 2) -->
+                    <div class="card-footer-gym text-center py-3 bg-dark" id="total-footer" style="display: none;">
+                        <div class="d-flex justify-content-between align-items-center px-3">
+                            <span class="h5 mb-0">Total:</span>
+                            <span class="h4 mb-0 text-warning" id="total-unico">$0.00</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -249,6 +268,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['procesar_pago'])) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="../assets/js/pago.js"></script>
+    
+    <script>
+        function cancelarCompra(e) {
+            e.preventDefault();
+            
+            // Limpiar carrito
+            localStorage.removeItem('gym_cart');
+            sessionStorage.removeItem('pago_carrito');
+            sessionStorage.removeItem('pago_total');
+            
+            // Redirigir según el tipo
+            <?php if ($tiene_membresia): ?>
+                window.location.href = 'planes.php';
+            <?php else: ?>
+                window.location.href = 'productos.php';
+            <?php endif; ?>
+        }
+    </script>
     
     <!-- Script para pasar datos de membresía desde PHP -->
     <script>

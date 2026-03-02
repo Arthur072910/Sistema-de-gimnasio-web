@@ -91,7 +91,7 @@ body {
     color: var(--gold);
 }
 
-
+/* ─── PROFILE CARD ───────────────────────────── */
 .profile-card {
     text-align: center;
     position: sticky;
@@ -160,7 +160,7 @@ body {
     margin-bottom: 1.4rem;
 }
 
-
+/* ─── INFO LIST ──────────────────────────────── */
 .info-list {
     text-align: left;
 }
@@ -182,7 +182,7 @@ body {
     flex-shrink: 0;
 }
 
-
+/* ─── INFO GRID ──────────────────────────────── */
 .info-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -211,7 +211,7 @@ body {
     color: var(--white);
 }
 
-
+/* ─── RACHA CARD (MEMBRESÍA) ─────────────────── */
 .racha-card {
     border-color: rgba(255, 215, 0, 0.4);
     background: linear-gradient(135deg, var(--black-card) 70%, rgba(255,215,0,0.04));
@@ -239,7 +239,20 @@ body {
     margin-bottom: 0;
 }
 
+.racha-content .badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
 
+.racha-content .badge-warning {
+    background: rgba(255, 193, 7, 0.15);
+    color: #ffc107;
+    border: 1px solid #ffc107;
+}
+
+/* ─── SUSCRIPCIÓN BOX ────────────────────────── */
 .suscripcion-box {
     display: flex;
     gap: .75rem;
@@ -263,12 +276,54 @@ body {
 .btn-gold {
     background: var(--gold);
     color: #111;
+    border: none;
+    padding: 0.55rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all .25s;
 }
 
 .btn-gold:hover {
     background: var(--gold-dark);
     color: #111;
     text-decoration: none;
+    transform: translateY(-2px);
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.55rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all .25s;
+}
+
+.btn-danger:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+}
+
+.btn-success {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 0.55rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all .25s;
+}
+
+.btn-success:hover {
+    background: #218838;
+    transform: translateY(-2px);
 }
 
 .btn-dark {
@@ -283,7 +338,7 @@ body {
     text-decoration: none;
 }
 
-
+/* ─── BOTTOM ACTIONS ─────────────────────────── */
 .suscripcion-box.bottom-actions {
     justify-content: center;
     margin: 1.5rem auto 0;
@@ -308,7 +363,179 @@ body {
     text-decoration: none;
 }
 
+/* ─── TABLAS ─────────────────────────────────── */
+table {
+    color: #ffffff;
+    width: 100%;
+    border-collapse: collapse;
+}
 
+table th {
+    color: #ffd700;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 12px 10px;
+    border-bottom: 2px solid var(--gold);
+    background: #000000;
+}
+
+table td {
+    color: #ffffff;
+    padding: 12px 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+table tbody tr:hover {
+    background: rgba(255, 215, 0, 0.05);
+}
+
+.table-responsive {
+    overflow-x: auto;
+    border-radius: var(--radius);
+}
+
+/* ─── MODALES ────────────────────────────────── */
+.modal.fade .modal-dialog {
+    transform: translateY(-50px);
+    transition: transform 0.3s ease-out;
+}
+
+.modal.show .modal-dialog {
+    transform: translateY(0);
+}
+
+.modal-content {
+    background: var(--black-card);
+    border: 2px solid var(--gold);
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+    overflow: hidden;
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--border);
+    padding: 1.2rem 1.5rem;
+    background: linear-gradient(90deg, #000000, var(--black-card));
+}
+
+.modal-header .close {
+    color: var(--white);
+    opacity: 0.7;
+    font-size: 1.8rem;
+    font-weight: 300;
+    transition: opacity 0.3s;
+}
+
+.modal-header .close:hover {
+    opacity: 1;
+}
+
+.modal-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.modal-title i {
+    color: var(--gold);
+}
+
+.modal-body {
+    padding: 1.5rem;
+    background: var(--black-card);
+}
+
+/* ─── TABLAS DENTRO DE MODALES ───────────────── */
+.modal .table {
+    margin-bottom: 0;
+    background: transparent;
+}
+
+.modal .table thead th {
+    background: #000000;
+    color: var(--gold);
+    border-bottom: 2px solid var(--gold);
+    font-size: 0.8rem;
+    padding: 12px 10px;
+}
+
+.modal .table tbody td {
+    color: var(--white);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding: 12px 10px;
+    vertical-align: middle;
+}
+
+.modal .table tbody tr:hover {
+    background: rgba(255, 215, 0, 0.05);
+}
+
+.modal .text-warning {
+    color: var(--gold) !important;
+}
+
+.modal .text-muted {
+    color: rgba(255,255,255,0.5) !important;
+}
+
+/* ─── BADGES PARA MODALES ────────────────────── */
+.modal .badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.modal .badge-warning {
+    background: rgba(255, 193, 7, 0.15);
+    color: #ffc107;
+    border: 1px solid #ffc107;
+}
+
+.modal .badge-info {
+    background: rgba(23, 162, 184, 0.15);
+    color: #17a2b8;
+    border: 1px solid #17a2b8;
+}
+
+.modal .badge-success {
+    background: rgba(40, 167, 69, 0.15);
+    color: #28a745;
+    border: 1px solid #28a745;
+}
+
+/* ─── POPOVER ────────────────────────────────── */
+.popover {
+    background-color: #1a1a1a;
+    border: 1px solid var(--gold);
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.7);
+    max-width: 300px;
+}
+
+.popover-body {
+    color: #ffffff !important;
+    padding: 1rem;
+}
+
+.popover .arrow::after {
+    border-right-color: #1a1a1a !important;
+}
+
+/* ─── ANIMACIONES ────────────────────────────── */
+.pulse-gold {
+    animation: pulse-border 2s infinite;
+}
+
+@keyframes pulse-border {
+    0% { box-shadow: 0 0 0 0px rgba(255, 215, 0, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 215, 0, 0); }
+    100% { box-shadow: 0 0 0 0px rgba(255, 215, 0, 0); }
+}
+
+/* ─── RESPONSIVE ─────────────────────────────── */
 @media (max-width: 900px) {
     .profile-grid {
         grid-template-columns: 1fr;
@@ -326,6 +553,22 @@ body {
     .info-grid {
         grid-template-columns: 1fr;
     }
+    
+    .modal-dialog {
+        margin: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .modal .table thead th {
+        font-size: 0.7rem;
+        padding: 8px 5px;
+    }
+    
+    .modal .table tbody td {
+        font-size: 0.8rem;
+        padding: 8px 5px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -340,134 +583,14 @@ body {
 
     .suscripcion-box.bottom-actions .btn {
         justify-content: center;
+        width: 100%;
+    }
+    
+    .modal-header {
+        padding: 1rem;
+    }
+    
+    .modal-body {
+        padding: 1rem;
     }
 }
-
-
-
-
-
-
-
-
-
-
-table {
-    color: #ffffff;
-}
-
-table th {
-    color: #ffd700;
-}
-
-table td {
-    color: #ffffff;
-}
-
-table tbody tr {
-    border-bottom: 1px solid rgba(255,255,255,0.2);
-}
-
-
-
-.btn-notify {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    width: 38px;
-    height: 38px;
-    background: var(--gold);
-    color: #111;
-    border: 3px solid var(--black-card);
-    border-radius: 50% !important; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    cursor: pointer;
-    z-index: 10;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-}
-
-.btn-notify:hover {
-    transform: scale(1.1) rotate(15deg);
-    background: #fff; 
-}
-
-
-.pulse-gold {
-    animation: pulse-animation 2s infinite;
-}
-
-@keyframes pulse-animation {
-    0% { box-shadow: 0 0 0 0px rgba(255, 215, 0, 0.7); }
-    70% { box-shadow: 0 0 0 10px rgba(255, 215, 0, 0); }
-    100% { box-shadow: 0 0 0 0px rgba(255, 215, 0, 0); }
-}
-
-.avatar-container {
-    position: relative;
-    width: 130px;
-    height: 130px;
-    margin: 0 auto 1.2rem;
-}
-
-
-.btn-notify {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    width: 35px;
-    height: 35px;
-    background: #ffd700; 
-    color: #111;
-    border: 3px solid #161616; 
-    border-radius: 50% !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.9rem;
-    z-index: 5;
-}
-
-
-.pulse-gold {
-    animation: pulse-border 2s infinite;
-}
-
-@keyframes pulse-border {
-    0% { box-shadow: 0 0 0 0px rgba(255, 215, 0, 0.7); }
-    70% { box-shadow: 0 0 0 10px rgba(255, 215, 0, 0); }
-    100% { box-shadow: 0 0 0 0px rgba(255, 215, 0, 0); }
-}
-
-.popover {
-    border: 1px solid var(--gold);
-    background-color: #fff; 
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-}
-
-.popover-body {
-    padding: 15px;
-}
-
-
-
-.popover {
-    background-color: #1a1a1a;
-    border: 1px solid var(--gold);
-    border-radius: 12px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.7);
-}
-
-.popover-body {
-    color: #ffffff !important;
-    padding: 1rem;
-}
-
-.popover .arrow::after {
-    border-right-color: #1a1a1a !important; 
-}
-

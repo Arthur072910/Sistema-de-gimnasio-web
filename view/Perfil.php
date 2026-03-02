@@ -8,6 +8,7 @@ if(!isset($_SESSION['cliente_id'])) {
 
 require_once __DIR__ . '/../controller/ClienteController.php';
 require_once __DIR__ . '/../controller/MembresiaController.php';
+require_once __DIR__ . '/../controller/PagoController.php';
 require_once __DIR__ . '/../config/database.php';
 
 $database = new Database();
@@ -15,19 +16,22 @@ $conn = $database->getConnection();
 
 $controller = new ClienteController();
 $membresiaController = new MembresiaController();
+$pagoController = new PagoController();
 
 $rol = $_SESSION['rol'] ?? 'cliente';
 
-$membresiaActiva = $membresiaController->obtenerActiva($_SESSION['cliente_id']);
-$membresiaActiva = $membresiaActiva ?: null;
-
+// Obtener membresía activa
+$membresiaActiva = $membresiaController->obtenerMembresiaActiva($_SESSION['cliente_id']);
 $tipoMembresia   = $membresiaActiva['tipo_membresia'] ?? '';
 $fechaVencimiento = $membresiaActiva['fecha_vencimiento'] ?? '';
+$diasRestantes = $membresiaActiva['dias_restantes'] ?? 0;
+$id_membresia = $membresiaActiva['id_membresia'] ?? '';
 
+// Obtener historial de pagos
+$historialPagos = $pagoController->obtenerHistorialPagos($_SESSION['cliente_id']);
 
-
+// Total de clases inscritas
 $totalClases = 0;
-
 if($membresiaActiva){
     $stmtCount = $conn->prepare("
         SELECT COUNT(*) 
@@ -39,7 +43,7 @@ if($membresiaActiva){
     $totalClases = $stmtCount->fetchColumn();
 }
 
-
+// Clases disponibles
 $stmtClases = $conn->prepare("
     SELECT id_clase, nombre, descripcion
     FROM clases
@@ -48,11 +52,9 @@ $stmtClases = $conn->prepare("
 $stmtClases->execute();
 $clases = $stmtClases->fetchAll(PDO::FETCH_ASSOC);
 
-
+// Datos del cliente
 if($rol == 'cliente') {
-
     $datos = $controller->obtenerDatosCompletos($_SESSION['cliente_id']);
-
     if(!$datos) {
         $datos = [
             'nombre'            => $_SESSION['cliente_nombre'] ?? 'Usuario',
@@ -63,12 +65,9 @@ if($rol == 'cliente') {
             'fecha_nacimiento'  => null,
         ];
     }
-
 } else {
-
     $nombreCompleto = $_SESSION['cliente_nombre'] ?? 'Administrador';
     $partes = explode(' ', $nombreCompleto, 2);
-
     $datos = [
         'nombre'            => $partes[0] ?? $nombreCompleto,
         'apellido'          => $partes[1] ?? '',
@@ -77,11 +76,9 @@ if($rol == 'cliente') {
         'telefono'          => 'N/A',
         'fecha_nacimiento'  => 'N/A',
     ];
-    
 }
 
-
-
+// Historial de actividades
 $stmtHistorial = $conn->prepare("
     SELECT 
         tipo_accion, 
@@ -94,17 +91,11 @@ $stmtHistorial = $conn->prepare("
 $stmtHistorial->execute([$_SESSION['cliente_id']]);
 $historialActividades = $stmtHistorial->fetchAll(PDO::FETCH_ASSOC);
 
-
-
+// Notificaciones
 $notificacion = null;
 $claseAlerta = "";
 
 if ($membresiaActiva && !empty($fechaVencimiento)) {
-    $fechaHoy = new DateTime();
-    $fechaVence = new DateTime($fechaVencimiento);
-    $diferencia = $fechaHoy->diff($fechaVence);
-    $diasRestantes = (int)$diferencia->format("%r%a"); 
-
     if ($diasRestantes < 0) {
         $notificacion = "Tu membresía venció. ¡Renueva para no perder tus beneficios!";
         $claseAlerta = "alert-danger";
@@ -127,7 +118,6 @@ if ($membresiaActiva && !empty($fechaVencimiento)) {
 <link rel="stylesheet" href="../assets/css/Perfil.css">
 <link rel="stylesheet" href="../assets/css/footer.css">
 </head>
-
 <body>
 
 <?php include "../layout/header.php"; ?>
@@ -163,6 +153,16 @@ if ($membresiaActiva && !empty($fechaVencimiento)) {
 <?php if(isset($_GET['error']) && $_GET['error'] == 'sin_membresia'): ?>
     <div class="alert alert-danger mt-3">
         No tienes una membresía activa.
+    </div>
+<?php endif; ?>
+
+<?php if(isset($_GET['pago']) && $_GET['pago'] == 'exitoso'): ?>
+    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+        <i class="fas fa-check-circle mr-2"></i>
+        ¡Pago realizado con éxito!
+        <button type="button" class="close" data-dismiss="alert">
+            <span>&times;</span>
+        </button>
     </div>
 <?php endif; ?>
 
@@ -235,49 +235,39 @@ if ($membresiaActiva && !empty($fechaVencimiento)) {
 <div class="racha-content">
 <div>
 <?php if($membresiaActiva): ?>
-<p>Plan Actual: <?= htmlspecialchars($tipoMembresia) ?></p>
-<p>Vence el:
-<span class="role"><?= htmlspecialchars($fechaVencimiento) ?></span>
-</p>
+<p>Plan Actual: <strong><?= htmlspecialchars($tipoMembresia) ?></strong></p>
+<p>Vence el: <span class="role"><?= date('d/m/Y', strtotime($fechaVencimiento)) ?></span></p>
+<p>Días restantes: <span class="badge badge-warning"><?= $diasRestantes ?> días</span></p>
 <?php else: ?>
 <p><strong>Sin plan activo</strong></p>
 <?php endif; ?>
 </div>
 
-
 <div class="suscripcion-box">
 <?php if($membresiaActiva): ?>
-    
+    <form action="renovar.php" method="POST" style="display:inline;">
+        <input type="hidden" name="renovar" value="1">
+        <button type="submit" class="btn btn-gold">
+            <i class="fas fa-sync-alt"></i> Renovar
+        </button>
+    </form>
 
-<form action="renovar.php" method="POST" style="display:inline;">
-<input type="hidden" name="renovar" value="1">
-<button type="submit" class="btn btn-gold">
-<i class="fas fa-sync-alt"></i> Renovar
-</button>
-</form>
-
-<form action="cancelar.php" method="POST"
-onsubmit="return confirm('¿Seguro que deseas cancelar tu membresía?');"
-style="display:inline;">
-
-<input type="hidden" name="id_membresia"
-value="<?= htmlspecialchars($membresiaActiva['id_membresia'] ?? '') ?>">
-
-<button type="submit" class="btn btn-danger">
-Cancelar
-</button>
-</form>
-
-
+    <form action="cancelar.php" method="POST"
+          onsubmit="return confirm('¿Seguro que deseas cancelar tu membresía?');"
+          style="display:inline;">
+        <input type="hidden" name="id_membresia"
+               value="<?= htmlspecialchars($id_membresia) ?>">
+        <button type="submit" class="btn btn-danger">
+            Cancelar
+        </button>
+    </form>
 <?php else: ?>
-<a href="plan.php" class="btn btn-success">
-Elegir Plan
-</a>
+    <a href="plan.php" class="btn btn-success">
+        Elegir Plan
+    </a>
 <?php endif; ?>
 </div>
 </div>
-
-
 
 <?php if($rol == 'cliente'): ?>
 <div class="suscripcion-box bottom-actions">
@@ -285,8 +275,11 @@ Elegir Plan
         <i class="fas fa-qrcode mr-1"></i> Tarjeta de Inscripción
     </a>
     <button type="button" class="btn btn-gold btn-sm" data-toggle="modal" data-target="#modalHistorial">
-        <i class="fas fa-history mr-1"></i> Ver Historial
-    </a>
+        <i class="fas fa-history mr-1"></i> Ver Actividad
+    </button>
+    <button type="button" class="btn btn-gold btn-sm" data-toggle="modal" data-target="#modalPagos">
+        <i class="fas fa-credit-card mr-1"></i> Ver Pagos
+    </button>
 </div>
 <?php endif; ?>
 </section>
@@ -311,8 +304,6 @@ if($membresiaActiva && $planNormalizado !== "básico"):
 
 <?php foreach($clases as $clase): ?>
     <?php
-   
-    $planNormalizado = trim(mb_strtolower($tipoMembresia, 'UTF-8'));
     $planSinTildes = str_replace(['á', 'é', 'í', 'ó', 'ú'], ['a', 'e', 'i', 'o', 'u'], $planNormalizado);
 
     $stmtInscrito = $conn->prepare("SELECT id_inscripcion FROM inscripciones_clases WHERE id_cliente = ? AND id_clase = ? AND estado = 'activa'");
@@ -338,15 +329,13 @@ if($membresiaActiva && $planNormalizado !== "básico"):
 
         <td class="align-middle">
             <?php if($yaInscrito): ?>
-                <button class="btn btn-success btn-sm btn-block" disabled style="background-color: #28a745; border: none;">
+                <button class="btn btn-success btn-sm btn-block" disabled>
                     <i class="fas fa-check"></i> Inscrito
                 </button>
-
             <?php elseif($bloqueado): ?>
-                <button class="btn btn-danger btn-sm btn-block" disabled style="background-color: #8b2e34; border: none; opacity: 1;">
+                <button class="btn btn-danger btn-sm btn-block" disabled>
                     <i class="fas fa-lock"></i> Límite alcanzado
                 </button>
-
             <?php else: ?>
                 <form action="inscribirse.php" method="POST" class="m-0">
                     <input type="hidden" name="id_clase" value="<?= $clase['id_clase'] ?>">
@@ -357,22 +346,17 @@ if($membresiaActiva && $planNormalizado !== "básico"):
             <?php endif; ?>
         </td>
     </tr>
-
     <?php endforeach; ?>
-
 </tbody>
 </table>
 </div>
 </section>
 <?php endif; ?>
 
-
 </main>
 </div>
 
-
-
-</div>
+<!-- Modal Historial de Actividad -->
 <div class="modal fade" id="modalHistorial" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content bg-dark text-white border-warning" style="border-radius: 15px;">
@@ -397,8 +381,9 @@ if($membresiaActiva && $planNormalizado !== "básico"):
                                         <td class="pl-4 align-middle">
                                             <?php 
                                                 $icon = 'fa-info-circle text-info';
-                                                if(strpos($log['tipo_accion'], 'cancelada') !== false) $icon = 'fa-times-circle text-danger';
-                                                if(strpos($log['tipo_accion'], 'renovada') !== false) $icon = 'fa-sync-alt text-success';
+                                                if(strpos($log['tipo_accion'], 'cancel') !== false) $icon = 'fa-times-circle text-danger';
+                                                if(strpos($log['tipo_accion'], 'renov') !== false) $icon = 'fa-sync-alt text-success';
+                                                if(strpos($log['tipo_accion'], 'compra') !== false) $icon = 'fa-shopping-cart text-warning';
                                             ?>
                                             <i class="fas <?= $icon ?> mr-2"></i>
                                             <span class="small font-weight-bold text-uppercase"><?= str_replace('_', ' ', $log['tipo_accion']) ?></span>
@@ -418,12 +403,64 @@ if($membresiaActiva && $planNormalizado !== "básico"):
     </div>
 </div>
 
+<!-- Modal Historial de Pagos -->
+<div class="modal fade" id="modalPagos" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content bg-dark text-white border-warning" style="border-radius: 15px;">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title text-warning"><i class="fas fa-credit-card mr-2"></i> Mis Pagos</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover table-dark mb-0">
+                        <thead class="bg-black">
+                            <tr class="text-secondary small">
+                                <th class="pl-4">Fecha</th>
+                                <th>Concepto</th>
+                                <th>Método</th>
+                                <th class="text-right pr-4">Monto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (count($historialPagos) > 0): ?>
+                                <?php foreach ($historialPagos as $pago): ?>
+                                    <tr>
+                                        <td class="pl-4 align-middle"><?= date('d/m/Y', strtotime($pago['fecha_pago'])) ?></td>
+                                        <td class="align-middle">
+                                            <?php 
+                                                if($pago['tipo_transaccion'] == 'membresia') {
+                                                    echo '<i class="fas fa-crown text-warning mr-2"></i>' . htmlspecialchars($pago['concepto']);
+                                                } else {
+                                                    echo '<i class="fas fa-box text-info mr-2"></i>Compra de productos';
+                                                }
+                                            ?>
+                                        </td>
+                                        <td class="align-middle">
+                                            <?php 
+                                                $metodo = $pago['metodo_pago'];
+                                                if($metodo == 'tarjeta') echo '<i class="fas fa-credit-card mr-2"></i>Tarjeta';
+                                                elseif($metodo == 'efectivo') echo '<i class="fas fa-money-bill-wave mr-2"></i>Efectivo';
+                                                else echo ucfirst($metodo);
+                                            ?>
+                                        </td>
+                                        <td class="text-right pr-4 align-middle text-warning font-weight-bold">$<?= number_format($pago['monto_total'], 2) ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr><td colspan="4" class="text-center py-5">No hay pagos registrados.</td></tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
 <script src="../assets/js/notificaciones.js"></script>
 
 <?php include "../layout/footer.php"; ?>

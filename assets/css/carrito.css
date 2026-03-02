@@ -367,3 +367,88 @@ h2::after {
         font-size: 1.6rem;
     }
 }
+
+/* ============================================ */
+/* INPUT DE CANTIDAD - SOLO FLECHAS             */
+/* ============================================ */
+
+/* Estilo para el input de cantidad */
+.cantidad-input {
+    width: 80px;
+    background: var(--dark-card) !important;  /* Mismo fondo que las tarjetas */
+    border: 2px solid var(--gold-soft) !important;  /* Borde dorado suave */
+    border-radius: 8px !important;
+    color: var(--text-primary) !important;  /* Texto blanco */
+    text-align: center;
+    padding: 0.5rem !important;
+    font-weight: 500 !important;
+    font-size: 0.95rem !important;
+    transition: var(--transition) !important;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+    pointer-events: auto;  /* Permite interacción con flechas */
+    user-select: none;  /* Evita selección de texto */
+}
+
+/* Hover del input */
+.cantidad-input:hover {
+    border-color: var(--gold-medium) !important;
+    background: var(--dark-surface) !important;
+}
+
+/* Focus del input (aunque no debería ocurrir) */
+.cantidad-input:focus {
+    outline: none !important;
+}
+
+/* ESTILO PARA LAS FLECHAS - FUNCIONA EN CHROME, EDGE, SAFARI */
+.cantidad-input::-webkit-outer-spin-button,
+.cantidad-input::-webkit-inner-spin-button {
+    -webkit-appearance: inner-spin-button !important;  /* Mantiene las flechas */
+    opacity: 0.9;  /* Visibles */
+    height: 24px;
+    margin-left: 4px;
+    cursor: pointer;
+    background: var(--dark-surface);
+    border-left: 1px solid var(--gold-soft);
+    border-radius: 0 4px 4px 0;
+    pointer-events: auto !important;  /* Asegura que las flechas funcionen */
+}
+
+/* Hover de las flechas */
+.cantidad-input::-webkit-outer-spin-button:hover,
+.cantidad-input::-webkit-inner-spin-button:hover {
+    opacity: 1;
+    background: var(--gold-soft);
+}
+
+/* Para Firefox - mantiene las flechas por defecto */
+.cantidad-input[type=number] {
+    -moz-appearance: textfield;  /* Esto permite las flechas en Firefox */
+}
+
+/* Para que se vean bien en Firefox */
+@-moz-document url-prefix() {
+    .cantidad-input {
+        padding-right: 2px !important;
+    }
+}
+
+/* Para la tabla, alinear verticalmente */
+.table tbody td .cantidad-input {
+    margin: 0 auto;
+}
+
+/* Responsive para el input */
+@media (max-width: 576px) {
+    .cantidad-input {
+        width: 70px !important;
+        padding: 0.4rem !important;
+        font-size: 0.9rem !important;
+    }
+    
+    /* Ajuste de flechas en móvil */
+    .cantidad-input::-webkit-outer-spin-button,
+    .cantidad-input::-webkit-inner-spin-button {
+        height: 20px;
+    }
+}

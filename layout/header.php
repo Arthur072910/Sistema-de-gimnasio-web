@@ -8,6 +8,9 @@ $base_url = '/Sistema-de-gimnasio-web';
 $rol = $_SESSION['rol'] ?? 'visitante';
 $nombreUsuario = $_SESSION['cliente_nombre'] ?? 'Usuario';
 $current_page = basename($_SERVER['PHP_SELF']);
+
+// Detectar si estamos en la página del carrito
+$en_carrito = ($current_page == 'carrito.php');
 ?>
 <link rel="stylesheet" href="<?php echo $base_url; ?>/assets/css/header.css">
 <nav class="navbar navbar-expand-sm navbar-dark" id="nav-1">
@@ -29,13 +32,22 @@ $current_page = basename($_SERVER['PHP_SELF']);
       <li class="nav-item <?php echo ($current_page == 'productos.php') ? 'active' : ''; ?>">
         <a class="nav-link" href="<?php echo $base_url; ?>/view/productos.php">Tienda</a>
       </li>
+
+      <!-- ASISTENCIA - SOLO PARA ADMINISTRADOR -->
+      <?php if($rol == 'administrador'): ?>
       <li class="nav-item <?php echo ($current_page == 'asistencia.php') ? 'active' : ''; ?>">
         <a class="nav-link" href="<?php echo $base_url; ?>/view/asistencia.php">Asistencia</a>
       </li>
+      <?php endif; ?>
 
       <?php if($rol != 'visitante'): ?>
       <li class="nav-item <?php echo ($current_page == 'carrito.php') ? 'active' : ''; ?>">
-        <a class="nav-link" href="<?php echo $base_url; ?>/view/carrito.php">Carrito</a>
+        <a class="nav-link cart-link" href="<?php echo $base_url; ?>/view/carrito.php">
+          <i class="fas fa-shopping-cart"></i> Carrito
+          <?php if(!$en_carrito): // Solo mostrar contador si NO estamos en carrito ?>
+            <span class="cart-badge" id="cart-count">0</span>
+          <?php endif; ?>
+        </a>
       </li>
       <?php endif; ?>
 
@@ -78,3 +90,76 @@ $current_page = basename($_SERVER['PHP_SELF']);
     </ul>
   </div>
 </nav>
+
+<!-- Estilos mejorados para el badge del carrito -->
+<style>
+.cart-link {
+    position: relative !important;
+    padding-right: 5px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+}
+
+.cart-link i {
+    color: var(--gold);
+    font-size: 1.1rem;
+    transition: transform 0.3s ease;
+}
+
+.cart-link:hover i {
+    transform: scale(1.2);
+}
+
+.cart-badge {
+    position: relative;
+    top: auto;
+    right: auto;
+    background: linear-gradient(135deg, #ffd700, #ffb347);
+    color: #000000;
+    font-size: 0.7rem;
+    font-weight: 800;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px;
+    box-shadow: 0 2px 8px rgba(255, 215, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    animation: cartPulse 1.5s infinite;
+    margin-left: 3px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+@keyframes cartPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 6px rgba(255, 215, 0, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
+    }
+}
+
+/* Cuando hay items, el badge brilla más */
+.cart-badge:not(:empty) {
+    background: linear-gradient(135deg, #ffd700, #ffa500);
+    border: 1px solid white;
+}
+
+/* Ocultar badge cuando está vacío (lo manejamos con PHP y JS) */
+.cart-badge[style*="display: none"] {
+    display: none !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .cart-link {
+        justify-content: center;
+    }
+}
+</style>

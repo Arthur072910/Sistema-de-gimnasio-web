@@ -2,25 +2,70 @@
 require_once __DIR__ . '/../config/Database.php';
 
 class Membresia {
-
     private $conn;
     private $table = "membresias";
-
-    public $id_membresia;
-    public $id_cliente;
-    public $id_tipo_membresia;
-    public $fecha_inicio;
-    public $fecha_vencimiento;
-    public $codigo_qr;
-    public $estado;
 
     public function __construct($db) {
         $this->conn = $db;
     }
 
-  
-    public function verificarAcceso($id_cliente) {
+    // ============================================
+    // MÉTODOS PARA OBTENER DATOS
+    // ============================================
+    
+    public function obtenerActiva($id_cliente) {
+        $query = "SELECT m.*, tm.nombre as tipo_membresia 
+                  FROM " . $this->table . " m
+                  JOIN tipo_membresia tm ON m.id_tipo_membresia = tm.id_tipo_membresia
+                  WHERE m.id_cliente = :id_cliente 
+                  AND m.estado = 'activa'
+                  ORDER BY m.fecha_creacion DESC
+                  LIMIT 1";
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id_cliente', $id_cliente);
+        $stmt->execute();
+        
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 
+    public function obtenerMembresiaActiva($id_cliente) {
+        $query = "SELECT m.*, 
+                         tm.nombre AS tipo_membresia,
+                         tm.precio,
+                         tm.duracion_dias,
+                         DATEDIFF(m.fecha_vencimiento, CURDATE()) AS dias_restantes
+                  FROM {$this->table} m
+                  INNER JOIN tipo_membresia tm 
+                        ON m.id_tipo_membresia = tm.id_tipo_membresia
+                  WHERE m.id_cliente = :id_cliente
+                  AND m.estado = 'activa'
+                  AND m.fecha_vencimiento >= CURDATE()
+                  ORDER BY m.fecha_vencimiento DESC
+                  LIMIT 1";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id_cliente', $id_cliente);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+    }
+
+    public function obtenerPorCliente($id_cliente) {
+        $query = "SELECT m.*, tm.nombre as tipo_membresia 
+                  FROM " . $this->table . " m
+                  JOIN tipo_membresia tm ON m.id_tipo_membresia = tm.id_tipo_membresia
+                  WHERE m.id_cliente = :id_cliente
+                  ORDER BY m.fecha_creacion DESC";
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id_cliente', $id_cliente);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function verificarAcceso($id_cliente) {
         $query = "SELECT m.*, tm.nombre as tipo_membresia,
                          DATEDIFF(m.fecha_vencimiento, CURDATE()) as dias_restantes
                   FROM {$this->table} m
@@ -38,40 +83,24 @@ class Membresia {
 
         if($stmt->rowCount() > 0){
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
             return [
                 'acceso' => true,
                 'datos' => $row
             ];
         }
-
         return ['acceso' => false];
     }
 
-   
     public function verificarEstadoMembresia($id_cliente) {
-
-        $query = "SELECT m.*, tm.nombre as tipo_membresia,
-                         DATEDIFF(m.fecha_vencimiento, CURDATE()) as dias_restantes
-                  FROM {$this->table} m
-                  INNER JOIN tipo_membresia tm 
-                        ON m.id_tipo_membresia = tm.id_tipo_membresia
-                  WHERE m.id_cliente = :id_cliente
-                  AND m.estado = 'activa'
-                  AND m.fecha_vencimiento >= CURDATE()
-                  ORDER BY m.fecha_vencimiento DESC
-                  LIMIT 1";
-
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':id_cliente', $id_cliente);
-        $stmt->execute();
-
-        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+        return $this->obtenerMembresiaActiva($id_cliente);
     }
 
-    public function asignarMembresia($id_cliente, $id_tipo_membresia) {
+    // ============================================
+    // MÉTODOS PARA CREAR/MODIFICAR
+    // ============================================
 
-     
+    public function asignarMembresia($id_cliente, $id_tipo_membresia) {
+        // Verificar si ya tiene membresía activa
         $check = "SELECT id_membresia FROM {$this->table}
                   WHERE id_cliente = :id_cliente
                   AND estado = 'activa'
@@ -86,8 +115,8 @@ class Membresia {
             return ['success' => false, 'message' => 'Ya tienes una membresía activa'];
         }
 
-       
-        $query_tipo = "SELECT duracion_dias 
+        // Obtener duración del plan
+        $query_tipo = "SELECT duracion_dias, nombre, precio 
                        FROM tipo_membresia 
                        WHERE id_tipo_membresia = :id_tipo
                        AND estado = 'activo'";
@@ -98,7 +127,7 @@ class Membresia {
         $tipo = $stmt_tipo->fetch(PDO::FETCH_ASSOC);
 
         if(!$tipo){
-            return ['success' => false, 'message' => 'Tipo inválido'];
+            return ['success' => false, 'message' => 'Tipo de membresía inválido'];
         }
 
         $fecha_inicio = date('Y-m-d');
@@ -106,11 +135,8 @@ class Membresia {
         $codigo_qr = uniqid("GYM-{$id_cliente}-");
 
         $query = "INSERT INTO {$this->table}
-                  (id_cliente, id_tipo_membresia, fecha_inicio,
-                   fecha_vencimiento, codigo_qr, estado)
-                  VALUES
-                  (:id_cliente, :id_tipo, :inicio,
-                   :vencimiento, :qr, 'activa')";
+                  (id_cliente, id_tipo_membresia, fecha_inicio, fecha_vencimiento, codigo_qr, estado)
+                  VALUES (:id_cliente, :id_tipo, :inicio, :vencimiento, :qr, 'activa')";
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':id_cliente', $id_cliente);
@@ -120,23 +146,26 @@ class Membresia {
         $stmt->bindParam(':qr', $codigo_qr);
 
         if($stmt->execute()){
-
+            $id_membresia = $this->conn->lastInsertId();
+            
             $this->registrarHistorial(
                 $id_cliente,
                 'membresia_creada',
-                $this->conn->lastInsertId(),
+                $id_membresia,
                 "Membresía creada hasta {$fecha_vencimiento}"
             );
 
-            return ['success' => true];
+            return [
+                'success' => true, 
+                'id_membresia' => $id_membresia,
+                'fecha_vencimiento' => $fecha_vencimiento
+            ];
         }
 
-        return ['success' => false];
+        return ['success' => false, 'message' => 'Error al crear membresía'];
     }
 
-  
     public function renovarMembresia($id_membresia){
-
         $query = "SELECT * FROM {$this->table}
                   WHERE id_membresia = :id";
 
@@ -174,23 +203,18 @@ class Membresia {
         $stmt_up->bindParam(':id', $id_membresia);
 
         if($stmt_up->execute()){
-
             $this->registrarHistorial(
                 $membresia['id_cliente'],
                 'membresia_renovada',
                 $id_membresia,
                 "Renovada hasta {$nueva_fecha}"
             );
-
             return ['success' => true];
         }
-
         return ['success' => false];
     }
 
-
     public function cancelarMembresia($id_cliente){
-
         $query = "SELECT id_membresia FROM {$this->table}
                   WHERE id_cliente = :id_cliente
                   AND estado = 'activa'
@@ -213,23 +237,18 @@ class Membresia {
         $stmt_up->bindParam(':id', $membresia['id_membresia']);
 
         if($stmt_up->execute()){
-
             $this->registrarHistorial(
                 $id_cliente,
                 'membresia_cancelada',
                 $membresia['id_membresia'],
                 'Membresía cancelada'
             );
-
             return ['success' => true];
         }
-
         return ['success' => false];
     }
 
-
     private function registrarHistorial($id_cliente, $tipo, $referencia, $descripcion){
-
         $query = "INSERT INTO historial
                   (id_cliente, tipo_accion, id_referencia, descripcion)
                   VALUES (:cliente, :tipo, :ref, :desc)";
@@ -242,28 +261,5 @@ class Membresia {
 
         return $stmt->execute();
     }
-
-    public function obtenerMembresiaActiva($id_cliente)
-{
-    $query = "SELECT m.*, 
-                     tm.nombre AS tipo_membresia,
-                     tm.precio,
-                     tm.duracion_dias,
-                     DATEDIFF(m.fecha_vencimiento, CURDATE()) AS dias_restantes
-              FROM {$this->table} m
-              INNER JOIN tipo_membresia tm 
-                    ON m.id_tipo_membresia = tm.id_tipo_membresia
-              WHERE m.id_cliente = :id_cliente
-              AND m.estado = 'activa'
-              AND m.fecha_vencimiento >= CURDATE()
-              ORDER BY m.fecha_vencimiento DESC
-              LIMIT 1";
-
-    $stmt = $this->conn->prepare($query);
-    $stmt->bindParam(':id_cliente', $id_cliente);
-    $stmt->execute();
-
-    return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
-}
 }
 ?>

@@ -516,3 +516,128 @@ h3 {
     from { transform: scale(0.8); opacity: 0; }
     to { transform: scale(1); opacity: 1; }
 }
+
+/* ============================================ */
+/* PAGO - DELUX GYM                             */
+/* ============================================ */
+
+:root {
+    --gold: #ffd700;
+    --gold-soft: rgba(255, 215, 0, 0.1);
+    --dark-card: #111111;
+    --border: #333333;
+}
+
+.card-gym {
+    background: linear-gradient(145deg, var(--dark-card) 0%, #1e1e1e 100%);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.card-header-gym {
+    background: linear-gradient(90deg, #000000 0%, var(--dark-card) 100%);
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border);
+    color: var(--gold);
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+/* Métodos de pago */
+.metodos-pago-simple .metodo-item {
+    background: var(--dark-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 15px 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.metodos-pago-simple .metodo-item i {
+    font-size: 24px;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 5px;
+}
+
+.metodos-pago-simple .metodo-item span {
+    color: #ffffff;
+    font-size: 0.9rem;
+}
+
+.metodos-pago-simple .metodo-item.active {
+    border-color: var(--gold);
+    background: var(--gold-soft);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.2);
+}
+
+/* Paneles */
+.metodo-panel {
+    display: none;
+}
+
+.metodo-panel.active {
+    display: block;
+}
+
+/* Formulario */
+.form-label {
+    color: #ffffff;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.form-control-gym {
+    background: #1a1a1a;
+    border: 1px solid var(--border);
+    color: #ffffff;
+    padding: 10px 15px;
+    border-radius: 8px;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.form-control-gym:focus {
+    border-color: var(--gold);
+    outline: none;
+    box-shadow: 0 0 0 3px var(--gold-soft);
+}
+
+/* Botón principal */
+.btn-gold-gym {
+    background: linear-gradient(135deg, var(--gold) 0%, #f0b400 100%);
+    color: #000000;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 50px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+}
+
+.btn-gold-gym:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 215, 0, 0.5);
+}
+
+/* Resumen */
+.resumen-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.sticky-top {
+    position: sticky;
+    top: 100px;
+}

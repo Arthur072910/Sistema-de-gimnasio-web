@@ -374,7 +374,6 @@ $estadisticas = $controller->estadisticas();
                                 </label>
                                 <select name="rol" class="form-control-gym" required>
                                     <option value="cliente" <?php echo (isset($miembro_editar['rol']) && $miembro_editar['rol'] == 'cliente') ? 'selected' : ''; ?>>Cliente</option>
-                                    <option value="recepcionista" <?php echo (isset($miembro_editar['rol']) && $miembro_editar['rol'] == 'recepcionista') ? 'selected' : ''; ?>>Recepcionista</option>
                                     <option value="administrador" <?php echo (isset($miembro_editar['rol']) && $miembro_editar['rol'] == 'administrador') ? 'selected' : ''; ?>>Administrador</option>
                                 </select>
                             </div>

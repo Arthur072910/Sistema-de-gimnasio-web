@@ -1,22 +1,28 @@
-// Inicializar el contador al cargar la página
+// Inicializar al cargar la página
 document.addEventListener('DOMContentLoaded', () => {
     actualizarContador();
     configurarBotones();
+    
+    // Si estamos en la página del carrito, renderizarlo
+    if (window.location.pathname.includes('carrito.php')) {
+        renderizarCarrito();
+    }
 });
 
 function configurarBotones() {
     // Seleccionamos todos los botones que dicen "COMPRAR"
-    const botones = document.querySelectorAll('.btn-warning');
+    const botones = document.querySelectorAll('.btn-comprar');
     
     botones.forEach(boton => {
         boton.addEventListener('click', (e) => {
             e.preventDefault();
-            // Buscamos los datos de la tarjeta (Card)
-            const card = e.target.closest('.card');
+            
+            // Obtener datos del producto desde los atributos data-
             const producto = {
-                titulo: card.querySelector('.card-title').textContent,
-                precio: card.querySelector('h5').textContent,
-                imagen: card.querySelector('img').src,
+                id: boton.dataset.id,
+                titulo: boton.dataset.nombre,
+                precio: parseFloat(boton.dataset.precio),
+                imagen: obtenerImagenProducto(boton),
                 cantidad: 1
             };
             
@@ -25,11 +31,18 @@ function configurarBotones() {
     });
 }
 
+function obtenerImagenProducto(boton) {
+    // Buscar la imagen dentro de la misma card
+    const card = boton.closest('.card');
+    const img = card.querySelector('img');
+    return img ? img.src : '../assets/img/default-product.jpg';
+}
+
 function agregarAlCarrito(producto) {
     let carrito = JSON.parse(localStorage.getItem('gym_cart')) || [];
     
-    // Verificar si ya existe para sumar cantidad
-    const existe = carrito.find(p => p.titulo === producto.titulo);
+    // Verificar si ya existe por ID
+    const existe = carrito.find(p => p.id === producto.id);
     if (existe) {
         existe.cantidad++;
     } else {
@@ -38,70 +51,116 @@ function agregarAlCarrito(producto) {
     
     localStorage.setItem('gym_cart', JSON.stringify(carrito));
     actualizarContador();
+    
+    // Animar el badge cuando se agrega un producto
+    animarBadge();
 }
 
-// assets/js/carrito.js
 function actualizarContador() {
     const contador = document.getElementById('cart-count');
-    if (contador) { // Verificación de seguridad
+    if (contador) {
         let carrito = JSON.parse(localStorage.getItem('gym_cart')) || [];
         const total = carrito.reduce((acc, p) => acc + p.cantidad, 0);
         contador.innerText = total;
+        
+        // Ocultar si es cero
+        if (total === 0) {
+            contador.style.display = 'none';
+        } else {
+            contador.style.display = 'inline-flex';
+        }
     }
 }
-// ... resto del código anterior
+
+function animarBadge() {
+    const badge = document.getElementById('cart-count');
+    if (badge && badge.style.display !== 'none') {
+        badge.style.transform = 'scale(1.3)';
+        setTimeout(() => {
+            badge.style.transform = 'scale(1)';
+        }, 200);
+    }
+}
 
 function renderizarCarrito() {
     const lista = document.getElementById('lista-carrito');
+    if (!lista) return;
+    
     let carrito = JSON.parse(localStorage.getItem('gym_cart')) || [];
     let totalFinal = 0;
     
-    lista.innerHTML = ''; // Limpiar tabla para redibujar
+    lista.innerHTML = '';
 
     if (carrito.length === 0) {
-        lista.innerHTML = '<tr><td colspan="5" class="text-center">El carrito está vacío</td></tr>';
+        lista.innerHTML = '<tr><td colspan="5" class="text-center py-4"><i class="fas fa-shopping-cart fa-3x mb-3" style="color: #333;"></i><br>El carrito está vacío</td></tr>';
+        document.getElementById('gran-total').innerText = '$0.00';
     } else {
         carrito.forEach((p, index) => {
-            const precioLimpio = parseFloat(p.precio.replace('$', ''));
-            const subtotal = precioLimpio * p.cantidad;
+            const subtotal = p.precio * p.cantidad;
             totalFinal += subtotal;
 
             lista.innerHTML += `
                 <tr>
-                    <td><img src="${p.imagen}" width="50" class="mr-2">${p.titulo}</td>
-                    <td>${p.precio}</td>
-                    <td>${p.cantidad}</td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <img src="${p.imagen}" width="50" height="50" style="object-fit: cover; border-radius: 8px; margin-right: 10px;">
+                            ${p.titulo}
+                        </div>
+                    </td>
+                    <td>$${p.precio.toFixed(2)}</td>
+                    <td>
+                        <input type="number" class="form-control cantidad-input" value="${p.cantidad}" min="1" data-index="${index}" style="width: 80px;" onkeydown="return false;">
+                    </td>
                     <td>$${subtotal.toFixed(2)}</td>
                     <td>
-                        <button class="btn btn-outline-danger btn-sm shadow-sm" onclick="eliminarProducto(${index})" title="Eliminar producto">
-                            <i class="fa-solid fa-trash-can"></i> Eliminar
+                        <button class="btn btn-outline-danger btn-sm" onclick="eliminarProducto(${index})" title="Eliminar">
+                            <i class="fas fa-trash"></i>
                         </button>
                     </td>
                 </tr>
             `;
         });
-    }
-    document.getElementById('gran-total').innerText = `Total: $${totalFinal.toFixed(2)}`;
-    
-    // Si tienes la función actualizarContador en carrito.js, llámala aquí también
-    if (typeof actualizarContador === "function") {
-        actualizarContador();
+        
+        document.getElementById('gran-total').innerText = `$${totalFinal.toFixed(2)}`;
+        
+        // Agregar eventos a los inputs de cantidad
+        document.querySelectorAll('.cantidad-input').forEach(input => {
+            input.addEventListener('change', actualizarCantidad);
+        });
     }
 }
 
-// Nueva función para eliminar un producto específico
 function eliminarProducto(index) {
     let carrito = JSON.parse(localStorage.getItem('gym_cart')) || [];
-    
-    // Eliminamos el elemento del array usando su posición
     carrito.splice(index, 1);
-    
-    // Guardamos el nuevo carrito en localStorage
     localStorage.setItem('gym_cart', JSON.stringify(carrito));
-    
-    // Volvemos a dibujar la tabla
     renderizarCarrito();
+    actualizarContador();
 }
 
-// Iniciar al cargar la página
-document.addEventListener('DOMContentLoaded', renderizarCarrito);
+function actualizarCantidad(e) {
+    const index = e.target.dataset.index;
+    const nuevaCantidad = parseInt(e.target.value);
+    
+    if (nuevaCantidad < 1) {
+        e.target.value = 1;
+        return;
+    }
+    
+    let carrito = JSON.parse(localStorage.getItem('gym_cart')) || [];
+    carrito[index].cantidad = nuevaCantidad;
+    localStorage.setItem('gym_cart', JSON.stringify(carrito));
+    renderizarCarrito();
+    actualizarContador();
+}
+
+// Función para vaciar carrito (opcional)
+function vaciarCarrito() {
+    if (confirm('¿Estás seguro de vaciar el carrito?')) {
+        localStorage.removeItem('gym_cart');
+        actualizarContador();
+        if (window.location.pathname.includes('carrito.php')) {
+            renderizarCarrito();
+        }
+    }
+}

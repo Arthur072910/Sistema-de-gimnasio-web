@@ -117,27 +117,5 @@ function mostrarProductos($productos) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="../assets/js/carrito.js"></script>
-    
-    <!-- Script para manejar compras -->
-    <script>
-    document.querySelectorAll('.btn-comprar').forEach(button => {
-        button.addEventListener('click', function() {
-            const producto = {
-                id: this.dataset.id,
-                nombre: this.dataset.nombre,
-                precio: parseFloat(this.dataset.precio)
-            };
-            
-            // Aquí puedes agregar la lógica del carrito
-            console.log('Producto agregado:', producto);
-            
-            // Ejemplo: mostrar notificación
-            alert(`✅ ${producto.nombre} agregado al carrito`);
-            
-            // Aquí puedes llamar a tu función de carrito.js
-            // agregarAlCarrito(producto);
-        });
-    });
-    </script>
 </body>
 </html>

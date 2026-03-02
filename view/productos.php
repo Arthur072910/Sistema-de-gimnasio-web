@@ -31,9 +31,12 @@ function mostrarProductos($productos) {
         return;
     }
     
-    foreach($productos as $producto): ?>
+    foreach($productos as $producto): 
+        // Verificamos si hay stock
+        $hay_stock = ($producto['stock'] > 0);
+    ?>
         <div class="col-lg-3 col-md-6 mb-4">
-            <div class="card h-100 shadow">
+            <div class="card h-100 shadow <?php echo !$hay_stock ? 'producto-agotado' : ''; ?>">
                 <?php if(!empty($producto['imagen_url'])): ?>
                     <img class="card-img-custom" src="<?php echo htmlspecialchars($producto['imagen_url']); ?>" 
                          alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
@@ -47,16 +50,27 @@ function mostrarProductos($productos) {
                     <h4 class="card-title"><?php echo htmlspecialchars($producto['nombre']); ?></h4>
                     <p class="card-text"><?php echo htmlspecialchars($producto['descripcion'] ?? 'Sin descripción'); ?></p>
                     <h5 class="font-weight-bold">$<?php echo number_format($producto['precio'], 2); ?></h5>
-                    <small class="text-muted">Stock: <?php echo $producto['stock']; ?> unidades</small>
+                    
+                    <?php if($hay_stock): ?>
+                        <small class="text-muted">Stock: <?php echo $producto['stock']; ?> unidades</small>
+                    <?php else: ?>
+                        <small class="badge badge-danger">AGOTADO</small>
+                    <?php endif; ?>
                 </div>
                 
                 <div class="card-footer bg-transparent border-0">
-                    <button class="btn btn-warning btn-block font-weight-bold btn-comprar" 
-                            data-id="<?php echo $producto['id_producto']; ?>"
-                            data-nombre="<?php echo htmlspecialchars($producto['nombre']); ?>"
-                            data-precio="<?php echo $producto['precio']; ?>">
-                        <i class="fas fa-cart-plus mr-2"></i>COMPRAR
-                    </button>
+                    <?php if($hay_stock): ?>
+                        <button class="btn btn-warning btn-block font-weight-bold btn-comprar" 
+                                data-id="<?php echo $producto['id_producto']; ?>"
+                                data-nombre="<?php echo htmlspecialchars($producto['nombre']); ?>"
+                                data-precio="<?php echo $producto['precio']; ?>">
+                            <i class="fas fa-cart-plus mr-2"></i>COMPRAR
+                        </button>
+                    <?php else: ?>
+                        <button class="btn btn-secondary btn-block font-weight-bold" disabled>
+                            <i class="fas fa-times-circle mr-2"></i>SIN STOCK
+                        </button>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

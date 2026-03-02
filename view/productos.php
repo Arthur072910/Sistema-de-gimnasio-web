@@ -21,6 +21,8 @@ $accesorios = array_filter($todos_los_productos, function($p) {
     return $p['categoria'] === 'equipo' || $p['categoria'] === 'ropa';
 });
 
+
+
 // Función para mostrar tarjetas de productos
 function mostrarProductos($productos) {
     if (empty($productos)) {
@@ -33,30 +35,50 @@ function mostrarProductos($productos) {
     
     foreach($productos as $producto): ?>
         <div class="col-lg-3 col-md-6 mb-4">
-            <div class="card h-100 shadow">
+            <div class="card h-100 shadow producto-card">
                 <?php if(!empty($producto['imagen_url'])): ?>
                     <img class="card-img-custom" src="<?php echo htmlspecialchars($producto['imagen_url']); ?>" 
                          alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
                 <?php else: ?>
-                    <div class="card-img-custom" style="background: #1a1a1a; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-image fa-3x" style="color: #333;"></i>
+                    <div class="card-img-custom d-flex align-items-center justify-content-center bg-dark">
+                        <i class="fas fa-image fa-3x text-muted"></i>
                     </div>
                 <?php endif; ?>
                 
                 <div class="card-body text-center">
                     <h4 class="card-title"><?php echo htmlspecialchars($producto['nombre']); ?></h4>
                     <p class="card-text"><?php echo htmlspecialchars($producto['descripcion'] ?? 'Sin descripción'); ?></p>
-                    <h5 class="font-weight-bold">$<?php echo number_format($producto['precio'], 2); ?></h5>
-                    <small class="text-muted">Stock: <?php echo $producto['stock']; ?> unidades</small>
+                    
+                    <!-- PRECIO DESTACADO -->
+                    <div class="precio-container my-3">
+                        <span class="precio-actual">$<?php echo number_format($producto['precio'], 2); ?></span>
+                    </div>
+                    
+                    <!-- STOCK CON COLOR SEGÚN DISPONIBILIDAD -->
+                    <?php if($producto['stock'] > 0): ?>
+                        <span class="badge badge-stock stock-disponible">
+                            <i class="fas fa-check-circle mr-1"></i> Stock: <?php echo $producto['stock']; ?> uni.
+                        </span>
+                    <?php else: ?>
+                        <span class="badge badge-stock stock-agotado">
+                            <i class="fas fa-times-circle mr-1"></i> Agotado
+                        </span>
+                    <?php endif; ?>
                 </div>
                 
                 <div class="card-footer bg-transparent border-0">
-                    <button class="btn btn-warning btn-block font-weight-bold btn-comprar" 
-                            data-id="<?php echo $producto['id_producto']; ?>"
-                            data-nombre="<?php echo htmlspecialchars($producto['nombre']); ?>"
-                            data-precio="<?php echo $producto['precio']; ?>">
-                        <i class="fas fa-cart-plus mr-2"></i>COMPRAR
-                    </button>
+                    <?php if($producto['stock'] > 0): ?>
+                        <button class="btn btn-warning btn-block font-weight-bold btn-comprar" 
+                                data-id="<?php echo $producto['id_producto']; ?>"
+                                data-nombre="<?php echo htmlspecialchars($producto['nombre']); ?>"
+                                data-precio="<?php echo $producto['precio']; ?>">
+                            <i class="fas fa-cart-plus mr-2"></i>COMPRAR
+                        </button>
+                    <?php else: ?>
+                        <button class="btn btn-secondary btn-block font-weight-bold" disabled>
+                            <i class="fas fa-ban mr-2"></i>SIN STOCK
+                        </button>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -83,6 +105,79 @@ function mostrarProductos($productos) {
     <link rel="stylesheet" href="../assets/css/header.css">
     <link rel="stylesheet" href="../assets/css/tienda.css">
     <link rel="stylesheet" href="../assets/css/footer.css">
+    
+    <style>
+        /* Estilos adicionales para mejorar la tienda */
+        .precio-container {
+            background: linear-gradient(135deg, #ffd700, #f0b400);
+            border-radius: 30px;
+            padding: 8px 15px;
+            display: inline-block;
+            margin: 10px 0;
+        }
+        
+        .precio-actual {
+            color: #000000;
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+        
+        .badge-stock {
+            padding: 8px 15px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .stock-disponible {
+            background: rgba(40, 167, 69, 0.15);
+            color: #28a745;
+            border: 1px solid #28a745;
+        }
+        
+        .stock-agotado {
+            background: rgba(220, 53, 69, 0.15);
+            color: #dc3545;
+            border: 1px solid #dc3545;
+        }
+        
+        .producto-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .producto-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(255, 215, 0, 0.2) !important;
+        }
+        
+        .card-img-custom {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-top-left-radius: calc(0.25rem - 1px);
+            border-top-right-radius: calc(0.25rem - 1px);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #ffd700, #f0b400);
+            border: none;
+            color: #000000;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            border: none;
+            opacity: 0.8;
+        }
+    </style>
 </head>
 <body>
     <?php include "../layout/header.php"; ?>

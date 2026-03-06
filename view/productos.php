@@ -33,9 +33,12 @@ function mostrarProductos($productos) {
         return;
     }
     
-    foreach($productos as $producto): ?>
+    foreach($productos as $producto): 
+        // Verificamos si hay stock
+        $hay_stock = ($producto['stock'] > 0);
+    ?>
         <div class="col-lg-3 col-md-6 mb-4">
-            <div class="card h-100 shadow producto-card">
+            <div class="card h-100 shadow">
                 <?php if(!empty($producto['imagen_url'])): ?>
                     <img class="card-img-custom" src="<?php echo htmlspecialchars($producto['imagen_url']); ?>" 
                          alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
@@ -48,37 +51,17 @@ function mostrarProductos($productos) {
                 <div class="card-body text-center">
                     <h4 class="card-title"><?php echo htmlspecialchars($producto['nombre']); ?></h4>
                     <p class="card-text"><?php echo htmlspecialchars($producto['descripcion'] ?? 'Sin descripción'); ?></p>
-                    
-                    <!-- PRECIO DESTACADO -->
-                    <div class="precio-container my-3">
-                        <span class="precio-actual">$<?php echo number_format($producto['precio'], 2); ?></span>
-                    </div>
-                    
-                    <!-- STOCK CON COLOR SEGÚN DISPONIBILIDAD -->
-                    <?php if($producto['stock'] > 0): ?>
-                        <span class="badge badge-stock stock-disponible">
-                            <i class="fas fa-check-circle mr-1"></i> Stock: <?php echo $producto['stock']; ?> uni.
-                        </span>
-                    <?php else: ?>
-                        <span class="badge badge-stock stock-agotado">
-                            <i class="fas fa-times-circle mr-1"></i> Agotado
-                        </span>
-                    <?php endif; ?>
+                    <h5 class="font-weight-bold">$<?php echo number_format($producto['precio'], 2); ?></h5>
+                    <small class="text-muted">Stock: <?php echo $producto['stock']; ?> unidades</small>
                 </div>
                 
                 <div class="card-footer bg-transparent border-0">
-                    <?php if($producto['stock'] > 0): ?>
-                        <button class="btn btn-warning btn-block font-weight-bold btn-comprar" 
-                                data-id="<?php echo $producto['id_producto']; ?>"
-                                data-nombre="<?php echo htmlspecialchars($producto['nombre']); ?>"
-                                data-precio="<?php echo $producto['precio']; ?>">
-                            <i class="fas fa-cart-plus mr-2"></i>COMPRAR
-                        </button>
-                    <?php else: ?>
-                        <button class="btn btn-secondary btn-block font-weight-bold" disabled>
-                            <i class="fas fa-ban mr-2"></i>SIN STOCK
-                        </button>
-                    <?php endif; ?>
+                    <button class="btn btn-warning btn-block font-weight-bold btn-comprar" 
+                            data-id="<?php echo $producto['id_producto']; ?>"
+                            data-nombre="<?php echo htmlspecialchars($producto['nombre']); ?>"
+                            data-precio="<?php echo $producto['precio']; ?>">
+                        <i class="fas fa-cart-plus mr-2"></i>COMPRAR
+                    </button>
                 </div>
             </div>
         </div>

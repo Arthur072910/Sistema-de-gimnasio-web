@@ -26,6 +26,10 @@ $base_url = '/Sistema-de-gimnasio-web';
         <a class="nav-link <?php echo ($pagina_actual == 'clasess.php') ? 'active' : ''; ?>" href="clasess.php">
             <i class="fas fa-chalkboard-teacher"></i> Clases
         </a>
+        <a class="nav-link <?php echo ($pagina_actual == 'horario_clases.php') ? 'active' : ''; ?>" href="horario_clases.php">
+            <i class="fas fa-clock"></i> Horario Clases
+        </a>
+
 
         <a class="nav-link <?php echo ($pagina_actual == 'registroproductos.php') ? 'active' : ''; ?>" href="registroproductos.php">
             <i class="fas fa-box"></i> Productos

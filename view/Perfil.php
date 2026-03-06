@@ -52,6 +52,19 @@ $stmtClases = $conn->prepare("
 $stmtClases->execute();
 $clases = $stmtClases->fetchAll(PDO::FETCH_ASSOC);
 
+// Horarios por clase
+$horariosClases = [];
+foreach ($clases as $c) {
+    $stmtH = $conn->prepare("
+        SELECT dia_semana, hora_inicio, hora_fin
+        FROM horarios_clases
+        WHERE id_clase = ?
+        ORDER BY FIELD(dia_semana,'Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'), hora_inicio
+    ");
+    $stmtH->execute([$c['id_clase']]);
+    $horariosClases[$c['id_clase']] = $stmtH->fetchAll(PDO::FETCH_ASSOC);
+}
+
 // Datos del cliente
 if($rol == 'cliente') {
     $datos = $controller->obtenerDatosCompletos($_SESSION['cliente_id']);
@@ -317,7 +330,10 @@ if($membresiaActiva && $planNormalizado !== "básico"):
         <td>
             <div class="d-flex align-items-center justify-content-between">
                 <strong class="text-white"><?= htmlspecialchars($clase['nombre']) ?></strong>
-                <button type="button" class="btn btn-outline-gold btn-gold ml-2" style="font-size: 0.75rem;" data-toggle="modal" data-target="#modalHorario<?= $clase['id_clase'] ?>">
+                <button type="button"
+                        class="btn btn-outline-gold btn-gold ml-2 btn-toggle-horario"
+                        style="font-size: 0.75rem;"
+                        data-target="horario-row-<?= $clase['id_clase'] ?>">
                     <i class="fas fa-calendar-alt"></i> Ver Horario
                 </button>
             </div>
@@ -344,6 +360,36 @@ if($membresiaActiva && $planNormalizado !== "básico"):
                     </button>
                 </form>
             <?php endif; ?>
+        </td>
+    </tr>
+    <tr id="horario-row-<?= $clase['id_clase'] ?>" style="display:none;">
+        <td colspan="3" class="p-0">
+            <div class="p-3">
+                <?php if (!empty($horariosClases[$clase['id_clase']])): ?>
+                    <div class="d-flex flex-wrap">
+                    <?php foreach ($horariosClases[$clase['id_clase']] as $h): ?>
+                        <div class="card bg-secondary text-white mr-2 mb-2"
+                             style="min-width:160px; border-radius:10px; border:1px solid #ffd700;">
+                            <div class="card-body py-2 px-3">
+                                <p class="mb-1 font-weight-bold text-warning" style="font-size:0.85rem;">
+                                    <i class="fas fa-calendar-day mr-1"></i>
+                                    <?= htmlspecialchars($h['dia_semana']) ?>
+                                </p>
+                                <p class="mb-0" style="font-size:0.82rem;">
+                                    <i class="fas fa-clock mr-1"></i>
+                                    <?= date('h:i A', strtotime($h['hora_inicio'])) ?> - 
+                                    <?= date('h:i A', strtotime($h['hora_fin'])) ?>
+                                </p>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                    </div>
+                <?php else: ?>
+                    <p class="text-muted mb-0">
+                        <i class="fas fa-info-circle mr-1"></i> Sin horarios asignados.
+                    </p>
+                <?php endif; ?>
+            </div>
         </td>
     </tr>
     <?php endforeach; ?>
@@ -462,6 +508,24 @@ if($membresiaActiva && $planNormalizado !== "básico"):
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script src="../assets/js/notificaciones.js"></script>
+
+<!-- Toggle Horario por Clase -->
+<script>
+document.querySelectorAll('.btn-toggle-horario').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        var targetId = this.getAttribute('data-target');
+        var fila = document.getElementById(targetId);
+        if (!fila) return;
+        if (fila.style.display === 'none' || fila.style.display === '') {
+            fila.style.display = 'table-row';
+            this.innerHTML = '<i class="fas fa-calendar-alt"></i> Ocultar';
+        } else {
+            fila.style.display = 'none';
+            this.innerHTML = '<i class="fas fa-calendar-alt"></i> Ver Horario';
+        }
+    });
+});
+</script>
 
 <?php include "../layout/footer.php"; ?>
 

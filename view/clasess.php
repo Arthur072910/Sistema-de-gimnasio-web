@@ -45,7 +45,6 @@ $entrenadores = $controller->listarEntrenadores();
     <link rel="stylesheet" href="../assets/css/dashboard-global.css">
     <link rel="stylesheet" href="../assets/css/clasess.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    
 </head>
 <body>
     <div style="display: flex">
@@ -83,10 +82,9 @@ $entrenadores = $controller->listarEntrenadores();
                     <h3 class="chart-title">Gestión de Clases</h3>
                 </div>
 
-                <!-- Formulario de Registro -->
-                <div class="card mb-4">
+                <div class="card mb-4" style="background: #1a1a1a; border: 1px solid #333;">
                     <div class="card-body">
-                        <h5 class="card-title" style="color: var(--accent-gold);">Agregar Nueva Clase</h5>
+                        <h5 class="card-title" style="color: #ffd700;">Agregar Nueva Clase</h5>
                         <form method="POST" action="">
                             <input type="hidden" name="accion" value="agregar">
                             <div class="form-row">
@@ -101,8 +99,8 @@ $entrenadores = $controller->listarEntrenadores();
                                 <div class="form-group col-md-3">
                                     <label>Estado</label>
                                     <select name="estado" class="form-control">
-                                        <option value="activo">Activo</option>
-                                        <option value="inactivo">Inactivo</option>
+                                        <option value="activa">Activa</option>
+                                        <option value="inactiva">Inactiva</option>
                                     </select>
                                 </div>
                             </div>
@@ -119,15 +117,14 @@ $entrenadores = $controller->listarEntrenadores();
                                     <?php endforeach; ?>
                                 </select>
                             </div>
-                            <button type="submit" class="btn-add">
+                            <button type="submit" class="btn-add" style="background: #ffd700; color: #000; border: none; padding: 10px 20px; font-weight: bold;">
                                 <i class="fas fa-save mr-2"></i>Guardar Clase
                             </button>
                         </form>
                     </div>
                 </div>
 
-                <!-- Tabla de Clases -->
-                <table class="classes-table">
+                <table class="classes-table w-100">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -157,12 +154,12 @@ $entrenadores = $controller->listarEntrenadores();
                                         <?= isset($clase['fecha_creacion']) ? date('d/m/Y H:i', strtotime($clase['fecha_creacion'])) : '-' ?>
                                     </td>
                                     <td>
-                                        <span class="class-status <?= ($clase['estado'] == 'activo') ? 'status-active' : 'status-cancelled' ?>">
-                                            <?= ucfirst($clase['estado']) ?>
+                                        <span class="class-status <?= (trim($clase['estado']) == 'activa') ? 'status-active' : 'status-cancelled' ?>">
+                                            <?= ucfirst($clase['estado'] ?: 'activa') ?>
                                         </span>
                                     </td>
                                     <td>
-                                        <button class="btn-edit" style="background: none; border: none; color: var(--accent-gold); font-size: 1.2rem; margin-right: 10px;"
+                                        <button class="btn-edit" style="background: none; border: none; color: #ffd700; font-size: 1.2rem; margin-right: 10px;"
                                                 data-toggle="modal" data-target="#modalEditar"
                                                 onclick="cargarDatos('<?= $clase['id_clase'] ?>', 
                                                     '<?= addslashes($clase['nombre']) ?>', 
@@ -187,12 +184,11 @@ $entrenadores = $controller->listarEntrenadores();
         </div>
     </div>
 
-    <!-- MODAL DE EDICIÓN -->
     <div class="modal fade" id="modalEditar" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
+            <div class="modal-content" style="background: #1a1a1a; color: white; border: 1px solid #ffd700;">
+                <div class="modal-header" style="border-bottom: 1px solid #333;">
+                    <h5 class="modal-title" style="color: #ffd700;">
                         <i class="fas fa-edit mr-2"></i>Editar Clase
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" style="color: #fff;">
@@ -222,8 +218,8 @@ $entrenadores = $controller->listarEntrenadores();
                             <div class="form-group col-md-6">
                                 <label>Estado</label>
                                 <select name="estado" id="edit_estado" class="form-control">
-                                    <option value="activo">Activo</option>
-                                    <option value="inactivo">Inactivo</option>
+                                    <option value="activa">Activa</option>
+                                    <option value="inactiva">Inactiva</option>
                                 </select>
                             </div>
                         </div>
@@ -238,11 +234,11 @@ $entrenadores = $controller->listarEntrenadores();
                             </select>
                         </div>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer" style="border-top: 1px solid #333;">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color: #333; border: none;">
                             <i class="fas fa-times mr-1"></i>Cancelar
                         </button>
-                        <button type="submit" class="btn-add">
+                        <button type="submit" class="btn-add" style="background: #ffd700; color: #000; border: none; padding: 8px 20px; font-weight: bold;">
                             <i class="fas fa-save mr-1"></i>Guardar Cambios
                         </button>
                     </div>
@@ -255,6 +251,15 @@ $entrenadores = $controller->listarEntrenadores();
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     
-    <script src="../assets/js/clasess.js"></script>
+    <script>
+        function cargarDatos(id, nombre, desc, cupo, entrenador, estado) {
+            document.getElementById('edit_id').value = id;
+            document.getElementById('edit_nombre').value = nombre;
+            document.getElementById('edit_descripcion').value = desc;
+            document.getElementById('edit_cupo').value = cupo;
+            document.getElementById('edit_entrenador').value = entrenador;
+            document.getElementById('edit_estado').value = estado;
+        }
+    </script>
 </body>
 </html>

@@ -40,67 +40,76 @@
 </div>
 
 <!-- ==================== NUESTROS PLANES ==================== -->
+<!-- ==================== NUESTROS PLANES ==================== -->
 <div class="wp-dev-pricing">
     <h1 style="text-align: center;">Nuestros planes</h1>
 
+    <?php
+    // Incluir la conexión a la base de datos
+    require_once 'config/database.php';
+    
+    // Crear instancia de la clase Database y obtener la conexión
+    $database = new Database();
+    $conn = $database->getConnection();
+    
+    // Consulta para obtener las membresías activas
+    $sql_membresias = "SELECT id_tipo_membresia, nombre, descripcion, precio, duracion_dias 
+                      FROM tipo_membresia 
+                      WHERE estado = 1 
+                      ORDER BY precio ASC";
+    
+    $stmt = $conn->prepare($sql_membresias);
+    $stmt->execute();
+    $result_membresias = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    ?>
+
     <div class="pricing-row">
-        <!-- Plan Básico -->
-        <div class="pricing-column">
-            <div class="pricing-card">
-                <h3>Plan Básico</h3>
-                <div class="price">
-                    <span class="annual-price">$29</span> /mes
-                </div>
-                <ul>
-                    <li>✓ Acceso a zonas comunes</li>
-                    <li>✓ Horario limitado</li>
-                    <li>✓ Sin entrenador personal</li>
-                    <li>✓ Vestidores</li>
-                </ul>
-               
-            </div>
-        </div>
-
-        <!-- Plan Popular -->
-        <div class="pricing-column">
-            <div class="pricing-card popular">
-                <h3>Plan Estándar</h3>
-                <div class="price">
-                    <span class="annual-price">$49</span> /mes
-                </div>
-                <ul>
-                    <li>✓ Acceso completo 24/7</li>
-                    <li>✓ Clases grupales</li>
-                    <li>✓ 1 evaluación mensual</li>
-                    <li>✓ Estacionamiento</li>
-                </ul>
+        <?php
+        if (count($result_membresias) > 0) {
+            $contador = 0;
+            foreach($result_membresias as $membresia) {
+                $contador++;
+                // El segundo plan será el "popular"
+                $popular_class = ($contador == 2) ? 'popular' : '';
                 
-            </div>
-        </div>
-
-        <!-- Plan Premium -->
-        <div class="pricing-column">
-            <div class="pricing-card">
-                <h3>Plan Premium</h3>
-                <div class="price">
-                    <span class="annual-price">$79</span> /mes
-                </div>
-                <ul>
-                    <li>✓ Acceso 24/7 + invitado</li>
-                    <li>✓ Entrenador personal</li>
-                    <li>✓ Nutricionista</li>
-                    <li>✓ Acceso a spa</li>
-                </ul>
+                // Dividir la descripción en items (asumiendo que están separadas por comas)
+                $caracteristicas = explode(',', $membresia['descripcion']);
+                ?>
                 
-            </div>
-        </div>
+                <!-- Plan <?php echo $membresia['nombre']; ?> -->
+                <div class="pricing-column">
+                    <div class="pricing-card <?php echo $popular_class; ?>">
+                        <h3><?php echo htmlspecialchars($membresia['nombre']); ?></h3>
+                        <div class="price">
+                            <span class="annual-price">$<?php echo number_format($membresia['precio'], 0); ?></span> /mes
+                        </div>
+                        <ul>
+                            <?php
+                            // Mostrar las características de la membresía
+                            foreach($caracteristicas as $caracteristica) {
+                                $caracteristica = trim($caracteristica);
+                                if(!empty($caracteristica)) {
+                                    echo '<li>✓ ' . htmlspecialchars($caracteristica) . '</li>';
+                                }
+                            }
+                            ?>
+                        </ul>
+                    </div>
+                </div>
+                <?php
+            }
+        } else {
+            // Si no hay membresías, mostrar mensaje
+            echo '<div style="text-align: center; width: 100%; padding: 20px;">';
+            echo '<p>No hay planes disponibles en este momento.</p>';
+            echo '</div>';
+        }
+        ?>
     </div>
 
     <div style="text-align: center; margin-top: 30px;">
         <a href="view/plan.php" class="btn unete">Únete a nosotros</a>
     </div>
-
-    
 </div>
 
 <!-- ==================== NUESTRAS INSTALACIONES ==================== -->

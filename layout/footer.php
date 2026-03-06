@@ -64,3 +64,4 @@ $ruta_assets = $base_url . '/assets';
 
 
 <link rel="stylesheet" href="<?php echo $base_url; ?>/assets/css/footer.css">
+<script src="../assets/js/membresia_alerta.js"></script>

@@ -261,5 +261,51 @@ class Membresia {
 
         return $stmt->execute();
     }
+
+    public function obtenerDatosParaAlerta($id_usuario) {
+        $query = "SELECT m.id_membresia, m.id_cliente, m.fecha_vencimiento, 
+                  tm.nombre AS tipo_membresia, u.email, c.nombre AS nombre_usuario,
+                  DATEDIFF(m.fecha_vencimiento, CURDATE()) AS dias_restantes
+                  FROM membresias m
+                  INNER JOIN tipo_membresia tm ON m.id_tipo_membresia = tm.id_tipo_membresia
+                  INNER JOIN clientes c ON m.id_cliente = c.id_cliente
+                  INNER JOIN usuarios u ON c.id_usuario = u.id_usuario
+                  WHERE u.id_usuario = :id_usuario AND m.estado = 'activa' LIMIT 1";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id_usuario', $id_usuario);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // FUNCIÓN PROFESIONAL: Revisa si ya se envió la alerta hoy
+    // En model/Membresia.php
+
+    public function yaSeEnvioAlertaHoy($id_cliente, $id_membresia) {
+        // Ahora buscamos si ya existe una notificación para ESE cliente y ESA membresía hoy
+        $query = "SELECT COUNT(*) FROM notificaciones 
+                WHERE id_cliente = :id_c 
+                AND mensaje LIKE :id_m
+                AND tipo = 'vencimiento_proximo' 
+                AND DATE(fecha_envio) = CURDATE()";
+        
+        $stmt = $this->conn->prepare($query);
+        // Usamos el ID de membresía dentro del mensaje para identificarla
+        $stmt->execute([
+            ':id_c' => $id_cliente, 
+            ':id_m' => "%ID_MEMB: " . $id_membresia . "%"
+        ]);
+        return $stmt->fetchColumn() > 0;
+    }
+
+    public function registrarNotificacion($id_cliente, $id_membresia, $dias) {
+        $mensaje = "Alerta de $dias dias enviada. ID_MEMB: $id_membresia";
+        $query = "INSERT INTO notificaciones (id_cliente, tipo, mensaje) 
+                VALUES (:id_c, 'vencimiento_proximo', :msg)";
+        $stmt = $this->conn->prepare($query);
+        return $stmt->execute([
+            ':id_c' => $id_cliente,
+            ':msg' => $mensaje
+        ]);
+    }
 }
 ?>

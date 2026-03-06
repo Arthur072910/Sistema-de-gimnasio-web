@@ -1,5 +1,8 @@
+
 <?php
+
 class Clase {
+
     private $conn;
     private $table_name = "clases";
 
@@ -11,14 +14,22 @@ class Clase {
     public $estado;
     public $fecha_creacion;
 
-    public function __construct($db) {
+    public function __construct($db){
         $this->conn = $db;
     }
 
-    public function crear() {
+  
+    public function crear(){
+
         $query = "INSERT INTO " . $this->table_name . "
-                  SET nombre=:nombre, descripcion=:descripcion, cupo_maximo=:cupo_maximo,
-                      id_entrenador=:id_entrenador, estado=:estado, fecha_creacion=NOW()";
+                SET
+                nombre = :nombre,
+                descripcion = :descripcion,
+                cupo_maximo = :cupo_maximo,
+                id_entrenador = :id_entrenador,
+                estado = :estado,
+                fecha_creacion = NOW()";
+
         $stmt = $this->conn->prepare($query);
 
         $this->nombre = htmlspecialchars(strip_tags($this->nombre));
@@ -36,30 +47,47 @@ class Clase {
         return $stmt->execute();
     }
 
-    public function obtenerTodos() {
-        // JOIN con entrenadores para obtener el nombre del entrenador
-        $query = "SELECT c.*, e.nombre as nombre_entrenador 
-                  FROM " . $this->table_name . " c
-                  LEFT JOIN entrenadores e ON c.id_entrenador = e.id_entrenador
-                  ORDER BY c.id_clase DESC";
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+   public function obtenerTodos() {
+    $query = "SELECT c.*, e.nombre as nombre_entrenador 
+              FROM " . $this->table_name . " c
+              LEFT JOIN entrenadores e ON c.id_entrenador = e.id_entrenador
+              ORDER BY c.id_clase DESC";
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+    
+    public function listarTodos(){
+        return $this->obtenerTodos();
     }
 
-    public function obtenerPorId($id) {
-        $query = "SELECT * FROM " . $this->table_name . " WHERE id_clase = ? LIMIT 1";
+    
+    public function obtenerPorId($id){
+
+        $query = "SELECT *
+                FROM " . $this->table_name . "
+                WHERE id_clase = ?
+                LIMIT 1";
+
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $id);
         $stmt->execute();
+
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function actualizar() {
+    public function actualizar(){
+
         $query = "UPDATE " . $this->table_name . "
-                  SET nombre=:nombre, descripcion=:descripcion, cupo_maximo=:cupo_maximo,
-                      id_entrenador=:id_entrenador, estado=:estado
-                  WHERE id_clase=:id_clase";
+                SET
+                nombre = :nombre,
+                descripcion = :descripcion,
+                cupo_maximo = :cupo_maximo,
+                id_entrenador = :id_entrenador,
+                estado = :estado
+                WHERE id_clase = :id_clase";
+
         $stmt = $this->conn->prepare($query);
 
         $this->nombre = htmlspecialchars(strip_tags($this->nombre));
@@ -79,19 +107,31 @@ class Clase {
         return $stmt->execute();
     }
 
-    public function eliminar($id) {
-        $query = "DELETE FROM " . $this->table_name . " WHERE id_clase = ?";
+  
+    public function eliminar($id){
+
+        $query = "DELETE FROM " . $this->table_name . "
+                WHERE id_clase = ?";
+
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $id);
+
         return $stmt->execute();
     }
 
-    // Método para obtener lista de entrenadores (para el select)
-    public function obtenerEntrenadores() {
-        $query = "SELECT id_entrenador, nombre FROM entrenadores WHERE estado = 'activo' ORDER BY nombre";
+   
+    public function obtenerEntrenadores(){
+
+        $query = "SELECT id_entrenador, nombre
+                FROM entrenadores
+                ORDER BY nombre";
+
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 }
 ?>
+

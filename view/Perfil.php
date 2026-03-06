@@ -151,15 +151,15 @@ if ($membresiaActiva && !empty($fechaVencimiento)) {
 
 <?php if(isset($_GET['error']) && $_GET['error'] == 'plan_basico'): ?>
     <div class="alert alert-danger mt-3">
-        El plan Básico no permite inscripción a clases.
+        Los planes Básico y Diario no permiten inscripción a clases.
         Mejora tu plan para acceder.
     </div>
 <?php endif; ?>
 
 <?php if(isset($_GET['error']) && $_GET['error'] == 'limite_intermedio'): ?>
     <div class="alert alert-warning mt-3">
-        Tu plan Intermedio permite solo 1 clase.
-        Actualiza a Premium para tener más clases.
+        Tu plan Intermedio permite solo 2 clases.
+        Ya has alcanzado el límite. Actualiza a Premium para tener más clases.
     </div>
 <?php endif; ?>
 
@@ -298,19 +298,125 @@ if ($membresiaActiva && !empty($fechaVencimiento)) {
 </section>
 
 <?php 
-// --- SECCIÓN CORREGIDA PARA MOSTRAR CLASES (VERSIÓN ROBUSTA) ---
-// Versión robusta que ignora acentos y mayúsculas
-$planNormalizado = preg_replace('/[áéíóú]/', '', mb_strtolower($tipoMembresia, 'UTF-8'));
+// --- SECCIÓN PARA MOSTRAR CLASES SEGÚN EL PLAN ---
+// Versión CORREGIDA que reemplaza acentos correctamente
+$planNormalizado = trim(str_replace(['á','é','í','ó','ú',' '], ['a','e','i','o','u',''], mb_strtolower($tipoMembresia, 'UTF-8')));
 $esBasico = strpos($planNormalizado, 'basico') !== false;
+$esDiario = strpos($planNormalizado, 'diario') !== false;
+$esIntermedio = strpos($planNormalizado, 'intermedio') !== false;
+$esPremium = strpos($planNormalizado, 'premium') !== false;
+$sinMembresia = !$membresiaActiva; // Nueva variable para detectar si no hay membresía
 
-// Mostrar clases SOLO si:
-// 1. Hay membresía activa
-// 2. El plan NO es básico (Básico no tiene acceso a clases)
-if($membresiaActiva && !$esBasico): 
+// Para depuración (puedes eliminarlo después)
+echo "<!-- Plan original: " . $tipoMembresia . " -->";
+echo "<!-- Plan normalizado: " . $planNormalizado . " -->";
+echo "<!-- Sin membresía: " . ($sinMembresia ? 'SI' : 'NO') . " -->";
+echo "<!-- Es Básico: " . ($esBasico ? 'SI' : 'NO') . " -->";
+echo "<!-- Es Diario: " . ($esDiario ? 'SI' : 'NO') . " -->";
+echo "<!-- Es Intermedio: " . ($esIntermedio ? 'SI' : 'NO') . " -->";
+echo "<!-- Es Premium: " . ($esPremium ? 'SI' : 'NO') . " -->";
 ?>
+
 <section class="card mt-4">
 <h2><i class="fas fa-dumbbell"></i> Clases Disponibles</h2>
 
+<?php 
+// Para usuarios SIN MEMBRESÍA: mensaje diferente
+if($sinMembresia): 
+?>
+    <div class="alert alert-secondary mb-3" style="background-color: #333333; border-color: #666666; color: #cccccc;">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-crown fa-2x mr-3" style="color: #999999;"></i>
+            <div>
+                <strong>¡Elige un plan!</strong><br>
+                No tienes una membresía activa. 
+            </div>
+        </div>
+    </div>
+
+<?php 
+// Para planes Básico y Diario: mensaje de mejora
+elseif($esBasico || $esDiario): 
+?>
+    <div class="alert alert-warning mb-3" style="background-color: #332c00; border-color: #ffd700; color: #ffd700;">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-crown fa-2x mr-3"></i>
+            <div>
+                <strong>¡Mejora tu experiencia!</strong><br>
+                Con tu plan actual no tienes acceso a clases grupales.
+            </div>
+        </div>
+    </div>
+
+<?php 
+else: 
+    // Para Intermedio y Premium: mostrar la tabla con clases
+    
+    // Para plan Intermedio: obtener las clases a las que tiene acceso
+    $clasesVisibles = [];
+    
+    if ($esIntermedio) {
+        // Obtener las clases donde el usuario YA ESTÁ inscrito
+        $stmtInscritas = $conn->prepare("
+            SELECT c.* 
+            FROM clases c
+            INNER JOIN inscripciones_clases ic ON c.id_clase = ic.id_clase
+            WHERE ic.id_cliente = ? 
+            AND ic.estado = 'activa'
+            AND c.estado = 'activa'
+        ");
+        $stmtInscritas->execute([$_SESSION['cliente_id']]);
+        $clasesInscritas = $stmtInscritas->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Obtener las clases disponibles para inscribir (máximo 2 - las ya inscritas)
+        $limiteDisponible = 2 - count($clasesInscritas);
+        
+        if ($limiteDisponible > 0) {
+            // Excluir las clases en las que ya está inscrito
+            $idsInscritos = array_column($clasesInscritas, 'id_clase');
+            
+            $sql = "SELECT id_clase, nombre, descripcion FROM clases WHERE estado = 'activa'";
+            if (!empty($idsInscritos)) {
+                $placeholders = implode(',', array_fill(0, count($idsInscritos), '?'));
+                $sql .= " AND id_clase NOT IN ($placeholders)";
+            }
+            $sql .= " LIMIT " . intval($limiteDisponible);
+            
+            $stmtDisponibles = $conn->prepare($sql);
+            if (!empty($idsInscritos)) {
+                $stmtDisponibles->execute($idsInscritos);
+            } else {
+                $stmtDisponibles->execute();
+            }
+            $clasesDisponibles = $stmtDisponibles->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            $clasesDisponibles = [];
+        }
+        
+        // Combinar clases inscritas y disponibles
+        $clasesVisibles = array_merge($clasesInscritas, $clasesDisponibles);
+        
+    } else {
+        // Para Premium: ver todas las clases
+        $clasesVisibles = $clases;
+    }
+?>
+
+<?php if ($esIntermedio): ?>
+    <div class="alert alert-info mb-3" style="background-color: #1a3300; border-color: #00ff00; color: #00ff00;">
+        <i class="fas fa-info-circle mr-2"></i>
+        Tu plan Intermedio te permite inscribirte hasta 2 clases. 
+        Actualmente tienes <strong><?= count($clasesInscritas ?? 0) ?></strong> clase(s) inscrita(s) 
+        y puedes inscribirte a <strong><?= $limiteDisponible ?? 0 ?></strong> clase(s) más.
+    </div>
+<?php endif; ?>
+
+<?php if (empty($clasesVisibles) && $esIntermedio): ?>
+    <div class="alert alert-secondary mb-3">
+        <i class="fas fa-calendar-times mr-2"></i>
+        No hay clases disponibles en este momento.
+    </div>
+<?php else: ?>
 <div class="table-responsive">
 <table class="table table-hover">
 <thead>
@@ -322,17 +428,16 @@ if($membresiaActiva && !$esBasico):
 </thead>
 <tbody>
 
-<?php foreach($clases as $clase): ?>
+<?php foreach($clasesVisibles as $clase): ?>
     <?php
     // Verificar si el usuario ya está inscrito en esta clase
     $stmtInscrito = $conn->prepare("SELECT id_inscripcion FROM inscripciones_clases WHERE id_cliente = ? AND id_clase = ? AND estado = 'activa'");
     $stmtInscrito->execute([$_SESSION['cliente_id'], $clase['id_clase']]);
     $yaInscrito = $stmtInscrito->rowCount() > 0;
 
-    // Verificar límite de clases para plan Intermedio
-    $limiteAlcanzado = false;
-    if (strpos($planNormalizado, 'intermedio') !== false && !$yaInscrito) {
-        // Para Intermedio: máximo 2 clases
+    // Para Intermedio: verificar si puede inscribirse a más clases
+    $puedeInscribirse = true;
+    if ($esIntermedio && !$yaInscrito) {
         $stmtClasesInscritas = $conn->prepare("
             SELECT COUNT(*) 
             FROM inscripciones_clases 
@@ -340,7 +445,7 @@ if($membresiaActiva && !$esBasico):
         ");
         $stmtClasesInscritas->execute([$_SESSION['cliente_id']]);
         $totalClasesInscritas = $stmtClasesInscritas->fetchColumn();
-        $limiteAlcanzado = $totalClasesInscritas >= 2;
+        $puedeInscribirse = $totalClasesInscritas < 2;
     }
     ?>
 
@@ -366,7 +471,7 @@ if($membresiaActiva && !$esBasico):
                 <button class="btn btn-success btn-sm btn-block" disabled>
                     <i class="fas fa-check"></i> Inscrito
                 </button>
-            <?php elseif($limiteAlcanzado): ?>
+            <?php elseif(!$puedeInscribirse): ?>
                 <button class="btn btn-danger btn-sm btn-block" disabled>
                     <i class="fas fa-lock"></i> Límite alcanzado (2/2)
                 </button>
@@ -414,10 +519,9 @@ if($membresiaActiva && !$esBasico):
 </tbody>
 </table>
 </div>
+<?php endif; // Fin del if empty clases ?>
+<?php endif; // Fin del else para Intermedio/Premium ?>
 </section>
-<?php endif; 
-// --- FIN DE LA SECCIÓN CORREGIDA ---
-?>
 
 </main>
 </div>

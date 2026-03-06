@@ -62,7 +62,9 @@ try {
     $tipoPlanNormalizado = trim($tipoPlanNormalizado);
 
   
-    if($tipoPlanNormalizado === 'basico'){
+    // Después de validar Básico, agrega Diario
+    // Modifica esta línea (como 50-54)
+    if($tipoPlanNormalizado === 'basico' || $tipoPlanNormalizado === 'diario'){
         header("Location: Perfil.php?error=plan_basico");
         exit();
     }
@@ -77,8 +79,8 @@ try {
     $stmtCount->execute([$cliente_id]);
     $totalClases = $stmtCount->fetch(PDO::FETCH_ASSOC)['total'];
 
-   
-    if($tipoPlanNormalizado === 'intermedio' && $totalClases >= 1){
+    // CORREGIDO: Cambiar de >= 1 a >= 2
+    if($tipoPlanNormalizado === 'intermedio' && $totalClases >= 2){
         header("Location: Perfil.php?error=limite_intermedio");
         exit();
     }

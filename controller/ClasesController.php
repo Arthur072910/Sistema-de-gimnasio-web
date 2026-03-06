@@ -22,7 +22,8 @@ class ClasesController {
         $this->clase->descripcion = $datos['descripcion'] ?? '';
         $this->clase->cupo_maximo = $datos['cupo_maximo'];
         $this->clase->id_entrenador = $datos['id_entrenador'];
-        $this->clase->estado = $datos['estado'] ?? 'activo';
+        // CORREGIDO: Cambiar de 'activo' a 'activa'
+        $this->clase->estado = $datos['estado'] ?? 'activa';
 
         if ($this->clase->crear()) {
             return ['success' => true, 'message' => 'Clase registrada exitosamente'];
@@ -48,7 +49,7 @@ class ClasesController {
         $this->clase->descripcion = $datos['descripcion'] ?? '';
         $this->clase->cupo_maximo = $datos['cupo_maximo'];
         $this->clase->id_entrenador = $datos['id_entrenador'];
-        $this->clase->estado = $datos['estado'];
+        $this->clase->estado = $datos['estado']; // Aquí ya viene 'activa' o 'inactiva' del formulario
 
         if ($this->clase->actualizar()) {
             return ['success' => true, 'message' => 'Clase actualizada exitosamente'];

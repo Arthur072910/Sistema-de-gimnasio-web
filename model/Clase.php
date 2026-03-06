@@ -20,6 +20,11 @@ class Clase {
 
   
     public function crear(){
+        // Validar que el estado sea válido
+        $estados_permitidos = ['activa', 'inactiva'];
+        if (!in_array($this->estado, $estados_permitidos)) {
+            $this->estado = 'activa'; // Valor por defecto seguro
+        }
 
         $query = "INSERT INTO " . $this->table_name . "
                 SET
@@ -55,7 +60,7 @@ class Clase {
     $stmt = $this->conn->prepare($query);
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+    }
 
     
     public function listarTodos(){

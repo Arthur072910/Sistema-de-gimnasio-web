@@ -298,8 +298,15 @@ if ($membresiaActiva && !empty($fechaVencimiento)) {
 </section>
 
 <?php 
-$planNormalizado = trim(mb_strtolower($tipoMembresia, 'UTF-8'));
-if($membresiaActiva && $planNormalizado !== "básico"): 
+// --- SECCIÓN CORREGIDA PARA MOSTRAR CLASES (VERSIÓN ROBUSTA) ---
+// Versión robusta que ignora acentos y mayúsculas
+$planNormalizado = preg_replace('/[áéíóú]/', '', mb_strtolower($tipoMembresia, 'UTF-8'));
+$esBasico = strpos($planNormalizado, 'basico') !== false;
+
+// Mostrar clases SOLO si:
+// 1. Hay membresía activa
+// 2. El plan NO es básico (Básico no tiene acceso a clases)
+if($membresiaActiva && !$esBasico): 
 ?>
 <section class="card mt-4">
 <h2><i class="fas fa-dumbbell"></i> Clases Disponibles</h2>
@@ -317,13 +324,24 @@ if($membresiaActiva && $planNormalizado !== "básico"):
 
 <?php foreach($clases as $clase): ?>
     <?php
-    $planSinTildes = str_replace(['á', 'é', 'í', 'ó', 'ú'], ['a', 'e', 'i', 'o', 'u'], $planNormalizado);
-
+    // Verificar si el usuario ya está inscrito en esta clase
     $stmtInscrito = $conn->prepare("SELECT id_inscripcion FROM inscripciones_clases WHERE id_cliente = ? AND id_clase = ? AND estado = 'activa'");
     $stmtInscrito->execute([$_SESSION['cliente_id'], $clase['id_clase']]);
     $yaInscrito = $stmtInscrito->rowCount() > 0;
 
-    $bloqueado = ($planSinTildes === 'intermedio' && $totalClases >= 1 && !$yaInscrito);
+    // Verificar límite de clases para plan Intermedio
+    $limiteAlcanzado = false;
+    if (strpos($planNormalizado, 'intermedio') !== false && !$yaInscrito) {
+        // Para Intermedio: máximo 2 clases
+        $stmtClasesInscritas = $conn->prepare("
+            SELECT COUNT(*) 
+            FROM inscripciones_clases 
+            WHERE id_cliente = ? AND estado = 'activa'
+        ");
+        $stmtClasesInscritas->execute([$_SESSION['cliente_id']]);
+        $totalClasesInscritas = $stmtClasesInscritas->fetchColumn();
+        $limiteAlcanzado = $totalClasesInscritas >= 2;
+    }
     ?>
 
     <tr>
@@ -348,9 +366,9 @@ if($membresiaActiva && $planNormalizado !== "básico"):
                 <button class="btn btn-success btn-sm btn-block" disabled>
                     <i class="fas fa-check"></i> Inscrito
                 </button>
-            <?php elseif($bloqueado): ?>
+            <?php elseif($limiteAlcanzado): ?>
                 <button class="btn btn-danger btn-sm btn-block" disabled>
-                    <i class="fas fa-lock"></i> Límite alcanzado
+                    <i class="fas fa-lock"></i> Límite alcanzado (2/2)
                 </button>
             <?php else: ?>
                 <form action="inscribirse.php" method="POST" class="m-0">
@@ -397,12 +415,13 @@ if($membresiaActiva && $planNormalizado !== "básico"):
 </table>
 </div>
 </section>
-<?php endif; ?>
+<?php endif; 
+// --- FIN DE LA SECCIÓN CORREGIDA ---
+?>
 
 </main>
 </div>
 
-<!-- Modal Historial de Actividad -->
 <div class="modal fade" id="modalHistorial" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content bg-dark text-white border-warning" style="border-radius: 15px;">
@@ -449,7 +468,6 @@ if($membresiaActiva && $planNormalizado !== "básico"):
     </div>
 </div>
 
-<!-- Modal Historial de Pagos -->
 <div class="modal fade" id="modalPagos" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content bg-dark text-white border-warning" style="border-radius: 15px;">
@@ -509,7 +527,6 @@ if($membresiaActiva && $planNormalizado !== "básico"):
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script src="../assets/js/notificaciones.js"></script>
 
-<!-- Toggle Horario por Clase -->
 <script>
 document.querySelectorAll('.btn-toggle-horario').forEach(function(btn) {
     btn.addEventListener('click', function() {
